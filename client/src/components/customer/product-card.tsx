@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -12,8 +13,13 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ item, type }: ProductCardProps) {
+  const [, navigate] = useLocation();
   const [liked, setLiked] = useState(false);
   const [showRentalForm, setShowRentalForm] = useState(false);
+
+  const handleCardClick = () => {
+    navigate(`/${type}/${item.id}`);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -49,7 +55,11 @@ export default function ProductCard({ item, type }: ProductCardProps) {
   const sizes = Array.isArray(item.sizes) ? item.sizes : [];
 
   return (
-    <div className="bg-card rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer group">
+    <div 
+      className="bg-card rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer group"
+      onClick={handleCardClick}
+      data-testid={`card-${type}-${item.id}`}
+    >
       <div className="relative">
         <div className="w-full h-64 bg-gradient-to-br from-primary/10 to-secondary/20 flex items-center justify-center">
           {item.imageUrl ? (

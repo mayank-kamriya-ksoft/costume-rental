@@ -33,11 +33,12 @@ type RentalFormData = z.infer<typeof rentalFormSchema>;
 interface RentalFormProps {
   item: Costume | Accessory;
   type: "costume" | "accessory";
+  selectedSize?: string;
   onSuccess: () => void;
   onCancel: () => void;
 }
 
-export default function RentalForm({ item, type, onSuccess, onCancel }: RentalFormProps) {
+export default function RentalForm({ item, type, selectedSize, onSuccess, onCancel }: RentalFormProps) {
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
   const { toast } = useToast();
@@ -51,6 +52,9 @@ export default function RentalForm({ item, type, onSuccess, onCancel }: RentalFo
     watch,
   } = useForm<RentalFormData>({
     resolver: zodResolver(rentalFormSchema),
+    defaultValues: {
+      size: selectedSize || "",
+    },
   });
 
   const watchedStartDate = watch("startDate");
@@ -166,7 +170,7 @@ export default function RentalForm({ item, type, onSuccess, onCancel }: RentalFo
       {sizes.length > 0 && (
         <div className="space-y-2">
           <Label>Size</Label>
-          <Select onValueChange={(value) => setValue("size", value)}>
+          <Select onValueChange={(value) => setValue("size", value)} defaultValue={selectedSize}>
             <SelectTrigger data-testid="select-size">
               <SelectValue placeholder="Select size" />
             </SelectTrigger>
