@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import path from "path";
 import session from "express-session";
+import MemoryStore from "memorystore";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { sessionConfig } from "./auth";
@@ -9,8 +10,14 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Session middleware
-app.use(session(sessionConfig));
+// Session middleware with memory store
+const MemStore = MemoryStore(session);
+app.use(session({
+  ...sessionConfig,
+  store: new MemStore({
+    checkPeriod: 86400000 // prune expired entries every 24h
+  })
+}));
 
 app.use((req, res, next) => {
   const start = Date.now();

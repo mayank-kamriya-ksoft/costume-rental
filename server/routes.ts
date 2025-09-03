@@ -78,13 +78,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      // Create session
+      // Create session and save it
       req.session.userId = user.id;
       req.session.user = user;
       
-      res.json({ 
-        user,
-        message: 'Login successful'
+      // Force session save
+      req.session.save((err) => {
+        if (err) {
+          console.error('Session save error:', err);
+          return res.status(500).json({ 
+            error: 'Session error',
+            message: 'Failed to create session'
+          });
+        }
+        
+        res.json({ 
+          user,
+          message: 'Login successful'
+        });
       });
       
     } catch (error) {
@@ -122,6 +133,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Get current user route
   app.get('/api/auth/user', optionalAuth, (req, res) => {
+    console.log('Session check - userId:', req.session.userId, 'user:', !!req.session.user);
     if (req.session.user) {
       const { password: _, ...userWithoutPassword } = req.session.user;
       res.json({ user: userWithoutPassword });
