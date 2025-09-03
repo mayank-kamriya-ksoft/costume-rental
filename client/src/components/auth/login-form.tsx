@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { loginSchema } from "@shared/schema";
 import { z } from "zod";
-import { Eye, EyeOff, LogIn } from "lucide-react";
+import { Eye, EyeOff, LogIn, Zap } from "lucide-react";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
@@ -56,6 +56,18 @@ export default function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormPr
 
   const onSubmit = (data: LoginFormData) => {
     loginMutation.mutate(data);
+  };
+
+  const handleQuickLogin = () => {
+    const demoCredentials = {
+      email: "demo@kamdhenudramaking.com",
+      password: "demo123"
+    };
+    
+    // Fill the form with demo credentials and submit
+    form.setValue("email", demoCredentials.email);
+    form.setValue("password", demoCredentials.password);
+    loginMutation.mutate(demoCredentials);
   };
 
   return (
@@ -138,6 +150,27 @@ export default function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormPr
           </Button>
         </form>
       </Form>
+
+      {/* Quick Login Demo Button */}
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-card px-2 text-muted-foreground">Or</span>
+        </div>
+      </div>
+
+      <Button 
+        variant="outline" 
+        className="w-full" 
+        onClick={handleQuickLogin}
+        disabled={loginMutation.isPending}
+        data-testid="button-quick-login"
+      >
+        <Zap className="h-4 w-4 mr-2" />
+        Quick Login (Demo)
+      </Button>
 
       {onSwitchToRegister && (
         <div className="text-center">
