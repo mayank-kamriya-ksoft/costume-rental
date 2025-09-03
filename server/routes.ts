@@ -1,10 +1,175 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertCostumeSchema, insertAccessorySchema, insertBookingSchema, insertBookingItemSchema } from "@shared/schema";
+import { insertCostumeSchema, insertAccessorySchema, insertBookingSchema, insertBookingItemSchema, registrationSchema, loginSchema } from "@shared/schema";
+import { hashPassword, loginUser, requireAuth, optionalAuth } from "./auth";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  
+  // Authentication routes
+  
+  // Register route
+  app.post('/api/auth/register', async (req, res) => {
+    try {
+      const validatedData = registrationSchema.parse(req.body);
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(validatedData.email);
+      if (existingUser) {
+        return res.status(400).json({ 
+          error: 'User already exists',
+          message: 'An account with this email already exists' 
+        });
+      }
+      
+      // Hash password
+      const hashedPassword = await hashPassword(validatedData.password);
+      
+      // Remove confirmPassword from data and add hashed password
+      const { confirmPassword, ...userData } = validatedData;
+      const userToCreate = {
+        ...userData,
+        password: hashedPassword,
+      };
+      
+      // Create user
+      const newUser = await storage.createUser(userToCreate);
+      
+      // Login user immediately after registration
+      req.session.userId = newUser.id;
+      req.session.user = newUser;
+      
+      // Return user without password
+      const { password: _, ...userResponse } = newUser;
+      res.status(201).json({ 
+        user: userResponse,
+        message: 'Account created successfully'
+      });
+      
+    } catch (error) {
+      console.error('Registration error:', error);
+      
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          error: 'Validation error',
+          message: 'Please check your input and try again',
+          details: error.errors
+        });
+      }
+      
+      res.status(500).json({ 
+        error: 'Registration failed',
+        message: 'An error occurred while creating your account'
+      });
+    }
+  });
+  
+  // Login route
+  app.post('/api/auth/login', async (req, res) => {
+    try {
+      const { email, password } = loginSchema.parse(req.body);
+      
+      const user = await loginUser(email, password);
+      if (!user) {
+        return res.status(401).json({ 
+          error: 'Invalid credentials',
+          message: 'Invalid email or password'
+        });
+      }
+      
+      // Create session
+      req.session.userId = user.id;
+      req.session.user = user;
+      
+      res.json({ 
+        user,
+        message: 'Login successful'
+      });
+      
+    } catch (error) {
+      console.error('Login error:', error);
+      
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          error: 'Validation error',
+          message: 'Please check your input and try again'
+        });
+      }
+      
+      res.status(500).json({ 
+        error: 'Login failed',
+        message: 'An error occurred during login'
+      });
+    }
+  });
+  
+  // Logout route
+  app.post('/api/auth/logout', (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Logout error:', err);
+        return res.status(500).json({ 
+          error: 'Logout failed',
+          message: 'An error occurred during logout'
+        });
+      }
+      
+      res.clearCookie('connect.sid');
+      res.json({ message: 'Logout successful' });
+    });
+  });
+  
+  // Get current user route
+  app.get('/api/auth/user', optionalAuth, (req, res) => {
+    if (req.session.user) {
+      const { password: _, ...userWithoutPassword } = req.session.user;
+      res.json({ user: userWithoutPassword });
+    } else {
+      res.status(401).json({ error: 'Not authenticated' });
+    }
+  });
+  
+  // User profile update route
+  app.put('/api/auth/profile', requireAuth, async (req, res) => {
+    try {
+      if (!req.session.userId) {
+        return res.status(401).json({ error: 'Not authenticated' });
+      }
+      
+      // Validate input - exclude password changes for now
+      const allowedFields = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        phone: req.body.phone,
+        address: req.body.address,
+        city: req.body.city,
+        postalCode: req.body.postalCode,
+      };
+      
+      // Remove undefined fields
+      const updateData = Object.fromEntries(
+        Object.entries(allowedFields).filter(([_, value]) => value !== undefined)
+      );
+      
+      const updatedUser = await storage.updateUser(req.session.userId, updateData);
+      req.session.user = updatedUser;
+      
+      const { password: _, ...userResponse } = updatedUser;
+      res.json({ 
+        user: userResponse,
+        message: 'Profile updated successfully'
+      });
+      
+    } catch (error) {
+      console.error('Profile update error:', error);
+      res.status(500).json({ 
+        error: 'Update failed',
+        message: 'An error occurred while updating your profile'
+      });
+    }
+  });
+  
   // Category routes
   app.get("/api/categories", async (req, res) => {
     try {

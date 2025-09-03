@@ -1,14 +1,31 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
+import { useAuth } from "@/hooks/useAuth";
+import AuthDialog from "@/components/auth/auth-dialog";
 import { 
   ShoppingCart, 
   Menu, 
   X, 
   Crown,
   Phone,
-  MapPin
+  MapPin,
+  User,
+  LogOut,
+  Settings
 } from "lucide-react";
 
 interface HeaderProps {
@@ -18,6 +35,49 @@ interface HeaderProps {
 export default function Header({ isAdmin = false }: HeaderProps) {
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authDialog, setAuthDialog] = useState<{ open: boolean; mode: "login" | "register" }>({ 
+    open: false, 
+    mode: "login" 
+  });
+  
+  const { user, isAuthenticated, isLoading } = useAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
+  const logoutMutation = useMutation({
+    mutationFn: () => apiRequest('/api/auth/logout', { method: 'POST' }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to log out. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+  
+  const handleLogin = () => {
+    setAuthDialog({ open: true, mode: "login" });
+  };
+  
+  const handleRegister = () => {
+    setAuthDialog({ open: true, mode: "register" });
+  };
+  
+  const handleLogout = () => {
+    logoutMutation.mutate();
+  };
+  
+  const getInitials = (firstName?: string, lastName?: string) => {
+    if (!firstName && !lastName) return "U";
+    return `${firstName?.[0] || ""}${lastName?.[0] || ""}`;
+  };
 
   return (
     <header className="bg-gradient-to-r from-orange-400 via-purple-500 to-yellow-400 border-b border-border shadow-lg sticky top-0 z-50">
@@ -68,9 +128,71 @@ export default function Header({ isAdmin = false }: HeaderProps) {
                 </Badge>
               </Button>
             )}
-            <Button className="bg-white text-orange-600 hover:bg-white/90 font-semibold" data-testid="button-signin">
-              Sign In
-            </Button>
+            
+            {/* Authentication UI */}
+            {isLoading ? (
+              <div className="h-8 w-20 bg-white/20 rounded animate-pulse" />
+            ) : isAuthenticated && user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full bg-white/10 hover:bg-white/20" data-testid="button-user-menu">
+                    <Avatar className="h-8 w-8">
+                      <AvatarFallback className="bg-white text-orange-600 text-sm font-semibold">
+                        {getInitials(user.firstName, user.lastName)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        {user.firstName} {user.lastName}
+                      </p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {user.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem data-testid="menu-profile">
+                    <User className="mr-2 h-4 w-4" />
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem data-testid="menu-settings">
+                    <Settings className="mr-2 h-4 w-4" />
+                    Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    onClick={handleLogout} 
+                    disabled={logoutMutation.isPending}
+                    data-testid="menu-logout"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    {logoutMutation.isPending ? "Logging out..." : "Log out"}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Button 
+                  variant="ghost" 
+                  className="text-white hover:bg-white/20 font-medium" 
+                  onClick={handleLogin}
+                  data-testid="button-login"
+                >
+                  Sign In
+                </Button>
+                <Button 
+                  className="bg-white text-orange-600 hover:bg-white/90 font-semibold" 
+                  onClick={handleRegister}
+                  data-testid="button-register"
+                >
+                  Sign Up
+                </Button>
+              </div>
+            )}
           </div>
           
           {/* Mobile Menu Button */}
@@ -123,6 +245,13 @@ export default function Header({ isAdmin = false }: HeaderProps) {
           </div>
         )}
       </div>
+      
+      {/* Authentication Dialog */}
+      <AuthDialog 
+        isOpen={authDialog.open} 
+        onOpenChange={(open) => setAuthDialog({ ...authDialog, open })} 
+        initialMode={authDialog.mode}
+      />
     </header>
   );
 }

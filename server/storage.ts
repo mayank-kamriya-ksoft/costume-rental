@@ -24,7 +24,12 @@ import { eq, and, gte, lte, ilike, or, desc, sql } from "drizzle-orm";
 export interface IStorage {
   // User operations
   getUser(id: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  updateUser(id: string, user: Partial<InsertUser>): Promise<User>;
+  
+  // Authentication
+  authenticateUser(email: string, password: string): Promise<User | null>;
 
   // Category operations
   getCategories(): Promise<Category[]>;
@@ -80,10 +85,43 @@ export class DatabaseStorage implements IStorage {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
   }
+  
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
+  }
 
   async createUser(userData: InsertUser): Promise<User> {
     const [user] = await db.insert(users).values(userData).returning();
     return user;
+  }
+  
+  async updateUser(id: string, userData: Partial<InsertUser>): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({ ...userData, updatedAt: new Date() })
+      .where(eq(users.id, id))
+      .returning();
+    return user;
+  }
+  
+  async authenticateUser(email: string, password: string): Promise<User | null> {
+    const user = await this.getUserByEmail(email);
+    if (!user || !user.password) {
+      return null;
+    }
+    
+    // Use bcrypt for password comparison
+    const bcrypt = await import('bcryptjs');
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    
+    if (isValidPassword) {
+      // Return user without password
+      const { password: _, ...userWithoutPassword } = user;
+      return userWithoutPassword as User;
+    }
+    
+    return null;
   }
 
   // Category operations

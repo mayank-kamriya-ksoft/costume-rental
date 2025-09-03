@@ -7,8 +7,16 @@ import { z } from "zod";
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   email: varchar("email").unique().notNull(),
-  name: varchar("name").notNull(),
+  password: varchar("password").notNull(), // Hashed password
+  firstName: varchar("first_name").notNull(),
+  lastName: varchar("last_name").notNull(),
   phone: varchar("phone"),
+  address: text("address"),
+  city: varchar("city"),
+  postalCode: varchar("postal_code"),
+  dateOfBirth: timestamp("date_of_birth"),
+  isActive: boolean("is_active").default(true),
+  emailVerified: boolean("email_verified").default(false),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -118,10 +126,27 @@ export const bookingItemsRelations = relations(bookingItems, ({ one }) => ({
 }));
 
 // Insert Schemas
+// User registration schema (excludes password confirmation)
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+  isActive: true,
+  emailVerified: true,
+});
+
+// Registration form schema with password confirmation
+export const registrationSchema = insertUserSchema.extend({
+  confirmPassword: z.string().min(8, 'Password must be at least 8 characters'),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
+
+// Login schema
+export const loginSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(1, 'Password is required'),
 });
 
 export const insertCategorySchema = createInsertSchema(categories).omit({
