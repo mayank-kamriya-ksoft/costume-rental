@@ -1,7 +1,7 @@
 import { useLocation } from "wouter";
 import LoginForm from "@/components/auth/login-form";
 import { Link } from "wouter";
-import { ArrowLeft, Sparkles, Crown, Star, Palette } from "lucide-react";
+import { ArrowLeft, Sparkles, Crown, Star, Palette, Theater, Drama, Circle } from "lucide-react";
 
 export default function Login() {
   const [, setLocation] = useLocation();
@@ -20,60 +20,80 @@ export default function Login() {
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/30 to-accent/20">
       {/* Back to Home Button */}
       <div className="absolute top-6 left-6 z-10">
-        <Link 
-          href="/" 
+        <button 
+          onClick={() => setLocation("/")}
           className="inline-flex items-center gap-2 px-4 py-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-all hover:shadow-lg"
-          data-testid="link-home"
+          data-testid="button-home"
         >
           <ArrowLeft className="h-4 w-4" />
           <span className="font-medium">Back to Home</span>
-        </Link>
+        </button>
       </div>
 
       <div className="min-h-screen flex">
         {/* Left Column - Visual/Branding */}
         <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 relative overflow-hidden">
           <div className="absolute inset-0 indian-gradient"></div>
-          <div className="relative z-10 flex flex-col justify-center items-center text-white p-12">
-            <div className="max-w-md text-center space-y-6">
+          <div className="relative z-10 flex flex-col justify-center items-center text-white p-8 lg:p-12">
+            <div className="max-w-lg text-center space-y-8">
               {/* Logo/Brand */}
               <div className="mb-8">
-                <div className="inline-flex items-center gap-3 mb-4">
+                <div className="flex flex-col items-center gap-4 mb-6">
                   <div className="relative">
-                    <Crown className="h-12 w-12 text-white" />
-                    <Sparkles className="h-6 w-6 text-yellow-300 absolute -top-1 -right-1" />
+                    <Crown className="h-16 w-16 text-white" />
+                    <Theater className="h-8 w-8 text-yellow-300 absolute -bottom-2 -right-2" />
                   </div>
-                  <h1 className="text-3xl font-bold">Kamdhenu Drama Making</h1>
+                  <div>
+                    <h1 className="text-3xl lg:text-4xl font-bold mb-2">Kamdhenu Drama Making</h1>
+                    <p className="text-white/90 text-lg lg:text-xl">Premium Costume Rental Experience</p>
+                  </div>
                 </div>
-                <p className="text-white/90 text-lg">Premium Costume Rental Experience</p>
               </div>
 
               {/* Feature highlights */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 text-white/90">
-                  <Star className="h-5 w-5 text-yellow-300" />
+              <div className="space-y-6">
+                <div className="flex items-center justify-center gap-4 text-white/90 text-lg">
+                  <Star className="h-6 w-6 text-yellow-300 flex-shrink-0" />
                   <span>Authentic Traditional Costumes</span>
                 </div>
-                <div className="flex items-center gap-3 text-white/90">
-                  <Palette className="h-5 w-5 text-yellow-300" />
-                  <span>Professional Quality Accessories</span>
+                <div className="flex items-center justify-center gap-4 text-white/90 text-lg">
+                  <Drama className="h-6 w-6 text-yellow-300 flex-shrink-0" />
+                  <span>Professional Stage Makeup</span>
                 </div>
-                <div className="flex items-center gap-3 text-white/90">
-                  <Crown className="h-5 w-5 text-yellow-300" />
-                  <span>Perfect for Theater & Events</span>
+                <div className="flex items-center justify-center gap-4 text-white/90 text-lg">
+                  <Theater className="h-6 w-6 text-yellow-300 flex-shrink-0" />
+                  <span>Perfect for Theater & Drama</span>
+                </div>
+                <div className="flex items-center justify-center gap-4 text-white/90 text-lg">
+                  <Palette className="h-6 w-6 text-yellow-300 flex-shrink-0" />
+                  <span>Premium Quality Accessories</span>
                 </div>
               </div>
 
-              {/* Decorative elements */}
-              <div className="absolute top-20 left-20 opacity-20">
-                <Crown className="h-24 w-24 text-white rotate-12" />
+              {/* Drama Quote */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mt-8">
+                <p className="text-white/95 italic text-lg lg:text-xl mb-3">
+                  "All the world's a stage, and all the men and women merely players"
+                </p>
+                <p className="text-white/80 text-sm">- Shakespeare</p>
               </div>
-              <div className="absolute bottom-20 right-20 opacity-20">
-                <Sparkles className="h-16 w-16 text-yellow-300 -rotate-12" />
+
+              {/* Decorative drama elements */}
+              <div className="absolute top-16 left-16 opacity-15">
+                <Theater className="h-28 w-28 text-white rotate-12" />
               </div>
-              <div className="absolute top-40 right-32 opacity-10">
-                <Star className="h-20 w-20 text-white rotate-45" />
+              <div className="absolute bottom-16 right-16 opacity-15">
+                <Drama className="h-24 w-24 text-yellow-300 -rotate-12" />
               </div>
+              <div className="absolute top-1/3 right-20 opacity-10">
+                <Crown className="h-32 w-32 text-white rotate-45" />
+              </div>
+              <div className="absolute bottom-1/3 left-20 opacity-15">
+                <Sparkles className="h-20 w-20 text-yellow-300 rotate-12" />
+              </div>
+              {/* Theater curtains effect */}
+              <div className="absolute top-0 left-0 w-8 h-full bg-gradient-to-r from-red-900/30 to-transparent"></div>
+              <div className="absolute top-0 right-0 w-8 h-full bg-gradient-to-l from-red-900/30 to-transparent"></div>
             </div>
           </div>
         </div>
