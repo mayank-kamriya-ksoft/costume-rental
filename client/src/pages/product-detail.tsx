@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRoute, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Separator } from "@/components/ui/separator";
 import Header from "@/components/layout/header";
 import RentalForm from "@/components/customer/rental-form";
-import { ArrowLeft, Heart, Shield, Clock, Package, Info, Star } from "lucide-react";
+import { ArrowLeft, Heart, Shield, Clock, Package, Info, Star, ZoomIn, CheckCircle, Truck, RotateCcw } from "lucide-react";
 import type { Costume, Accessory } from "@shared/schema";
 
 export default function ProductDetail() {
@@ -25,10 +25,21 @@ export default function ProductDetail() {
   const [liked, setLiked] = useState(false);
   const [showRentalForm, setShowRentalForm] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showImageZoom, setShowImageZoom] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const { data: product, isLoading } = useQuery<Costume | Accessory>({
     queryKey: [`/api/${productType}s/${productId}`],
     enabled: !!productId,
+  });
+
+  const { data: relatedProducts } = useQuery<(Costume | Accessory)[]>({
+    queryKey: [`/api/${productType}s`],
+    enabled: !!product,
+    select: (data) => data?.filter(item => 
+      item.id !== product?.id && 
+      item.categoryId === product?.categoryId
+    ).slice(0, 4)
   });
 
   if (isLoading) {
@@ -137,58 +148,94 @@ export default function ProductDetail() {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Image Gallery */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+          {/* Enhanced Image Gallery */}
           <div className="space-y-4">
-            <div className="relative bg-card rounded-lg overflow-hidden shadow-lg">
-              <div className="aspect-square bg-gradient-to-br from-primary/10 to-secondary/20 flex items-center justify-center">
+            <div className="relative bg-card rounded-2xl overflow-hidden shadow-2xl group">
+              <div className="aspect-square bg-gradient-to-br from-primary/20 via-secondary/10 to-accent/20 flex items-center justify-center relative">
                 {productImages[currentImageIndex] && productImages[currentImageIndex] !== "/placeholder-costume.jpg" ? (
-                  <img
-                    src={productImages[currentImageIndex].startsWith('@assets') ? 
-                      productImages[currentImageIndex].replace('@assets', '/attached_assets') : 
-                      productImages[currentImageIndex]
-                    }
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      console.log('Product detail image load error:', productImages[currentImageIndex]);
-                    }}
-                  />
+                  <div className="relative w-full h-full">
+                    <img
+                      src={productImages[currentImageIndex].startsWith('@assets') ? 
+                        productImages[currentImageIndex].replace('@assets', '/attached_assets') : 
+                        productImages[currentImageIndex]
+                      }
+                      alt={product.name}
+                      className={`w-full h-full object-cover transition-all duration-700 transform ${
+                        imageLoaded ? 'scale-100 opacity-100' : 'scale-105 opacity-0'
+                      } group-hover:scale-105`}
+                      onLoad={() => setImageLoaded(true)}
+                      onError={(e) => {
+                        console.log('Product detail image load error:', productImages[currentImageIndex]);
+                      }}
+                    />
+                    {/* Zoom overlay */}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 hover:bg-white dark:bg-black/90 dark:hover:bg-black"
+                        onClick={() => setShowImageZoom(true)}
+                        data-testid="button-zoom"
+                      >
+                        <ZoomIn className="h-4 w-4 mr-2" />
+                        View Full Size
+                      </Button>
+                    </div>
+                  </div>
                 ) : (
-                  <div className="text-muted-foreground text-center">
-                    <Info className="h-16 w-16 mx-auto mb-4" />
-                    <p className="text-lg font-medium">{product.name}</p>
-                    <p className="text-sm">No image available</p>
+                  <div className="text-muted-foreground text-center p-8">
+                    <div className="bg-primary/10 rounded-full p-8 mx-auto mb-4 w-fit">
+                      <Info className="h-16 w-16 text-primary" />
+                    </div>
+                    <p className="text-lg font-medium mb-2">{product.name}</p>
+                    <p className="text-sm opacity-70">No image available</p>
                   </div>
                 )}
               </div>
-              <div className="absolute top-4 left-4">
-                <Badge className={`${getStatusColor(product.status)}`}>
+              
+              {/* Status Badge with animation */}
+              <div className="absolute top-6 left-6">
+                <Badge className={`${getStatusColor(product.status)} shadow-lg animate-pulse`}>
+                  <CheckCircle className="h-3 w-3 mr-1" />
                   {getStatusText(product.status)}
                 </Badge>
               </div>
-              <div className="absolute top-4 right-4">
+              
+              {/* Wishlist button */}
+              <div className="absolute top-6 right-6 flex gap-2">
                 <Button
                   variant="secondary"
                   size="sm"
-                  className="bg-white/80 hover:bg-white dark:bg-black/80 dark:hover:bg-black p-2"
+                  className="bg-white/90 backdrop-blur-sm hover:bg-white dark:bg-black/90 dark:hover:bg-black p-2 shadow-lg transition-all duration-300 hover:scale-110"
                   onClick={() => setLiked(!liked)}
                   data-testid="button-like"
                 >
-                  <Heart className={`h-4 w-4 ${liked ? "fill-current text-red-500" : ""}`} />
+                  <Heart className={`h-4 w-4 transition-colors duration-300 ${
+                    liked ? "fill-current text-red-500" : "text-muted-foreground"
+                  }`} />
                 </Button>
+              </div>
+              
+              {/* Price badge */}
+              <div className="absolute bottom-6 left-6">
+                <div className="bg-primary text-primary-foreground px-4 py-2 rounded-full font-bold text-lg shadow-lg">
+                  ₹{parseFloat(product.pricePerDay).toFixed(0)}/day
+                </div>
               </div>
             </div>
 
             {/* Thumbnail Images (if multiple) */}
             {productImages.length > 1 && (
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 {productImages.map((image, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`w-20 h-20 rounded-lg overflow-hidden border-2 ${
-                      currentImageIndex === index ? "border-primary" : "border-muted"
+                    className={`w-20 h-20 rounded-xl overflow-hidden border-2 transition-all duration-300 transform hover:scale-105 ${
+                      currentImageIndex === index 
+                        ? "border-primary shadow-lg shadow-primary/25" 
+                        : "border-muted hover:border-primary/50"
                     }`}
                     data-testid={`button-thumbnail-${index}`}
                   >
@@ -201,32 +248,67 @@ export default function ProductDetail() {
                 ))}
               </div>
             )}
+            
+            {/* Image Zoom Dialog */}
+            <Dialog open={showImageZoom} onOpenChange={setShowImageZoom}>
+              <DialogContent className="max-w-4xl w-full p-0">
+                <div className="relative aspect-square bg-black rounded-lg overflow-hidden">
+                  {productImages[currentImageIndex] && productImages[currentImageIndex] !== "/placeholder-costume.jpg" && (
+                    <img
+                      src={productImages[currentImageIndex].startsWith('@assets') ? 
+                        productImages[currentImageIndex].replace('@assets', '/attached_assets') : 
+                        productImages[currentImageIndex]
+                      }
+                      alt={product.name}
+                      className="w-full h-full object-contain"
+                    />
+                  )}
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="absolute top-4 right-4"
+                    onClick={() => setShowImageZoom(false)}
+                  >
+                    ×
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
 
-          {/* Product Details */}
-          <div className="space-y-6">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground mb-2" data-testid="text-product-name">
-                {product.name}
-              </h1>
-              <p className="text-muted-foreground text-lg" data-testid="text-product-description">
-                {product.description || "No description available"}
-              </p>
-            </div>
-
-            {/* Price and Security Deposit */}
-            <div className="space-y-2">
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold text-primary" data-testid="text-price">
-                  ₹{parseFloat(product.pricePerDay).toFixed(0)}
-                </span>
-                <span className="text-muted-foreground">/day</span>
-              </div>
-              {securityDeposit > 0 && (
-                <p className="text-sm text-muted-foreground">
-                  Security deposit: ₹{securityDeposit.toFixed(0)}
+          {/* Enhanced Product Details */}
+          <div className="space-y-8">
+            {/* Title and Description */}
+            <div className="space-y-4">
+              <div>
+                <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-3 leading-tight" data-testid="text-product-name">
+                  {product.name}
+                </h1>
+                <p className="text-muted-foreground text-xl leading-relaxed" data-testid="text-product-description">
+                  {product.description || "No description available"}
                 </p>
-              )}
+              </div>
+              
+              {/* Enhanced Pricing Section */}
+              <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-6 border border-primary/20">
+                <div className="flex items-baseline justify-between mb-2">
+                  <div className="flex items-baseline gap-3">
+                    <span className="text-4xl font-bold text-primary" data-testid="text-price">
+                      ₹{parseFloat(product.pricePerDay).toFixed(0)}
+                    </span>
+                    <span className="text-lg text-muted-foreground font-medium">/day</span>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm text-muted-foreground">Starting from</p>
+                  </div>
+                </div>
+                {securityDeposit > 0 && (
+                  <div className="flex items-center justify-between pt-3 border-t border-primary/20">
+                    <span className="text-sm text-muted-foreground">Security deposit:</span>
+                    <span className="font-semibold text-foreground">₹{securityDeposit.toFixed(0)}</span>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Themes (for costumes) */}
@@ -257,39 +339,64 @@ export default function ProductDetail() {
               </div>
             )}
 
-            {/* Size Selection */}
+            {/* Enhanced Size Selection */}
             {sizes.length > 0 && (
-              <div>
-                <h3 className="font-medium text-foreground mb-2">Select Size</h3>
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-foreground">Select Size</h3>
                 <Select value={selectedSize} onValueChange={setSelectedSize}>
-                  <SelectTrigger className="w-full" data-testid="select-size">
-                    <SelectValue placeholder="Choose a size" />
+                  <SelectTrigger className="w-full h-14 text-lg border-2 hover:border-primary transition-colors" data-testid="select-size">
+                    <SelectValue placeholder="Choose your perfect size" />
                   </SelectTrigger>
                   <SelectContent>
                     {sizes.map((size) => (
-                      <SelectItem key={size} value={size} data-testid={`option-size-${size}`}>
-                        {size}
+                      <SelectItem key={size} value={size} data-testid={`option-size-${size}`} className="text-lg py-3">
+                        Size {size}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+                {selectedSize && (
+                  <div className="flex items-center text-sm text-green-600 bg-green-50 dark:bg-green-900/20 p-2 rounded-lg">
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Size {selectedSize} selected
+                  </div>
+                )}
               </div>
             )}
 
-            {/* Action Buttons */}
-            <div className="space-y-3">
+            {/* Enhanced Action Buttons */}
+            <div className="space-y-4">
               <Dialog open={showRentalForm} onOpenChange={setShowRentalForm}>
                 <DialogTrigger asChild>
                   <Button
-                    className="w-full text-lg py-6"
+                    className={`w-full text-xl py-8 rounded-2xl font-bold shadow-xl transition-all duration-300 transform hover:scale-105 ${
+                      !isAvailable 
+                        ? "bg-gray-400 hover:bg-gray-400 cursor-not-allowed" 
+                        : "bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary shadow-primary/25"
+                    }`}
                     disabled={!isAvailable || (sizes.length > 0 && !selectedSize)}
                     data-testid="button-rent-now"
                   >
                     {!isAvailable 
-                      ? "Currently Unavailable" 
+                      ? (
+                        <>
+                          <Package className="h-5 w-5 mr-3" />
+                          Currently Unavailable
+                        </>
+                      )
                       : sizes.length > 0 && !selectedSize
-                      ? "Select Size to Rent"
-                      : "Rent Now"}
+                      ? (
+                        <>
+                          <Info className="h-5 w-5 mr-3" />
+                          Select Size to Continue
+                        </>
+                      )
+                      : (
+                        <>
+                          <CheckCircle className="h-5 w-5 mr-3" />
+                          Rent Now - ₹{parseFloat(product.pricePerDay).toFixed(0)}/day
+                        </>
+                      )}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-md">
@@ -305,92 +412,217 @@ export default function ProductDetail() {
                   />
                 </DialogContent>
               </Dialog>
+              
+              {/* Quick Actions */}
+              <div className="grid grid-cols-2 gap-3">
+                <Button 
+                  variant="outline" 
+                  className="py-4 text-base border-2 hover:bg-primary/5 hover:border-primary transition-all duration-300"
+                  onClick={() => setLiked(!liked)}
+                >
+                  <Heart className={`h-4 w-4 mr-2 ${liked ? "fill-current text-red-500" : ""}`} />
+                  {liked ? "Saved" : "Save"}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="py-4 text-base border-2 hover:bg-primary/5 hover:border-primary transition-all duration-300"
+                >
+                  <Package className="h-4 w-4 mr-2" />
+                  Details
+                </Button>
+              </div>
             </div>
 
-            {/* Product Information Cards */}
-            <div className="grid grid-cols-2 gap-4">
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <Shield className="h-6 w-6 text-primary mx-auto mb-2" />
-                  <p className="text-sm font-medium">Quality Assured</p>
-                  <p className="text-xs text-muted-foreground">Professional cleaning</p>
+            {/* Enhanced Product Information Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/20 hover:border-primary/40">
+                <CardContent className="p-6 text-center">
+                  <div className="bg-primary/10 rounded-full p-3 w-fit mx-auto mb-3 group-hover:bg-primary/20 transition-colors">
+                    <Shield className="h-7 w-7 text-primary" />
+                  </div>
+                  <p className="font-semibold text-foreground mb-1">Quality Assured</p>
+                  <p className="text-sm text-muted-foreground">Professional cleaning & maintenance</p>
                 </CardContent>
               </Card>
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <Clock className="h-6 w-6 text-primary mx-auto mb-2" />
-                  <p className="text-sm font-medium">Flexible Rental</p>
-                  <p className="text-xs text-muted-foreground">Daily pricing</p>
+              
+              <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/20 hover:border-primary/40">
+                <CardContent className="p-6 text-center">
+                  <div className="bg-primary/10 rounded-full p-3 w-fit mx-auto mb-3 group-hover:bg-primary/20 transition-colors">
+                    <Clock className="h-7 w-7 text-primary" />
+                  </div>
+                  <p className="font-semibold text-foreground mb-1">Flexible Rental</p>
+                  <p className="text-sm text-muted-foreground">Daily pricing, extend as needed</p>
                 </CardContent>
               </Card>
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <Package className="h-6 w-6 text-primary mx-auto mb-2" />
-                  <p className="text-sm font-medium">Easy Pickup</p>
-                  <p className="text-xs text-muted-foreground">Simple return process</p>
+              
+              <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/20 hover:border-primary/40">
+                <CardContent className="p-6 text-center">
+                  <div className="bg-primary/10 rounded-full p-3 w-fit mx-auto mb-3 group-hover:bg-primary/20 transition-colors">
+                    <Truck className="h-7 w-7 text-primary" />
+                  </div>
+                  <p className="font-semibold text-foreground mb-1">Easy Delivery</p>
+                  <p className="text-sm text-muted-foreground">Doorstep pickup & return</p>
                 </CardContent>
               </Card>
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <Star className="h-6 w-6 text-primary mx-auto mb-2" />
-                  <p className="text-sm font-medium">Premium Quality</p>
-                  <p className="text-xs text-muted-foreground">Authentic designs</p>
+              
+              <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/20 hover:border-primary/40">
+                <CardContent className="p-6 text-center">
+                  <div className="bg-primary/10 rounded-full p-3 w-fit mx-auto mb-3 group-hover:bg-primary/20 transition-colors">
+                    <Star className="h-7 w-7 text-primary" />
+                  </div>
+                  <p className="font-semibold text-foreground mb-1">Premium Quality</p>
+                  <p className="text-sm text-muted-foreground">Authentic designs & materials</p>
                 </CardContent>
               </Card>
             </div>
           </div>
         </div>
 
-        <Separator className="my-8" />
+        <Separator className="my-12" />
 
-        {/* Additional Product Information */}
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-foreground">Product Details</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="font-semibold text-foreground mb-4">Rental Information</h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Daily Rate:</span>
-                    <span className="font-medium">₹{parseFloat(product.pricePerDay).toFixed(0)}</span>
+        {/* Enhanced Product Information Section */}
+        <div className="space-y-8">
+          <h2 className="text-3xl font-bold text-foreground text-center">Complete Details</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <Card className="border-primary/20 shadow-lg">
+              <CardContent className="p-8">
+                <div className="flex items-center mb-6">
+                  <div className="bg-primary/10 rounded-full p-2 mr-3">
+                    <Info className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-foreground">Rental Information</h3>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center p-3 bg-primary/5 rounded-lg">
+                    <span className="text-muted-foreground font-medium">Daily Rate:</span>
+                    <span className="font-bold text-lg text-primary">₹{parseFloat(product.pricePerDay).toFixed(0)}</span>
                   </div>
                   {securityDeposit > 0 && (
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Security Deposit:</span>
-                      <span className="font-medium">₹{securityDeposit.toFixed(0)}</span>
+                    <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
+                      <span className="text-muted-foreground font-medium">Security Deposit:</span>
+                      <span className="font-semibold">₹{securityDeposit.toFixed(0)}</span>
                     </div>
                   )}
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Status:</span>
-                    <Badge className={`text-xs ${getStatusColor(product.status)}`}>
+                  <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
+                    <span className="text-muted-foreground font-medium">Status:</span>
+                    <Badge className={`${getStatusColor(product.status)} text-sm px-3 py-1`}>
                       {getStatusText(product.status)}
                     </Badge>
                   </div>
                   {sizes.length > 0 && (
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Available Sizes:</span>
-                      <span className="font-medium">{sizes.join(", ")}</span>
+                    <div className="p-3 bg-muted/30 rounded-lg">
+                      <span className="text-muted-foreground font-medium block mb-2">Available Sizes:</span>
+                      <div className="flex flex-wrap gap-2">
+                        {sizes.map(size => (
+                          <Badge key={size} variant="outline" className="px-3 py-1">
+                            {size}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="font-semibold text-foreground mb-4">Rental Terms</h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>• Minimum rental period: 1 day</li>
-                  <li>• Late return charges may apply</li>
-                  <li>• Damage assessment on return</li>
-                  <li>• Professional cleaning included</li>
-                  <li>• Security deposit refunded after return</li>
+            <Card className="border-primary/20 shadow-lg">
+              <CardContent className="p-8">
+                <div className="flex items-center mb-6">
+                  <div className="bg-primary/10 rounded-full p-2 mr-3">
+                    <RotateCcw className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-foreground">Rental Terms</h3>
+                </div>
+                <ul className="space-y-3">
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span className="text-muted-foreground">Minimum rental period: 1 day</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span className="text-muted-foreground">Late return charges may apply</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span className="text-muted-foreground">Damage assessment on return</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span className="text-muted-foreground">Professional cleaning included</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                    <span className="text-muted-foreground">Security deposit refunded after return</span>
+                  </li>
                 </ul>
               </CardContent>
             </Card>
           </div>
         </div>
+        
+        {/* Related Products Section */}
+        {relatedProducts && relatedProducts.length > 0 && (
+          <>
+            <Separator className="my-12" />
+            <div className="space-y-8">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-foreground mb-2">You Might Also Like</h2>
+                <p className="text-muted-foreground text-lg">Similar {productType}s from the same collection</p>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {relatedProducts.map((item) => {
+                  const itemImageUrl = item.imageUrl?.startsWith('@assets') ? 
+                    item.imageUrl.replace('@assets', '/attached_assets') : 
+                    item.imageUrl;
+                  
+                  return (
+                    <Card key={item.id} className="group cursor-pointer hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-primary/10 hover:border-primary/30">
+                      <CardContent className="p-0">
+                        <div className="relative aspect-square bg-gradient-to-br from-primary/10 to-secondary/20 rounded-t-lg overflow-hidden">
+                          {itemImageUrl ? (
+                            <img
+                              src={itemImageUrl}
+                              alt={item.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center h-full text-muted-foreground">
+                              <Info className="h-12 w-12" />
+                            </div>
+                          )}
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+                          <div className="absolute bottom-2 right-2">
+                            <div className="bg-primary text-primary-foreground px-2 py-1 rounded-full text-sm font-bold">
+                              ₹{parseFloat(item.pricePerDay).toFixed(0)}/day
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="p-4">
+                          <h3 className="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                            {item.name}
+                          </h3>
+                          <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                            {item.description}
+                          </p>
+                          <Button 
+                            className="w-full" 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => navigate(`/${productType}/${item.id}`)}
+                          >
+                            View Details
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
