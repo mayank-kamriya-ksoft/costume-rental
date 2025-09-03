@@ -248,13 +248,17 @@ export class DatabaseStorage implements IStorage {
 
   // Booking operations
   async getBookings(status?: string): Promise<(Booking & { items: BookingItem[] })[]> {
-    let bookingsQuery = db.select().from(bookings);
+    const conditions = [];
     
     if (status) {
-      bookingsQuery = bookingsQuery.where(eq(bookings.status, status));
+      conditions.push(eq(bookings.status, status));
     }
     
-    const allBookings = await bookingsQuery.orderBy(desc(bookings.createdAt));
+    const query = conditions.length > 0 
+      ? db.select().from(bookings).where(and(...conditions))
+      : db.select().from(bookings);
+      
+    const allBookings = await query.orderBy(desc(bookings.createdAt));
     
     // Get items for each booking
     const bookingsWithItems = await Promise.all(
@@ -271,13 +275,15 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserBookings(userId: string, status?: string): Promise<(Booking & { items: BookingItem[] })[]> {
-    let bookingsQuery = db.select().from(bookings).where(eq(bookings.userId, userId));
+    const conditions = [eq(bookings.userId, userId)];
     
     if (status) {
-      bookingsQuery = bookingsQuery.where(and(eq(bookings.userId, userId), eq(bookings.status, status)));
+      conditions.push(eq(bookings.status, status));
     }
     
-    const userBookings = await bookingsQuery.orderBy(desc(bookings.createdAt));
+    const userBookings = await db.select().from(bookings)
+      .where(and(...conditions))
+      .orderBy(desc(bookings.createdAt));
     
     // Get items for each booking
     const bookingsWithItems = await Promise.all(
