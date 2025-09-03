@@ -1,7 +1,7 @@
 import { useLocation } from "wouter";
 import RegisterForm from "@/components/auth/register-form";
 import { Link } from "wouter";
-import { ArrowLeft, Sparkles, Crown, Star, Palette, Users, Shield, Heart, Theater, Drama } from "lucide-react";
+import { ArrowLeft, Crown, Users, Shield, Star } from "lucide-react";
 
 export default function Register() {
   const [, setLocation] = useLocation();
@@ -17,129 +17,144 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/30 to-accent/20">
+    <div className="min-h-screen bg-gray-50">
       {/* Back to Home Button */}
       <div className="absolute top-6 left-6 z-10">
         <button 
           onClick={() => setLocation("/")}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-all hover:shadow-lg"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 rounded-lg shadow-sm border transition-all"
           data-testid="button-home"
         >
           <ArrowLeft className="h-4 w-4" />
-          <span className="font-medium">Back to Home</span>
+          <span className="font-medium text-gray-700">Back to Home</span>
         </button>
       </div>
 
       <div className="min-h-screen flex">
-        {/* Left Column - Visual/Branding */}
-        <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 relative overflow-hidden">
-          <div className="absolute inset-0 bright-gradient"></div>
-          <div className="relative z-10 flex flex-col justify-center items-center text-white p-8 lg:p-12">
-            <div className="max-w-lg text-center space-y-8">
-              {/* Logo/Brand */}
-              <div className="mb-8">
-                <div className="flex flex-col items-center gap-4 mb-6">
-                  <div className="relative">
-                    <Crown className="h-16 w-16 text-white" />
-                    <Drama className="h-8 w-8 text-pink-300 absolute -bottom-2 -right-2" />
+        {/* Left Column - Professional Branding */}
+        <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 relative bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900">
+          {/* Subtle pattern overlay */}
+          <div className="absolute inset-0 opacity-10" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='m0 40l40-40h-40v40zm40 0v-40h-40l40 40z'/%3E%3C/g%3E%3C/svg%3E")`
+          }}></div>
+          
+          <div className="relative z-10 flex flex-col justify-center p-12 lg:p-16">
+            <div className="max-w-lg">
+              {/* Brand Header */}
+              <div className="mb-12">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center">
+                    <Crown className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-3xl lg:text-4xl font-bold mb-2">Join Our Drama Community</h1>
-                    <p className="text-white/90 text-lg lg:text-xl">Start Your Costume Rental Journey</p>
+                    <h1 className="text-2xl font-bold text-white">Kamdhenu Drama Making</h1>
+                    <p className="text-gray-300 text-sm">Join Our Community</p>
                   </div>
                 </div>
               </div>
 
-              {/* Benefits */}
-              <div className="space-y-6">
-                <div className="flex items-center justify-center gap-4 text-white/90 text-lg">
-                  <Users className="h-6 w-6 text-pink-300 flex-shrink-0" />
-                  <span>Join Thousands of Drama Artists</span>
+              {/* Value Proposition */}
+              <div className="space-y-8">
+                <div>
+                  <h2 className="text-3xl font-bold text-white mb-4 leading-tight">
+                    Join thousands of satisfied customers
+                  </h2>
+                  <p className="text-gray-300 text-lg leading-relaxed">
+                    Create your account today and get access to our premium collection 
+                    of costumes and exclusive member benefits.
+                  </p>
                 </div>
-                <div className="flex items-center justify-center gap-4 text-white/90 text-lg">
-                  <Theater className="h-6 w-6 text-pink-300 flex-shrink-0" />
-                  <span>Access Exclusive Stage Collections</span>
-                </div>
-                <div className="flex items-center justify-center gap-4 text-white/90 text-lg">
-                  <Shield className="h-6 w-6 text-pink-300 flex-shrink-0" />
-                  <span>Secure & Trusted Platform</span>
-                </div>
-                <div className="flex items-center justify-center gap-4 text-white/90 text-lg">
-                  <Star className="h-6 w-6 text-pink-300 flex-shrink-0" />
-                  <span>VIP Member Benefits</span>
-                </div>
-              </div>
 
-              {/* Drama Quote */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mt-8">
-                <p className="text-white/95 italic text-lg lg:text-xl mb-3">
-                  "Transform your performances with our stunning costume collection. Every rental brings your character to life."
-                </p>
-                <div className="flex items-center justify-center gap-1 mt-4">
-                  {[1,2,3,4,5].map(i => (
-                    <Star key={i} className="h-5 w-5 text-yellow-300 fill-current" />
-                  ))}
+                {/* Member Benefits */}
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <p className="text-white font-medium">Priority Access to New Collections</p>
+                      <p className="text-gray-400 text-sm">Be the first to rent the latest costumes</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <p className="text-white font-medium">Member Discounts & Special Offers</p>
+                      <p className="text-gray-400 text-sm">Exclusive pricing for regular customers</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <p className="text-white font-medium">Personalized Recommendations</p>
+                      <p className="text-gray-400 text-sm">Costume suggestions based on your preferences</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <p className="text-white font-medium">Easy Booking Management</p>
+                      <p className="text-gray-400 text-sm">Track your rentals and manage orders online</p>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-white/80 text-sm mt-2">Trusted by 500+ Drama Groups</p>
-              </div>
 
-              {/* Decorative drama elements */}
-              <div className="absolute top-16 left-16 opacity-15">
-                <Drama className="h-28 w-28 text-white rotate-12" />
+                {/* Trust Indicators */}
+                <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+                  <div className="flex items-center gap-4 mb-3">
+                    <Users className="h-5 w-5 text-emerald-400" />
+                    <span className="text-white font-medium">5,000+ Happy Customers</span>
+                  </div>
+                  <div className="flex items-center gap-4 mb-3">
+                    <Shield className="h-5 w-5 text-emerald-400" />
+                    <span className="text-white font-medium">100% Secure & Private</span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <Star className="h-5 w-5 text-emerald-400" />
+                    <span className="text-white font-medium">4.9/5 Customer Rating</span>
+                  </div>
+                </div>
               </div>
-              <div className="absolute bottom-16 right-16 opacity-15">
-                <Users className="h-24 w-24 text-pink-300 -rotate-12" />
-              </div>
-              <div className="absolute top-1/3 right-20 opacity-10">
-                <Theater className="h-32 w-32 text-white rotate-45" />
-              </div>
-              <div className="absolute bottom-1/3 left-20 opacity-15">
-                <Heart className="h-20 w-20 text-pink-300 rotate-12" />
-              </div>
-              {/* Theater curtains effect */}
-              <div className="absolute top-0 left-0 w-8 h-full bg-gradient-to-r from-purple-900/30 to-transparent"></div>
-              <div className="absolute top-0 right-0 w-8 h-full bg-gradient-to-l from-purple-900/30 to-transparent"></div>
             </div>
           </div>
         </div>
 
         {/* Right Column - Registration Form */}
-        <div className="w-full lg:w-1/2 xl:w-2/5 flex items-center justify-center p-6 lg:p-12">
-          <div className="w-full max-w-md space-y-8">
-            {/* Mobile Logo */}
+        <div className="w-full lg:w-1/2 xl:w-2/5 flex items-center justify-center p-6 lg:p-12 bg-white">
+          <div className="w-full max-w-md">
+            {/* Mobile Header */}
             <div className="lg:hidden text-center mb-8">
-              <div className="inline-flex items-center gap-2 mb-2">
-                <Crown className="h-8 w-8 text-primary" />
-                <h1 className="text-2xl font-bold text-foreground">Kamdhenu</h1>
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center">
+                  <Crown className="h-4 w-4 text-white" />
+                </div>
+                <h1 className="text-xl font-bold text-gray-900">Kamdhenu</h1>
               </div>
-              <p className="text-muted-foreground">Premium Costume Rental</p>
+              <p className="text-gray-600">Join Our Community</p>
             </div>
 
-            {/* Form Container */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/50 p-8 lg:p-10">
-              <div className="mb-8">
-                <h2 className="text-3xl font-bold text-foreground mb-2">Create Account</h2>
-                <p className="text-muted-foreground">Join us and start renting amazing costumes</p>
+            {/* Registration Section */}
+            <div className="space-y-6">
+              <div className="text-center lg:text-left">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Create your account</h2>
+                <p className="text-gray-600">Start your costume rental journey today</p>
               </div>
 
               <RegisterForm 
                 onSuccess={handleRegisterSuccess}
                 onSwitchToLogin={handleSwitchToLogin}
               />
-            </div>
-            
-            {/* Additional navigation link */}
-            <div className="text-center">
-              <p className="text-muted-foreground">
-                Already have an account?{" "}
-                <Link 
-                  href="/login" 
-                  className="text-primary hover:text-primary/80 font-semibold transition-colors"
-                  data-testid="link-login"
-                >
-                  Sign in here
-                </Link>
-              </p>
+
+              <div className="text-center">
+                <p className="text-gray-600">
+                  Already have an account?{" "}
+                  <Link 
+                    href="/login" 
+                    className="text-emerald-600 hover:text-emerald-700 font-medium transition-colors"
+                    data-testid="link-login"
+                  >
+                    Sign in here
+                  </Link>
+                </p>
+              </div>
             </div>
           </div>
         </div>

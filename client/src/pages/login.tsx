@@ -1,7 +1,7 @@
 import { useLocation } from "wouter";
 import LoginForm from "@/components/auth/login-form";
 import { Link } from "wouter";
-import { ArrowLeft, Sparkles, Crown, Star, Palette, Theater, Drama, Circle } from "lucide-react";
+import { ArrowLeft, Crown } from "lucide-react";
 
 export default function Login() {
   const [, setLocation] = useLocation();
@@ -17,124 +17,129 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/30 to-accent/20">
+    <div className="min-h-screen bg-gray-50">
       {/* Back to Home Button */}
       <div className="absolute top-6 left-6 z-10">
         <button 
           onClick={() => setLocation("/")}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-white/90 hover:bg-white rounded-full shadow-md transition-all hover:shadow-lg"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 rounded-lg shadow-sm border transition-all"
           data-testid="button-home"
         >
           <ArrowLeft className="h-4 w-4" />
-          <span className="font-medium">Back to Home</span>
+          <span className="font-medium text-gray-700">Back to Home</span>
         </button>
       </div>
 
       <div className="min-h-screen flex">
-        {/* Left Column - Visual/Branding */}
-        <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 relative overflow-hidden">
-          <div className="absolute inset-0 indian-gradient"></div>
-          <div className="relative z-10 flex flex-col justify-center items-center text-white p-8 lg:p-12">
-            <div className="max-w-lg text-center space-y-8">
-              {/* Logo/Brand */}
-              <div className="mb-8">
-                <div className="flex flex-col items-center gap-4 mb-6">
-                  <div className="relative">
-                    <Crown className="h-16 w-16 text-white" />
-                    <Theater className="h-8 w-8 text-yellow-300 absolute -bottom-2 -right-2" />
+        {/* Left Column - Professional Branding */}
+        <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+          {/* Subtle pattern overlay */}
+          <div className="absolute inset-0 opacity-10" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='m0 40l40-40h-40v40zm40 0v-40h-40l40 40z'/%3E%3C/g%3E%3C/svg%3E")`
+          }}></div>
+          
+          <div className="relative z-10 flex flex-col justify-center p-12 lg:p-16">
+            <div className="max-w-lg">
+              {/* Brand Header */}
+              <div className="mb-12">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-amber-400 to-orange-500 rounded-lg flex items-center justify-center">
+                    <Crown className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-3xl lg:text-4xl font-bold mb-2">Kamdhenu Drama Making</h1>
-                    <p className="text-white/90 text-lg lg:text-xl">Premium Costume Rental Experience</p>
+                    <h1 className="text-2xl font-bold text-white">Kamdhenu Drama Making</h1>
+                    <p className="text-gray-300 text-sm">Professional Costume Rentals</p>
                   </div>
                 </div>
               </div>
 
-              {/* Feature highlights */}
-              <div className="space-y-6">
-                <div className="flex items-center justify-center gap-4 text-white/90 text-lg">
-                  <Star className="h-6 w-6 text-yellow-300 flex-shrink-0" />
-                  <span>Authentic Traditional Costumes</span>
+              {/* Value Proposition */}
+              <div className="space-y-8">
+                <div>
+                  <h2 className="text-3xl font-bold text-white mb-4 leading-tight">
+                    Authentic costumes for your perfect performance
+                  </h2>
+                  <p className="text-gray-300 text-lg leading-relaxed">
+                    Trusted by theater groups and event organizers across the region. 
+                    Premium quality costumes and accessories for every occasion.
+                  </p>
                 </div>
-                <div className="flex items-center justify-center gap-4 text-white/90 text-lg">
-                  <Drama className="h-6 w-6 text-yellow-300 flex-shrink-0" />
-                  <span>Professional Stage Makeup</span>
-                </div>
-                <div className="flex items-center justify-center gap-4 text-white/90 text-lg">
-                  <Theater className="h-6 w-6 text-yellow-300 flex-shrink-0" />
-                  <span>Perfect for Theater & Drama</span>
-                </div>
-                <div className="flex items-center justify-center gap-4 text-white/90 text-lg">
-                  <Palette className="h-6 w-6 text-yellow-300 flex-shrink-0" />
-                  <span>Premium Quality Accessories</span>
-                </div>
-              </div>
 
-              {/* Drama Quote */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mt-8">
-                <p className="text-white/95 italic text-lg lg:text-xl mb-3">
-                  "All the world's a stage, and all the men and women merely players"
-                </p>
-                <p className="text-white/80 text-sm">- Shakespeare</p>
-              </div>
+                {/* Key Features */}
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <p className="text-white font-medium">Traditional & Contemporary Collections</p>
+                      <p className="text-gray-400 text-sm">Extensive range for all types of performances</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <p className="text-white font-medium">Professional Quality Assurance</p>
+                      <p className="text-gray-400 text-sm">Every costume carefully maintained and cleaned</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <p className="text-white font-medium">Flexible Rental Periods</p>
+                      <p className="text-gray-400 text-sm">From single day to extended productions</p>
+                    </div>
+                  </div>
+                </div>
 
-              {/* Decorative drama elements */}
-              <div className="absolute top-16 left-16 opacity-15">
-                <Theater className="h-28 w-28 text-white rotate-12" />
+                {/* Testimonial */}
+                <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+                  <p className="text-white italic mb-2">
+                    "Exceptional quality and service. Their costume collection helped make our production truly memorable."
+                  </p>
+                  <p className="text-gray-400 text-sm">— City Theatre Company</p>
+                </div>
               </div>
-              <div className="absolute bottom-16 right-16 opacity-15">
-                <Drama className="h-24 w-24 text-yellow-300 -rotate-12" />
-              </div>
-              <div className="absolute top-1/3 right-20 opacity-10">
-                <Crown className="h-32 w-32 text-white rotate-45" />
-              </div>
-              <div className="absolute bottom-1/3 left-20 opacity-15">
-                <Sparkles className="h-20 w-20 text-yellow-300 rotate-12" />
-              </div>
-              {/* Theater curtains effect */}
-              <div className="absolute top-0 left-0 w-8 h-full bg-gradient-to-r from-red-900/30 to-transparent"></div>
-              <div className="absolute top-0 right-0 w-8 h-full bg-gradient-to-l from-red-900/30 to-transparent"></div>
             </div>
           </div>
         </div>
 
         {/* Right Column - Login Form */}
-        <div className="w-full lg:w-1/2 xl:w-2/5 flex items-center justify-center p-6 lg:p-12">
-          <div className="w-full max-w-md space-y-8">
-            {/* Mobile Logo */}
+        <div className="w-full lg:w-1/2 xl:w-2/5 flex items-center justify-center p-6 lg:p-12 bg-white">
+          <div className="w-full max-w-md">
+            {/* Mobile Header */}
             <div className="lg:hidden text-center mb-8">
-              <div className="inline-flex items-center gap-2 mb-2">
-                <Crown className="h-8 w-8 text-primary" />
-                <h1 className="text-2xl font-bold text-foreground">Kamdhenu</h1>
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-r from-amber-400 to-orange-500 rounded-lg flex items-center justify-center">
+                  <Crown className="h-4 w-4 text-white" />
+                </div>
+                <h1 className="text-xl font-bold text-gray-900">Kamdhenu</h1>
               </div>
-              <p className="text-muted-foreground">Premium Costume Rental</p>
+              <p className="text-gray-600">Professional Costume Rentals</p>
             </div>
 
-            {/* Form Container */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/50 p-8 lg:p-10">
-              <div className="mb-8">
-                <h2 className="text-3xl font-bold text-foreground mb-2">Welcome Back</h2>
-                <p className="text-muted-foreground">Sign in to access your costume rentals</p>
+            {/* Login Section */}
+            <div className="space-y-6">
+              <div className="text-center lg:text-left">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome back</h2>
+                <p className="text-gray-600">Please sign in to your account</p>
               </div>
 
               <LoginForm 
                 onSuccess={handleLoginSuccess}
                 onSwitchToRegister={handleSwitchToRegister}
               />
-            </div>
-            
-            {/* Additional navigation link */}
-            <div className="text-center">
-              <p className="text-muted-foreground">
-                Don't have an account?{" "}
-                <Link 
-                  href="/register" 
-                  className="text-primary hover:text-primary/80 font-semibold transition-colors"
-                  data-testid="link-register"
-                >
-                  Create one here
-                </Link>
-              </p>
+
+              <div className="text-center">
+                <p className="text-gray-600">
+                  Don't have an account?{" "}
+                  <Link 
+                    href="/register" 
+                    className="text-amber-600 hover:text-amber-700 font-medium transition-colors"
+                    data-testid="link-register"
+                  >
+                    Sign up here
+                  </Link>
+                </p>
+              </div>
             </div>
           </div>
         </div>
