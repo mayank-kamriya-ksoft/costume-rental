@@ -24,15 +24,15 @@ export default function ProductCard({ item, type }: ProductCardProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "available":
-        return "bg-green-100 text-green-800";
+        return "bg-gradient-to-r from-green-400 to-emerald-500 text-white shadow-lg";
       case "rented":
-        return "bg-orange-100 text-orange-800";
+        return "bg-gradient-to-r from-orange-400 to-red-500 text-white shadow-lg";
       case "cleaning":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg";
       case "damaged":
-        return "bg-red-100 text-red-800";
+        return "bg-gradient-to-r from-red-400 to-red-600 text-white shadow-lg";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gradient-to-r from-gray-400 to-gray-600 text-white shadow-lg";
     }
   };
 
@@ -56,12 +56,12 @@ export default function ProductCard({ item, type }: ProductCardProps) {
 
   return (
     <div 
-      className="bg-card rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer group"
+      className="bg-gradient-to-br from-white to-orange-50 rounded-xl shadow-xl overflow-hidden hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer group border border-orange-100"
       onClick={handleCardClick}
       data-testid={`card-${type}-${item.id}`}
     >
       <div className="relative">
-        <div className="w-full h-64 bg-gradient-to-br from-primary/10 to-secondary/20 flex items-center justify-center">
+        <div className="w-full h-64 bg-gradient-to-br from-orange-200 via-purple-200 to-yellow-200 flex items-center justify-center">
           {item.imageUrl ? (
             <img
               src={item.imageUrl}
@@ -76,8 +76,10 @@ export default function ProductCard({ item, type }: ProductCardProps) {
           )}
         </div>
         <div className="absolute top-3 left-3">
-          <Badge className={`text-xs font-medium ${getStatusColor(item.status)}`}>
-            {getStatusText(item.status)}
+          <Badge className={`text-xs font-bold ${getStatusColor(item.status)} border-0`}>
+            {item.status === 'available' ? '✅' : 
+             item.status === 'rented' ? '📅' : 
+             item.status === 'cleaning' ? '🧽' : '⚠️'} {getStatusText(item.status)}
           </Badge>
         </div>
         <div className="absolute top-3 right-3">
@@ -103,8 +105,8 @@ export default function ProductCard({ item, type }: ProductCardProps) {
           {item.description || "No description available"}
         </p>
         <div className="flex items-center justify-between mb-3">
-          <span className="text-lg font-bold text-primary" data-testid={`text-price-${item.id}`}>
-            ${parseFloat(item.pricePerDay).toFixed(0)}/day
+          <span className="text-xl font-bold bg-gradient-to-r from-orange-600 to-purple-600 bg-clip-text text-transparent" data-testid={`text-price-${item.id}`}>
+            ₹{parseFloat(item.pricePerDay).toFixed(0)}/day
           </span>
           {sizes.length > 0 && (
             <span className="text-sm text-muted-foreground">
@@ -116,11 +118,15 @@ export default function ProductCard({ item, type }: ProductCardProps) {
         <Dialog open={showRentalForm} onOpenChange={setShowRentalForm}>
           <DialogTrigger asChild>
             <Button
-              className="w-full"
+              className={`w-full font-semibold transition-all ${
+                isAvailable 
+                  ? 'bg-gradient-to-r from-orange-500 to-purple-600 hover:from-orange-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl' 
+                  : 'bg-gray-400 text-gray-700'
+              }`}
               disabled={!isAvailable}
               data-testid={`button-rent-${item.id}`}
             >
-              {isAvailable ? "Rent Now" : "Currently Unavailable"}
+              {isAvailable ? "🎭 Rent Now" : "Currently Unavailable"}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
