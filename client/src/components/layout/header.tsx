@@ -15,7 +15,6 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
-import AuthDialog from "@/components/auth/auth-dialog";
 import { 
   ShoppingCart, 
   Menu, 
@@ -33,19 +32,15 @@ interface HeaderProps {
 }
 
 export default function Header({ isAdmin = false }: HeaderProps) {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [authDialog, setAuthDialog] = useState<{ open: boolean; mode: "login" | "register" }>({ 
-    open: false, 
-    mode: "login" 
-  });
   
   const { user, isAuthenticated, isLoading } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
   const logoutMutation = useMutation({
-    mutationFn: () => apiRequest('/api/auth/logout', { method: 'POST' }),
+    mutationFn: () => apiRequest('POST', '/api/auth/logout'),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
       toast({
@@ -63,11 +58,11 @@ export default function Header({ isAdmin = false }: HeaderProps) {
   });
   
   const handleLogin = () => {
-    setAuthDialog({ open: true, mode: "login" });
+    setLocation("/login");
   };
   
   const handleRegister = () => {
-    setAuthDialog({ open: true, mode: "register" });
+    setLocation("/register");
   };
   
   const handleLogout = () => {
@@ -246,12 +241,6 @@ export default function Header({ isAdmin = false }: HeaderProps) {
         )}
       </div>
       
-      {/* Authentication Dialog */}
-      <AuthDialog 
-        isOpen={authDialog.open} 
-        onOpenChange={(open) => setAuthDialog({ ...authDialog, open })} 
-        initialMode={authDialog.mode}
-      />
     </header>
   );
 }

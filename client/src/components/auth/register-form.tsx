@@ -38,10 +38,7 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
 
   const registerMutation = useMutation({
     mutationFn: async (data: RegisterFormData) => {
-      return apiRequest("/api/auth/register", {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
+      return apiRequest("POST", "/api/auth/register", data);
     },
     onSuccess: (data) => {
       toast({
@@ -143,7 +140,8 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
                     type="tel" 
                     placeholder="Enter your phone number" 
                     data-testid="input-phone"
-                    {...field} 
+                    {...field}
+                    value={field.value || ""} 
                   />
                 </FormControl>
                 <FormMessage />
