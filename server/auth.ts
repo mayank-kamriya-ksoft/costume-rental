@@ -9,10 +9,12 @@ export const sessionConfig = {
   secret: process.env.SESSION_SECRET || 'costume-rental-secret-key',
   resave: false,
   saveUninitialized: false,
+  name: 'connect.sid',
   cookie: {
     secure: false, // Set to true in production with HTTPS
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    sameSite: 'lax' as const,
   },
 };
 

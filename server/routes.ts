@@ -78,9 +78,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
+      console.log('Login successful for user:', user.email, 'ID:', user.id);
+      
       // Create session and save it
       req.session.userId = user.id;
       req.session.user = user;
+      
+      console.log('Session set - userId:', req.session.userId, 'user:', !!req.session.user);
       
       // Force session save
       req.session.save((err) => {
@@ -92,6 +96,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
         }
         
+        console.log('Session saved successfully');
         res.json({ 
           user,
           message: 'Login successful'
