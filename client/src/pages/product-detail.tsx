@@ -144,9 +144,15 @@ export default function ProductDetail() {
               <div className="aspect-square bg-gradient-to-br from-primary/10 to-secondary/20 flex items-center justify-center">
                 {productImages[currentImageIndex] && productImages[currentImageIndex] !== "/placeholder-costume.jpg" ? (
                   <img
-                    src={productImages[currentImageIndex]}
+                    src={productImages[currentImageIndex].startsWith('@assets') ? 
+                      productImages[currentImageIndex].replace('@assets', '/attached_assets') : 
+                      productImages[currentImageIndex]
+                    }
                     alt={product.name}
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      console.log('Product detail image load error:', productImages[currentImageIndex]);
+                    }}
                   />
                 ) : (
                   <div className="text-muted-foreground text-center">

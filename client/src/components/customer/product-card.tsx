@@ -64,9 +64,16 @@ export default function ProductCard({ item, type }: ProductCardProps) {
         <div className="w-full h-64 bg-gradient-to-br from-orange-200 via-purple-200 to-yellow-200 flex items-center justify-center">
           {item.imageUrl ? (
             <img
-              src={item.imageUrl}
+              src={item.imageUrl.startsWith('@assets') ? 
+                item.imageUrl.replace('@assets', '/attached_assets') : 
+                item.imageUrl
+              }
               alt={item.name}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              onError={(e) => {
+                console.log('Image load error:', item.imageUrl);
+                (e.target as HTMLImageElement).style.display = 'none';
+              }}
             />
           ) : (
             <div className="text-muted-foreground text-center">
