@@ -72,11 +72,6 @@ export default function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormPr
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-foreground mb-2">Welcome Back</h2>
-        <p className="text-muted-foreground">Sign in to your account</p>
-      </div>
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField

@@ -65,11 +65,6 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFor
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-foreground mb-2">Create Account</h2>
-        <p className="text-muted-foreground">Join us to start renting amazing costumes</p>
-      </div>
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
