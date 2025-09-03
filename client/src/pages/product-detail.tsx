@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
 import RentalForm from "@/components/customer/rental-form";
 import { ArrowLeft, Heart, Shield, Clock, Package, Info, Star, ZoomIn, CheckCircle, Truck, RotateCcw } from "lucide-react";
 import type { Costume, Accessory } from "@shared/schema";
@@ -344,19 +345,24 @@ export default function ProductDetail() {
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-foreground">Select Size</h3>
                 <Select value={selectedSize} onValueChange={setSelectedSize}>
-                  <SelectTrigger className="w-full h-14 text-lg border-2 hover:border-primary transition-colors" data-testid="select-size">
+                  <SelectTrigger className="w-full h-14 text-lg border-2 hover:border-primary transition-colors bg-background" data-testid="select-size">
                     <SelectValue placeholder="Choose your perfect size" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-background/95 backdrop-blur-md border-primary/20 shadow-2xl">
                     {sizes.map((size) => (
-                      <SelectItem key={size} value={size} data-testid={`option-size-${size}`} className="text-lg py-3">
+                      <SelectItem 
+                        key={size} 
+                        value={size} 
+                        data-testid={`option-size-${size}`} 
+                        className="text-lg py-4 hover:bg-primary/10 focus:bg-primary/10 cursor-pointer transition-colors"
+                      >
                         Size {size}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 {selectedSize && (
-                  <div className="flex items-center text-sm text-green-600 bg-green-50 dark:bg-green-900/20 p-2 rounded-lg">
+                  <div className="flex items-center text-sm text-green-600 bg-green-50 dark:bg-green-900/20 p-3 rounded-lg border border-green-200 dark:border-green-800">
                     <CheckCircle className="h-4 w-4 mr-2" />
                     Size {selectedSize} selected
                   </div>
@@ -369,31 +375,33 @@ export default function ProductDetail() {
               <Dialog open={showRentalForm} onOpenChange={setShowRentalForm}>
                 <DialogTrigger asChild>
                   <Button
-                    className={`w-full text-xl py-8 rounded-2xl font-bold shadow-xl transition-all duration-300 transform hover:scale-105 ${
+                    className={`w-full text-xl py-8 rounded-2xl font-bold shadow-2xl transition-all duration-500 transform hover:scale-[1.02] hover:shadow-3xl ${
                       !isAvailable 
-                        ? "bg-gray-400 hover:bg-gray-400 cursor-not-allowed" 
-                        : "bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary shadow-primary/25"
+                        ? "bg-gradient-to-r from-gray-400 to-gray-500 hover:from-gray-400 hover:to-gray-500 cursor-not-allowed text-white" 
+                        : sizes.length > 0 && !selectedSize
+                        ? "bg-gradient-to-r from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 text-white shadow-orange-500/30"
+                        : "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-green-500/40 ring-2 ring-green-500/20"
                     }`}
-                    disabled={!isAvailable || (sizes.length > 0 && !selectedSize)}
+                    disabled={!isAvailable}
                     data-testid="button-rent-now"
                   >
                     {!isAvailable 
                       ? (
                         <>
-                          <Package className="h-5 w-5 mr-3" />
+                          <Package className="h-6 w-6 mr-3" />
                           Currently Unavailable
                         </>
                       )
                       : sizes.length > 0 && !selectedSize
                       ? (
                         <>
-                          <Info className="h-5 w-5 mr-3" />
+                          <Info className="h-6 w-6 mr-3" />
                           Select Size to Continue
                         </>
                       )
                       : (
                         <>
-                          <CheckCircle className="h-5 w-5 mr-3" />
+                          <CheckCircle className="h-6 w-6 mr-3" />
                           Rent Now - ₹{parseFloat(product.pricePerDay).toFixed(0)}/day
                         </>
                       )}
@@ -624,6 +632,8 @@ export default function ProductDetail() {
           </>
         )}
       </div>
+      
+      <Footer />
     </div>
   );
 }
