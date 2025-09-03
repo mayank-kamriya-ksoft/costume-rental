@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import Header from "@/components/layout/header";
@@ -6,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
 import { 
   Calendar, 
@@ -16,7 +18,9 @@ import {
   IndianRupee,
   User,
   Phone,
-  Mail
+  Mail,
+  Eye,
+  ArrowLeft
 } from "lucide-react";
 import type { Booking, BookingItem } from "@shared/schema";
 
@@ -24,6 +28,7 @@ type BookingWithItems = Booking & { items: BookingItem[] };
 
 export default function Dashboard() {
   const { user, isAuthenticated, isLoading } = useAuth();
+  const [selectedBooking, setSelectedBooking] = useState<BookingWithItems | null>(null);
 
   const { data: bookings = [], isLoading: bookingsLoading } = useQuery<BookingWithItems[]>({
     queryKey: ["/api/user/bookings"],
@@ -177,7 +182,11 @@ export default function Dashboard() {
                 ) : (
                   <div className="space-y-4">
                     {allBookings.map((booking) => (
-                      <BookingCard key={booking.id} booking={booking} />
+                      <BookingCard 
+                        key={booking.id} 
+                        booking={booking} 
+                        onViewDetails={() => setSelectedBooking(booking)}
+                      />
                     ))}
                   </div>
                 )}
@@ -193,7 +202,11 @@ export default function Dashboard() {
                 ) : (
                   <div className="space-y-4">
                     {activeBookings.map((booking) => (
-                      <BookingCard key={booking.id} booking={booking} />
+                      <BookingCard 
+                        key={booking.id} 
+                        booking={booking} 
+                        onViewDetails={() => setSelectedBooking(booking)}
+                      />
                     ))}
                   </div>
                 )}
@@ -209,7 +222,11 @@ export default function Dashboard() {
                 ) : (
                   <div className="space-y-4">
                     {completedBookings.map((booking) => (
-                      <BookingCard key={booking.id} booking={booking} />
+                      <BookingCard 
+                        key={booking.id} 
+                        booking={booking} 
+                        onViewDetails={() => setSelectedBooking(booking)}
+                      />
                     ))}
                   </div>
                 )}
@@ -219,12 +236,31 @@ export default function Dashboard() {
         </Card>
       </div>
 
+      {/* Order Details Dialog */}
+      <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Package className="h-5 w-5" />
+              Order Details
+            </DialogTitle>
+          </DialogHeader>
+          
+          {selectedBooking && (
+            <OrderDetailsView 
+              booking={selectedBooking} 
+              onClose={() => setSelectedBooking(null)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
       <Footer />
     </div>
   );
 }
 
-function BookingCard({ booking }: { booking: BookingWithItems }) {
+function BookingCard({ booking, onViewDetails }: { booking: BookingWithItems; onViewDetails: () => void }) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active': return 'bg-blue-100 text-blue-800';
@@ -299,7 +335,7 @@ function BookingCard({ booking }: { booking: BookingWithItems }) {
             </div>
           </div>
 
-          {/* Amount Info */}
+          {/* Amount Info & Actions */}
           <div className="text-right space-y-2">
             <div className="flex items-center gap-1 text-lg font-semibold">
               <IndianRupee className="h-4 w-4" />
@@ -311,9 +347,199 @@ function BookingCard({ booking }: { booking: BookingWithItems }) {
             <div className="text-xs text-muted-foreground">
               Booking #{booking.id.slice(-8)}
             </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onViewDetails}
+              data-testid={`button-view-details-${booking.id}`}
+              className="mt-2"
+            >
+              <Eye className="h-4 w-4 mr-2" />
+              View Details
+            </Button>
           </div>
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+function OrderDetailsView({ booking, onClose }: { booking: BookingWithItems; onClose: () => void }) {
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active': return 'bg-blue-100 text-blue-800';
+      case 'completed': return 'bg-green-100 text-green-800';
+      case 'overdue': return 'bg-red-100 text-red-800';
+      case 'cancelled': return 'bg-gray-100 text-gray-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getPaymentStatusColor = (status: string) => {
+    switch (status) {
+      case 'paid': return 'bg-green-100 text-green-800';
+      case 'pending': return 'bg-yellow-100 text-yellow-800';
+      case 'refunded': return 'bg-blue-100 text-blue-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'active': return <Clock className="h-4 w-4" />;
+      case 'completed': return <CheckCircle className="h-4 w-4" />;
+      case 'overdue': return <XCircle className="h-4 w-4" />;
+      case 'cancelled': return <XCircle className="h-4 w-4" />;
+      default: return <Package className="h-4 w-4" />;
+    }
+  };
+
+  return (
+    <div className="space-y-6" data-testid="order-details">
+      {/* Header with status and booking ID */}
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <h3 className="text-lg font-semibold">Booking #{booking.id.slice(-8)}</h3>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
+              {getStatusIcon(booking.status)}
+              <Badge className={getStatusColor(booking.status)} data-testid="order-status">
+                {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+              </Badge>
+            </div>
+            <Badge className={getPaymentStatusColor(booking.paymentStatus)} data-testid="payment-status">
+              {booking.paymentStatus.charAt(0).toUpperCase() + booking.paymentStatus.slice(1)}
+            </Badge>
+          </div>
+        </div>
+        <Button variant="ghost" size="sm" onClick={onClose} data-testid="button-close-details">
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Customer Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <User className="h-4 w-4" />
+            Customer Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <div className="flex items-center gap-2">
+            <User className="h-4 w-4 text-muted-foreground" />
+            <span data-testid="customer-name">{booking.customerName}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Mail className="h-4 w-4 text-muted-foreground" />
+            <span data-testid="customer-email">{booking.customerEmail}</span>
+          </div>
+          {booking.customerPhone && (
+            <div className="flex items-center gap-2">
+              <Phone className="h-4 w-4 text-muted-foreground" />
+              <span data-testid="customer-phone">{booking.customerPhone}</span>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Rental Period */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Calendar className="h-4 w-4" />
+            Rental Period
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm text-muted-foreground">Start Date</p>
+              <p className="font-semibold" data-testid="start-date">
+                {format(new Date(booking.startDate), 'PPP')}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">End Date</p>
+              <p className="font-semibold" data-testid="end-date">
+                {format(new Date(booking.endDate), 'PPP')}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Rented Items */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Package className="h-4 w-4" />
+            Rented Items ({booking.items.length})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {booking.items.map((item, index) => (
+              <div key={index} className="flex justify-between items-center p-3 bg-muted rounded-lg" data-testid={`item-detail-${index}`}>
+                <div>
+                  <h4 className="font-semibold">{item.itemName}</h4>
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <span>Type: {item.itemType}</span>
+                    {item.size && <span>Size: {item.size}</span>}
+                    <span>Qty: {item.quantity}</span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold">₹{item.pricePerDay}/day</div>
+                  <div className="text-sm text-muted-foreground">
+                    Total: ₹{(parseFloat(item.pricePerDay) * item.quantity).toFixed(2)}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Payment Summary */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <IndianRupee className="h-4 w-4" />
+            Payment Summary
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span>Total Amount</span>
+              <span className="font-semibold" data-testid="detail-total-amount">₹{booking.totalAmount}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Security Deposit</span>
+              <span data-testid="detail-security-deposit">₹{booking.securityDeposit}</span>
+            </div>
+            <div className="border-t pt-2 flex justify-between font-semibold text-lg">
+              <span>Grand Total</span>
+              <span data-testid="grand-total">₹{(parseFloat(booking.totalAmount) + parseFloat(booking.securityDeposit)).toFixed(2)}</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Notes */}
+      {booking.notes && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Special Notes</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground italic" data-testid="booking-notes">
+              "{booking.notes}"
+            </p>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 }
