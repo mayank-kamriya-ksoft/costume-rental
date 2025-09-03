@@ -62,6 +62,7 @@ export interface IStorage {
 
   // Booking operations
   getBookings(status?: string): Promise<(Booking & { items: BookingItem[] })[]>;
+  getUserBookings(userId: string, status?: string): Promise<(Booking & { items: BookingItem[] })[]>;
   getBooking(id: string): Promise<(Booking & { items: BookingItem[] }) | undefined>;
   createBooking(booking: InsertBooking, items: InsertBookingItem[]): Promise<Booking>;
   updateBooking(id: string, booking: Partial<InsertBooking>): Promise<Booking>;
@@ -258,6 +259,29 @@ export class DatabaseStorage implements IStorage {
     // Get items for each booking
     const bookingsWithItems = await Promise.all(
       allBookings.map(async (booking) => {
+        const items = await db
+          .select()
+          .from(bookingItems)
+          .where(eq(bookingItems.bookingId, booking.id));
+        return { ...booking, items };
+      })
+    );
+
+    return bookingsWithItems;
+  }
+
+  async getUserBookings(userId: string, status?: string): Promise<(Booking & { items: BookingItem[] })[]> {
+    let bookingsQuery = db.select().from(bookings).where(eq(bookings.userId, userId));
+    
+    if (status) {
+      bookingsQuery = bookingsQuery.where(and(eq(bookings.userId, userId), eq(bookings.status, status)));
+    }
+    
+    const userBookings = await bookingsQuery.orderBy(desc(bookings.createdAt));
+    
+    // Get items for each booking
+    const bookingsWithItems = await Promise.all(
+      userBookings.map(async (booking) => {
         const items = await db
           .select()
           .from(bookingItems)

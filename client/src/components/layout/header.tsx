@@ -105,6 +105,13 @@ export default function Header({ isAdmin = false }: HeaderProps) {
               }`} data-testid="nav-browse">
                 Browse Costumes
               </Link>
+              {isAuthenticated && (
+                <Link href="/dashboard" className={`font-medium transition-colors ${
+                  location === "/dashboard" ? "text-white font-bold" : "text-white/80 hover:text-white"
+                }`} data-testid="nav-dashboard">
+                  My Orders
+                </Link>
+              )}
               <Link href="/admin" className={`font-medium transition-colors ${
                 location === "/admin" ? "text-white font-bold" : "text-white/80 hover:text-white"
               }`} data-testid="nav-admin">
@@ -227,6 +234,16 @@ export default function Header({ isAdmin = false }: HeaderProps) {
                 >
                   Browse Costumes
                 </Link>
+                {isAuthenticated && (
+                  <Link 
+                    href="/dashboard" 
+                    className="text-white hover:text-white/80 transition-colors font-medium"
+                    onClick={() => setMobileMenuOpen(false)}
+                    data-testid="mobile-nav-dashboard"
+                  >
+                    My Orders
+                  </Link>
+                )}
                 <Link 
                   href="/admin" 
                   className="text-white hover:text-white/80 transition-colors font-medium"

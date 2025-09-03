@@ -434,6 +434,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User bookings route (authenticated users only)
+  app.get("/api/user/bookings", requireAuth, async (req, res) => {
+    try {
+      if (!req.session.userId) {
+        return res.status(401).json({ error: 'Not authenticated' });
+      }
+      
+      const status = req.query.status as string;
+      const userBookings = await storage.getUserBookings(req.session.userId, status);
+      res.json(userBookings);
+    } catch (error) {
+      console.error("Error fetching user bookings:", error);
+      res.status(500).json({ message: "Failed to fetch user bookings" });
+    }
+  });
+
   // Dashboard stats
   app.get("/api/dashboard/stats", async (req, res) => {
     try {

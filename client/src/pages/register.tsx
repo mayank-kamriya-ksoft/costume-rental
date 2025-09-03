@@ -8,8 +8,8 @@ export default function Register() {
   const [, setLocation] = useLocation();
 
   const handleRegisterSuccess = () => {
-    // Redirect to home page after successful registration
-    setLocation("/");
+    // Redirect to dashboard after successful registration
+    setLocation("/dashboard");
   };
 
   const handleSwitchToLogin = () => {
