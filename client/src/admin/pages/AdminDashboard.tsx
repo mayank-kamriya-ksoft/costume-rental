@@ -25,7 +25,8 @@ import {
   Sparkles,
   Tags,
   Image,
-  Save
+  Save,
+  CreditCard
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { useLocation } from "wouter";
@@ -44,7 +45,7 @@ type AdminStats = {
   overdueReturns?: number;
 };
 
-type AdminTab = "dashboard" | "inventory" | "add-item" | "categories" | "bookings" | "customers" | "reports" | "settings";
+type AdminTab = "dashboard" | "inventory" | "add-item" | "categories" | "bookings" | "customers" | "pos" | "reports" | "settings";
 
 type Category = {
   id: string;
@@ -65,6 +66,7 @@ export default function AdminDashboard() {
     if (url.includes('/categories')) return 'categories';
     if (url.includes('/bookings')) return 'bookings';
     if (url.includes('/customers')) return 'customers';
+    if (url.includes('/pos')) return 'pos';
     if (url.includes('/reports')) return 'reports';
     if (url.includes('/settings')) return 'settings';
     return 'dashboard';
@@ -154,6 +156,7 @@ export default function AdminDashboard() {
     { id: "categories" as AdminTab, label: "Categories", icon: Tags },
     { id: "bookings" as AdminTab, label: "Bookings", icon: Calendar },
     { id: "customers" as AdminTab, label: "Customers", icon: Users },
+    { id: "pos" as AdminTab, label: "Point of Sale", icon: CreditCard },
     { id: "reports" as AdminTab, label: "Reports", icon: BarChart3 },
     { id: "settings" as AdminTab, label: "Settings", icon: Settings },
   ];
@@ -768,6 +771,27 @@ export default function AdminDashboard() {
         return (
           <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-6">
             <CustomerManagement />
+          </div>
+        );
+      case "pos":
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-6">
+            <div className="max-w-7xl mx-auto">
+              <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-8">Point of Sale</h1>
+              <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+                <CardContent className="p-12 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full flex items-center justify-center">
+                    <CreditCard className="h-8 w-8 text-white" />
+                  </div>
+                  <p className="text-slate-600 dark:text-slate-400 text-lg">
+                    POS System - Quick customer and rental management
+                  </p>
+                  <p className="text-slate-500 dark:text-slate-500 text-sm mt-2">
+                    Coming Soon - Under Development
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         );
       default:
