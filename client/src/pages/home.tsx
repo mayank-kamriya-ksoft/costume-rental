@@ -232,7 +232,7 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
               <div className="text-center bg-white/5 rounded-3xl p-10 border border-white/10 hover:-translate-y-2 transition-all duration-300">
                 <div className="bg-white w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg">
-                  <Search className="h-8 w-8 text-primary" />
+                  <Search className="h-8 w-8 text-slate-700" />
                 </div>
                 <div className="bg-white/10 rounded-full px-4 py-2 text-xs font-bold text-white/80 mb-6 inline-block">
                   01
@@ -243,7 +243,7 @@ export default function Home() {
               
               <div className="text-center bg-white/5 rounded-3xl p-10 border border-white/10 hover:-translate-y-2 transition-all duration-300">
                 <div className="bg-white w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg">
-                  <Calendar className="h-8 w-8 text-primary" />
+                  <Calendar className="h-8 w-8 text-slate-700" />
                 </div>
                 <div className="bg-white/10 rounded-full px-4 py-2 text-xs font-bold text-white/80 mb-6 inline-block">
                   02
@@ -254,7 +254,7 @@ export default function Home() {
               
               <div className="text-center bg-white/5 rounded-3xl p-10 border border-white/10 hover:-translate-y-2 transition-all duration-300">
                 <div className="bg-white w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg">
-                  <CreditCard className="h-8 w-8 text-primary" />
+                  <CreditCard className="h-8 w-8 text-slate-700" />
                 </div>
                 <div className="bg-white/10 rounded-full px-4 py-2 text-xs font-bold text-white/80 mb-6 inline-block">
                   03
@@ -265,7 +265,7 @@ export default function Home() {
               
               <div className="text-center bg-white/5 rounded-3xl p-10 border border-white/10 hover:-translate-y-2 transition-all duration-300">
                 <div className="bg-white w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg">
-                  <Truck className="h-8 w-8 text-primary" />
+                  <Truck className="h-8 w-8 text-slate-700" />
                 </div>
                 <div className="bg-white/10 rounded-full px-4 py-2 text-xs font-bold text-white/80 mb-6 inline-block">
                   04
