@@ -1,0 +1,201 @@
+NetworkError when attempting to fetch resource. sdk.min.js:1:104201
+[analytics.js] Failed to load Analytics.js TypeError: NetworkError when attempting to fetch resource. sdk.min.js:1:107195
+Error sending segment performance metrics TypeError: NetworkError when attempting to fetch resource. sdk.min.js:1:20614
+
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      _app-96549f549165c5ba.js:38:5277
+[LaunchDarkly] LaunchDarkly client initialized _app-96549f549165c5ba.js:38:5277
+Partitioned cookie or storage access was provided to “https://js.stripe.com/v3/controller-with-preconnect-51cf8b2489c8609c5c38592bfdccdea6.html#__shared_params__[version]=acacia&__shared_params__[light_experiment_assignments]=%7B%22token%22%3A%2201f864b7-82c8-4f61-93da-568de3d4454c%22%2C%22assignments%22%3A%7B%22optimize_ewcs_link_get_cookie%22%3A%22control%22%7D%7D&apiKey=pk_live_515YpNsJAmnYVOvfnsBqRdATWS6SzbNAslOz1z2tujdKuvRMDAwWMeFXp6dJL1YKRrQjB0WAp0UDGwlFYL7hxw7Fc00QkfxBFsL&apiVersion=2025-01-27.acacia&stripeJsId=01f864b7-82c8-4f61-93da-568de3d4454c&stripeObjId=sobj-e950c7ac-fe02-40de-a423-a9e4b5539652&firstStripeInstanceCreatedLatency=7&controllerCount=1&isCheckout=false&stripeJsLoadTime=1757390958532&manualBrowserDeprecationRollout=false&mids[guid]=NA&mids[muid]=6d6db8ab-ed2d-4845-b20e-0308ba823db62db3de&mids[sid]=14bc8b31-fc5f-4261-8d3a-c850d02a7ece3d8a42&referrer=https%3A%2F%2Freplit.com%2F~&controllerId=__privateStripeController1531” because it is loaded in the third-party context and dynamic state partitioning is enabled. controller-with-preconnect-826a494bc906df1fb594f9368864085a.js:1:183347
+Content-Security-Policy warnings 4
+Ignoring unsupported entryTypes: longtask. recaptcha__en.js:104:65
+Partitioned cookie or storage access was provided to “https://www.google.com/recaptcha/enterprise/anchor?ar=1&k=6LdqhwwoAAAAAFPdw8jCuvY3PaHQItGj3RzOS4fW&co=aHR0cHM6Ly9yZXBsaXQuY29tOjQ0Mw..&hl=en&v=Lu6n5xwy2ghvnPNo3IxkhcCb&size=invisible&anchor-ms=20000&execute-ms=15000&cb=c2ne1n313d9s” because it is loaded in the third-party context and dynamic state partitioning is enabled. recaptcha__en.js:306:157
+Request for font "Arial Rounded MT" blocked at visibility level 2 (requires 3)
+out-4.5.44.js:1:53048
+Request for font "Book Antiqua" blocked at visibility level 2 (requires 3)
+out-4.5.44.js:1:53048
+Request for font "Bookman Old Style" blocked at visibility level 2 (requires 3)
+out-4.5.44.js:1:53048
+Request for font "Century Gothic" blocked at visibility level 2 (requires 3)
+out-4.5.44.js:1:53048
+Request for font "Century Schoolbook" blocked at visibility level 2 (requires 3)
+out-4.5.44.js:1:53048
+Request for font "Century" blocked at visibility level 2 (requires 3)
+out-4.5.44.js:1:53048
+Request for font "Garamond" blocked at visibility level 2 (requires 3)
+out-4.5.44.js:1:53048
+Request for font "Lucida Fax" blocked at visibility level 2 (requires 3)
+out-4.5.44.js:1:53048
+Request for font "Lucida Handwriting" blocked at visibility level 2 (requires 3)
+out-4.5.44.js:1:53048
+Request for font "Lucida Sans Typewriter" blocked at visibility level 2 (requires 3)
+out-4.5.44.js:1:53048
+Request for font "Lucida Sans" blocked at visibility level 2 (requires 3)
+out-4.5.44.js:1:53048
+Request for font "MS Outlook" blocked at visibility level 2 (requires 3)
+out-4.5.44.js:1:53048
+Request for font "MS Reference Sans Serif" blocked at visibility level 2 (requires 3)
+out-4.5.44.js:1:53048
+Request for font "Monotype Corsiva" blocked at visibility level 2 (requires 3)
+out-4.5.44.js:1:53048
+Partitioned cookie or storage access was provided to “<URL>[version]=acacia” because it is loaded in the third-party context and dynamic state partitioning is enabled. 4
+Cookie warnings 3
+Cookie warnings 4
+Feature Policy: Skipping unsupported feature name “accelerometer”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “autoplay”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “battery”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “encrypted-media”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “execution-while-out-of-viewport”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “gyroscope”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “layout-animations”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “legacy-image-formats”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “magnetometer”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “midi”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “navigation-override”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “oversized-images”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “payment”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “picture-in-picture”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “publickey-credentials”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “sync-xhr”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “unoptimized-images”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “unsized-media”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “usb”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “xr-spatial-tracking”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “clipboard-read”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “clipboard-write”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “pointer-lock”. framework-6e39269e12def326.js:1:44626
+Feature Policy: Skipping unsupported feature name “accelerometer”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “autoplay”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “battery”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “encrypted-media”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “execution-while-out-of-viewport”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “gyroscope”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “layout-animations”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “legacy-image-formats”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “magnetometer”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “midi”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “navigation-override”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “oversized-images”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “payment”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “picture-in-picture”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “publickey-credentials”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “sync-xhr”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “unoptimized-images”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “unsized-media”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “usb”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “xr-spatial-tracking”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “clipboard-read”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “clipboard-write”. framework-6e39269e12def326.js:1:130983
+Feature Policy: Skipping unsupported feature name “pointer-lock”. framework-6e39269e12def326.js:1:130983
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0. (Reason: CORS request did not succeed). Status code: (null).
+The resource at “<URL>” was blocked because Enhanced Tracking Protection is enabled. 15
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0. (Reason: CORS request did not succeed). Status code: (null).
+onClick is deprecated, please use onPress _app-96549f549165c5ba.js:38:5277
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0. (Reason: CORS request did not succeed). Status code: (null).
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0. (Reason: CORS request did not succeed). Status code: (null).
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0. (Reason: CORS request did not succeed). Status code: (null).
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0. (Reason: CORS request did not succeed). Status code: (null).
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0. (Reason: CORS request did not succeed). Status code: (null).
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0. (Reason: CORS request did not succeed). Status code: (null).
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0. (Reason: CORS request did not succeed). Status code: (null).
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0. (Reason: CORS request did not succeed). Status code: (null).
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0. (Reason: CORS request did not succeed). Status code: (null).
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0. (Reason: CORS request did not succeed). Status code: (null).
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0. (Reason: CORS request did not succeed). Status code: (null).
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0. (Reason: CORS request did not succeed). Status code: (null).
+Feature Policy: Skipping unsupported feature name “accelerometer”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “autoplay”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “battery”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “encrypted-media”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “execution-while-out-of-viewport”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “gyroscope”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “layout-animations”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “legacy-image-formats”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “magnetometer”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “midi”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “navigation-override”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “oversized-images”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “payment”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “picture-in-picture”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “publickey-credentials”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “sync-xhr”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “unoptimized-images”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “unsized-media”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “usb”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “xr-spatial-tracking”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “clipboard-read”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “clipboard-write”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “accelerometer”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “autoplay”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “battery”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “encrypted-media”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “execution-while-out-of-viewport”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “gyroscope”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “layout-animations”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “legacy-image-formats”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “magnetometer”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “midi”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “navigation-override”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “oversized-images”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “payment”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “picture-in-picture”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “publickey-credentials”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “sync-xhr”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “unoptimized-images”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “unsized-media”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “usb”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “xr-spatial-tracking”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “clipboard-read”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “clipboard-write”. workspace_iframe.html
+Feature Policy: Skipping unsupported feature name “accelerometer”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “autoplay”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “battery”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “encrypted-media”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “execution-while-out-of-viewport”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “gyroscope”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “layout-animations”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “legacy-image-formats”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “magnetometer”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “midi”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “navigation-override”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “oversized-images”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “payment”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “picture-in-picture”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “publickey-credentials”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “sync-xhr”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “unoptimized-images”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “unsized-media”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “usb”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “xr-spatial-tracking”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “clipboard-read”. workspace_iframe.html:151:20
+Feature Policy: Skipping unsupported feature name “clipboard-write”. workspace_iframe.html:151:20
+The script from “https://7707d171-23fe-46e9-82fd-c967f1924b90-00-ikdkdx8tuyte.pike.replit.dev/__replco/static/devtools/injected.js” was loaded even though its MIME type (“text/plain”) is not a valid JavaScript MIME type. admin
+The script from “https://7707d171-23fe-46e9-82fd-c967f1924b90-00-ikdkdx8tuyte.pike.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js” was loaded even though its MIME type (“text/plain”) is not a valid JavaScript MIME type. admin
+Layout was forced before the page was fully loaded. If stylesheets are not yet loaded this may cause a flash of unstyled content. eruda.js:2:105892
+Partitioned cookie or storage access was provided to “https://7707d171-23fe-46e9-82fd-c967f1924b90-00-ikdkdx8tuyte.pike.replit.dev/admin” because it is loaded in the third-party context and dynamic state partitioning is enabled. eruda.js:2:397271
+Partitioned cookie or storage access was provided to “https://7707d171-23fe-46e9-82fd-c967f1924b90-00-ikdkdx8tuyte.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2Fadmin&id=%3Ari3%3A” because it is loaded in the third-party context and dynamic state partitioning is enabled.
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://o1151714.ingest.sentry.io/api/6318792/envelope/?sentry_key=8aa91189a4274b5a8c9b7b01d46ea360&sentry_version=7&sentry_client=sentry.javascript.browser%2F7.112.0. (Reason: CORS request did not succeed). Status code: (null).
+[vite] connecting... eruda.js:2:135516
+[vite] connected. eruda.js:2:135516
+Cookie warnings 2
