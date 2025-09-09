@@ -56,12 +56,12 @@ export default function ProductCard({ item, type }: ProductCardProps) {
 
   return (
     <div 
-      className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer group border border-border"
+      className="bg-gradient-to-br from-white via-amber-50/30 to-purple-50/30 rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl hover:-translate-y-4 hover:scale-105 transition-all duration-500 cursor-pointer group border-2 border-amber-200/50 hover:border-purple-300 backdrop-blur-sm"
       onClick={handleCardClick}
       data-testid={`card-${type}-${item.id}`}
     >
       <div className="relative">
-        <div className="w-full h-64 bg-muted flex items-center justify-center">
+        <div className="w-full h-72 bg-gradient-to-br from-purple-100 to-amber-100 flex items-center justify-center relative overflow-hidden">
           {item.imageUrl ? (
             <img
               src={item.imageUrl.startsWith('@assets') ? 
@@ -69,7 +69,7 @@ export default function ProductCard({ item, type }: ProductCardProps) {
                 item.imageUrl
               }
               alt={item.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 filter group-hover:brightness-110"
               onError={(e) => {
                 console.log('Image load error:', item.imageUrl);
                 (e.target as HTMLImageElement).style.display = 'none';
@@ -83,45 +83,54 @@ export default function ProductCard({ item, type }: ProductCardProps) {
           )}
         </div>
         <div className="absolute top-4 left-4">
-          <Badge className={`text-xs font-semibold ${getStatusColor(item.status)} px-3 py-1`}>
-            {getStatusText(item.status)}
+          <Badge className={`text-sm font-bold ${getStatusColor(item.status)} px-4 py-2 rounded-full shadow-lg`}>
+            ✨ {getStatusText(item.status)}
           </Badge>
         </div>
+        
+        {/* Magical glow effect */}
+        <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-amber-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         <div className="absolute top-4 right-4">
           <Button
             variant="secondary"
             size="sm"
-            className="bg-white/90 hover:bg-white p-2 rounded-full shadow-md border-0"
+            className="bg-white/95 hover:bg-white p-3 rounded-full shadow-xl border-2 border-purple-200 hover:border-red-300 backdrop-blur-sm transform hover:scale-110 transition-all duration-300"
             onClick={(e) => {
               e.stopPropagation();
               setLiked(!liked);
             }}
             data-testid={`button-like-${item.id}`}
           >
-            <Heart className={`h-4 w-4 ${liked ? "fill-current text-red-500" : "text-muted-foreground"}`} />
+            <Heart className={`h-5 w-5 ${liked ? "fill-current text-red-500 animate-pulse" : "text-purple-600"} transition-all duration-300`} />
           </Button>
         </div>
       </div>
-      <div className="p-6">
-        <h3 className="font-bold text-foreground mb-3 text-lg leading-tight" data-testid={`text-name-${item.id}`}>
-          {item.name}
+      <div className="p-8 bg-gradient-to-br from-white via-purple-50/30 to-amber-50/30">
+        <h3 className="font-bold text-gray-800 mb-3 text-xl leading-tight bg-gradient-to-r from-purple-800 to-amber-600 bg-clip-text text-transparent" data-testid={`text-name-${item.id}`}>
+          ✨ {item.name}
         </h3>
-        <p className="text-muted-foreground text-sm mb-4 line-clamp-2 leading-relaxed" data-testid={`text-description-${item.id}`}>
-          {item.description || "No description available"}
+        <p className="text-gray-600 text-base mb-6 line-clamp-2 leading-relaxed" data-testid={`text-description-${item.id}`}>
+          {item.description || "Divine costume crafted with mythological authenticity"}
         </p>
-        <div className="flex items-center justify-between mb-4">
+        
+        <div className="flex items-center justify-between mb-6 bg-gradient-to-r from-purple-100 to-amber-100 rounded-2xl p-4 border border-purple-200">
           <div>
-            <span className="text-2xl font-bold text-primary" data-testid={`text-price-${item.id}`}>
+            <p className="text-sm text-purple-600 font-medium mb-1">Daily Rental</p>
+            <span className="text-3xl font-bold bg-gradient-to-r from-purple-700 to-amber-600 bg-clip-text text-transparent" data-testid={`text-price-${item.id}`}>
               ₹{parseFloat(item.pricePerDay).toFixed(0)}
             </span>
-            <span className="text-sm text-muted-foreground ml-1">per day</span>
+            <span className="text-sm text-purple-500 ml-2 font-medium">per day</span>
           </div>
           {sizes.length > 0 && (
             <div className="text-right">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Available Sizes</p>
-              <p className="text-sm font-medium text-foreground">
-                {sizes.join(", ")}
-              </p>
+              <p className="text-xs text-purple-600 uppercase tracking-wide font-bold mb-2">Available Sizes</p>
+              <div className="flex flex-wrap gap-1 justify-end">
+                {sizes.map((size, index) => (
+                  <span key={index} className="text-xs font-bold bg-amber-200 text-purple-800 px-2 py-1 rounded-full">
+                    {size}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -129,20 +138,22 @@ export default function ProductCard({ item, type }: ProductCardProps) {
         <Dialog open={showRentalForm} onOpenChange={setShowRentalForm}>
           <DialogTrigger asChild>
             <Button
-              className={`w-full font-semibold transition-all h-12 rounded-xl ${
+              className={`w-full font-bold transition-all h-14 rounded-2xl text-lg ${
                 isAvailable 
-                  ? 'bg-primary text-white shadow-lg hover:bg-primary/90 hover:shadow-xl hover:-translate-y-0.5' 
+                  ? 'bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-xl hover:shadow-2xl transform hover:scale-105 hover:-translate-y-1' 
                   : 'bg-gray-200 text-gray-500 cursor-not-allowed'
               }`}
               disabled={!isAvailable}
               data-testid={`button-rent-${item.id}`}
             >
-              {isAvailable ? "Rent Now" : "Currently Unavailable"}
+              {isAvailable ? "🌟 Rent This Divine Costume" : "✨ Currently Unavailable"}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Rent {item.name}</DialogTitle>
+              <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+                ✨ Rent {item.name}
+              </DialogTitle>
             </DialogHeader>
             <RentalForm
               item={item}

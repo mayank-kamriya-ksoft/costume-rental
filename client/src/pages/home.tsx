@@ -7,7 +7,7 @@ import SearchFilters from "@/components/customer/search-filters";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Sparkles, Calendar, CreditCard, Truck } from "lucide-react";
+import { Search, Sparkles, Calendar, CreditCard, Truck, Crown, Star } from "lucide-react";
 import type { Costume, Accessory, Category } from "@shared/schema";
 
 interface Filters {
@@ -54,30 +54,72 @@ export default function Home() {
       <Header />
       
       {/* Hero Section */}
-      <section className="hero-bg py-32 relative overflow-hidden">
+      <section className="hero-bg py-40 relative overflow-hidden">
+        {/* Floating Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 w-20 h-20 bg-amber-400 rounded-full opacity-20 animate-pulse"></div>
+          <div className="absolute top-40 right-20 w-16 h-16 bg-purple-400 rounded-full opacity-30 animate-bounce"></div>
+          <div className="absolute bottom-32 left-1/4 w-12 h-12 bg-amber-300 rounded-full opacity-25 animate-pulse"></div>
+          <div className="absolute bottom-20 right-1/3 w-14 h-14 bg-purple-300 rounded-full opacity-20 animate-bounce"></div>
+        </div>
+        
         <div className="relative z-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-6xl md:text-8xl font-bold text-white mb-12 tracking-tight">
-              Transform Into Legendary Characters
-            </h1>
-            <p className="text-xl md:text-2xl text-white mb-16 max-w-4xl mx-auto leading-relaxed">
-              Premium Indian Mythological Costumes & Accessories<br />
-              <span className="text-lg md:text-xl text-white/80">Bring the divine stories of Krishna, Rama, Durga, and legendary heroes to life</span>
-            </p>
+            <div className="mb-8">
+              <Sparkles className="h-16 w-16 text-amber-300 mx-auto mb-4 animate-pulse" />
+            </div>
             
-            {/* Search Bar */}
-            <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 flex items-center border border-border">
-              <Input
-                type="text"
-                placeholder="Search for characters, themes, or costume types..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="flex-1 border-0 focus-visible:ring-0 text-lg h-14 bg-transparent"
-                data-testid="input-search"
-              />
-              <Button onClick={handleSearch} className="bg-primary hover:bg-primary/90 text-white h-14 px-8 ml-4 font-semibold" data-testid="button-search">
-                <Search className="h-5 w-5 mr-2" />
-                Search
+            <h1 className="text-7xl md:text-9xl font-bold text-transparent bg-gradient-to-r from-amber-200 via-amber-100 to-white bg-clip-text mb-12 tracking-tight drop-shadow-2xl">
+              Transform Into 
+              <span className="block bg-gradient-to-r from-white via-amber-100 to-amber-200 bg-clip-text">
+                Legendary Characters
+              </span>
+            </h1>
+            
+            <div className="mb-16 max-w-5xl mx-auto">
+              <p className="text-2xl md:text-3xl text-amber-100 font-semibold mb-4 drop-shadow-lg">
+                ✨ Premium Indian Mythological Costumes & Accessories ✨
+              </p>
+              <p className="text-lg md:text-xl text-white/90 leading-relaxed max-w-4xl mx-auto">
+                Bring the divine stories of Krishna, Rama, Durga, and legendary heroes to life with our authentic, 
+                handcrafted costumes that transport you into the realm of ancient mythology
+              </p>
+            </div>
+            
+            {/* Enhanced Search Bar */}
+            <div className="max-w-4xl mx-auto bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-8 border-2 border-amber-200 hover:border-amber-300 transition-all duration-300 transform hover:scale-105">
+              <div className="flex items-center">
+                <div className="relative flex-1">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-purple-600" />
+                  <Input
+                    type="text"
+                    placeholder="Search for divine characters, mythological themes, or costume types..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-14 pr-4 border-0 focus-visible:ring-2 focus-visible:ring-purple-500 text-lg h-16 bg-transparent placeholder:text-gray-500 text-gray-800 font-medium"
+                    data-testid="input-search"
+                  />
+                </div>
+                <Button 
+                  onClick={handleSearch} 
+                  className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white h-16 px-10 ml-4 font-bold text-lg rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300" 
+                  data-testid="button-search"
+                >
+                  <Search className="h-6 w-6 mr-3" />
+                  Search Divine Collection
+                </Button>
+              </div>
+            </div>
+            
+            {/* Call to Action */}
+            <div className="mt-12 flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <Button className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-purple-900 font-bold text-lg px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                <Crown className="h-6 w-6 mr-2" />
+                Browse Divine Costumes
+              </Button>
+              <Button variant="outline" className="border-2 border-white/80 text-white hover:bg-white/20 backdrop-blur-sm font-bold text-lg px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                <Sparkles className="h-6 w-6 mr-2" />
+                View Accessories
               </Button>
             </div>
           </div>
@@ -158,24 +200,34 @@ export default function Home() {
       />
 
       {/* Products Grid */}
-      <section className="py-24 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between mb-20">
+      <section className="py-32 section-light relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="flex items-end justify-between mb-24">
             <div>
-              <h2 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
-                {activeTab === "costumes" ? "Divine Costume Collection" : "Exquisite Accessories"}
-              </h2>
-              <p className="text-xl text-muted-foreground max-w-2xl">
-                {activeTab === "costumes" ? "Authentic designs inspired by Indian mythology, crafted with premium materials and attention to detail" : "Complete your transformation with meticulously curated accessories that bring your character to life"}
+              <div className="flex items-center mb-6">
+                <Sparkles className="h-12 w-12 text-primary mr-4" />
+                <h2 className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-purple-800 via-purple-600 to-amber-600 bg-clip-text text-transparent">
+                  {activeTab === "costumes" ? "Divine Costume Collection" : "Exquisite Accessories"}
+                </h2>
+              </div>
+              <p className="text-2xl text-gray-700 max-w-3xl leading-relaxed">
+                {activeTab === "costumes" ? 
+                  "✨ Authentic designs inspired by Indian mythology, crafted with premium materials and divine attention to detail that brings legends to life ✨" : 
+                  "✨ Complete your transformation with meticulously curated accessories that embody the divine essence of legendary characters ✨"}
               </p>
             </div>
-            <div className="text-right bg-accent rounded-2xl p-6">
-              <p className="text-3xl font-bold text-primary">
+            <div className="text-right bg-gradient-to-br from-purple-100 to-amber-100 rounded-3xl p-8 shadow-xl border-2 border-purple-200">
+              <p className="text-5xl font-bold bg-gradient-to-r from-purple-700 to-amber-600 bg-clip-text text-transparent">
                 {activeTab === "costumes" ? costumes.length : accessories.length}
               </p>
-              <p className="text-sm text-muted-foreground uppercase tracking-wide font-medium">
-                Available Items
+              <p className="text-lg text-purple-600 uppercase tracking-wide font-bold mt-2">
+                Divine Items Available
               </p>
+              <div className="flex justify-center mt-3 space-x-1">
+                <Star className="h-5 w-5 text-amber-500 fill-current" />
+                <Star className="h-5 w-5 text-amber-500 fill-current" />
+                <Star className="h-5 w-5 text-amber-500 fill-current" />
+              </div>
             </div>
           </div>
           
