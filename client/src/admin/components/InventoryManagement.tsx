@@ -7,13 +7,13 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
 import { Badge } from "../../components/ui/badge";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../../components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../../components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
 import { useToast } from "../../hooks/use-toast";
 import { Plus, Edit, Trash2, Search, Filter, Package, Sparkles, Tags, Image, DollarSign } from "lucide-react";
 import { Textarea } from "../../components/ui/textarea";
 import { cn } from "../../lib/utils";
+import { useLocation } from "wouter";
 
 type InventoryItem = {
   id: string;
@@ -39,13 +39,13 @@ type Category = {
 };
 
 export default function InventoryManagement() {
-  const [activeTab, setActiveTab] = useState("costumes");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState("all");
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [, setLocation] = useLocation();
 
   // Fetch data
   const { data: costumes, isLoading: costumesLoading } = useQuery({
@@ -60,23 +60,9 @@ export default function InventoryManagement() {
     queryKey: ["/api/categories"],
   });
 
-  // Mutations
-  const createItemMutation = useMutation({
-    mutationFn: async (data: { type: string; item: any }) => {
-      const endpoint = data.type === "costume" ? "/api/costumes" : "/api/accessories";
-      const response = await apiRequest("POST", endpoint, data.item);
-      return response.json();
-    },
-    onSuccess: () => {
-      toast({ title: "Success", description: "Item added successfully" });
-      queryClient.invalidateQueries({ queryKey: ["/api/costumes"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/accessories"] });
-      setIsAddDialogOpen(false);
-    },
-    onError: (error: Error) => {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
-    },
-  });
+  // Combine all items
+  const allItems = [...(costumes as InventoryItem[] || []), ...(accessories as InventoryItem[] || [])];
+  const isLoading = costumesLoading || accessoriesLoading;
 
   const updateItemMutation = useMutation({
     mutationFn: async (data: { type: string; id: string; item: any }) => {
@@ -110,12 +96,13 @@ export default function InventoryManagement() {
     },
   });
 
-  const getFilteredItems = (items: InventoryItem[] | undefined) => {
-    return (items || []).filter((item) => {
+  const getFilteredItems = (items: InventoryItem[]) => {
+    return items.filter((item) => {
       const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.description?.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesStatus = statusFilter === "all" || item.status === statusFilter;
-      return matchesSearch && matchesStatus;
+      const matchesCategory = categoryFilter === "all" || item.categoryId === categoryFilter;
+      return matchesSearch && matchesStatus && matchesCategory;
     });
   };
 
@@ -132,6 +119,15 @@ export default function InventoryManagement() {
       default:
         return "outline";
     }
+  };
+
+  const getCategoryInfo = (categoryId: string) => {
+    const category = (categories as Category[] || []).find((cat: Category) => cat.id === categoryId);
+    return category;
+  };
+  
+  const getItemType = (item: InventoryItem) => {
+    return item.themes ? "costume" : "accessory";
   };
 
   const ItemForm = ({ item, type, onSubmit, isLoading }: {
@@ -409,7 +405,7 @@ export default function InventoryManagement() {
             <Button 
               type="button" 
               variant="outline" 
-              onClick={() => item ? setEditingItem(null) : setIsAddDialogOpen(false)}
+              onClick={() => setEditingItem(null)}
               disabled={isLoading}
               className="px-6 h-11 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
               data-testid="button-cancel"
@@ -421,9 +417,7 @@ export default function InventoryManagement() {
               disabled={isLoading} 
               className={cn(
                 "px-6 h-11 bg-gradient-to-r text-white shadow-md hover:shadow-lg transition-all duration-200",
-                type === "costume" 
-                  ? "from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600" 
-                  : "from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
+                "from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"
               )}
               data-testid="button-save-item"
             >
@@ -433,7 +427,7 @@ export default function InventoryManagement() {
                   <span>Saving...</span>
                 </div>
               ) : (
-                `${item ? "Update" : "Add"} ${type === "costume" ? "Costume" : "Accessory"}`
+                `Update ${type === "costume" ? "Costume" : "Accessory"}`
               )}
             </Button>
           </div>
@@ -467,21 +461,19 @@ export default function InventoryManagement() {
       );
     }
 
-    const filteredItems = getFilteredItems(items);
-
-    if (filteredItems.length === 0) {
+    if (items.length === 0) {
       return (
         <div className="text-center py-16">
           <div className="w-16 h-16 mx-auto mb-4 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center">
             <Package className="h-8 w-8 text-slate-400" />
           </div>
           <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
-            No {type}s found
+            No items found
           </h3>
           <p className="text-slate-600 dark:text-slate-400">
-            {searchTerm || statusFilter !== "all" 
+            {searchTerm || statusFilter !== "all" || categoryFilter !== "all"
               ? "Try adjusting your search or filter criteria" 
-              : `Start by adding your first ${type} to the inventory`}
+              : "Start by adding your first item to the inventory"}
           </p>
         </div>
       );
@@ -501,7 +493,7 @@ export default function InventoryManagement() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredItems.map((item, index) => (
+            {items.map((item, index) => (
               <TableRow 
                 key={item.id} 
                 className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors duration-150 border-slate-200 dark:border-slate-700"
@@ -510,11 +502,11 @@ export default function InventoryManagement() {
                   <div className="flex items-center space-x-3">
                     <div className={cn(
                       "w-12 h-12 rounded-lg flex items-center justify-center text-white font-semibold text-sm shadow-md",
-                      type === "costume" 
+                      getItemType(item) === "costume" 
                         ? "bg-gradient-to-r from-blue-500 to-purple-500" 
                         : "bg-gradient-to-r from-green-500 to-emerald-500"
                     )}>
-                      {type === "costume" ? <Package className="h-5 w-5" /> : <Sparkles className="h-5 w-5" />}
+                      {getItemType(item) === "costume" ? <Package className="h-5 w-5" /> : <Sparkles className="h-5 w-5" />}
                     </div>
                     <div>
                       <div className="font-semibold text-slate-900 dark:text-slate-100" data-testid={`text-item-${item.id}-name`}>
@@ -529,8 +521,20 @@ export default function InventoryManagement() {
                   </div>
                 </TableCell>
                 <TableCell className="py-4">
-                  <div className="text-slate-700 dark:text-slate-300 font-medium">
-                    {(categories as Category[] || []).find((cat: Category) => cat.id === item.categoryId)?.name || "Unknown"}
+                  <div className="flex items-center space-x-2">
+                    {getCategoryInfo(item.categoryId)?.type === "costume" ? (
+                      <Package className="h-4 w-4 text-blue-500" />
+                    ) : (
+                      <Sparkles className="h-4 w-4 text-green-500" />
+                    )}
+                    <div>
+                      <div className="text-slate-700 dark:text-slate-300 font-medium">
+                        {getCategoryInfo(item.categoryId)?.name || "Unknown"}
+                      </div>
+                      <div className="text-xs text-slate-500 capitalize">
+                        {getCategoryInfo(item.categoryId)?.type || "unknown"}
+                      </div>
+                    </div>
                   </div>
                 </TableCell>
                 <TableCell className="py-4">
@@ -601,7 +605,7 @@ export default function InventoryManagement() {
                       size="sm"
                       onClick={() => {
                         if (confirm(`Are you sure you want to delete ${item.name}?`)) {
-                          deleteItemMutation.mutate({ type, id: item.id });
+                          deleteItemMutation.mutate({ type: getItemType(item), id: item.id });
                         }
                       }}
                       className="h-8 w-8 p-0 border-slate-200 dark:border-slate-700 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300 dark:hover:border-red-700"
@@ -619,6 +623,8 @@ export default function InventoryManagement() {
     );
   };
 
+  const filteredItems = getFilteredItems(allItems);
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
@@ -631,48 +637,24 @@ export default function InventoryManagement() {
               <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
                 Inventory Management
               </h1>
-              <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">Manage your costume and accessory collections</p>
+              <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">Manage all your inventory items in one place</p>
             </div>
           </div>
         </div>
-        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-          <DialogTrigger asChild>
-            <Button 
-              className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 h-11 px-6"
-              data-testid="button-add-item"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add New Item
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-4xl max-h-[90vh]">
-            <DialogHeader className="pb-4">
-              <DialogTitle className="text-2xl font-bold flex items-center space-x-2">
-                <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg">
-                  <Plus className="h-5 w-5 text-white" />
-                </div>
-                <span>Add New {activeTab === "costumes" ? "Costume" : "Accessory"}</span>
-              </DialogTitle>
-              <DialogDescription className="text-slate-600 dark:text-slate-400">
-                Create a new {activeTab === "costumes" ? "costume" : "accessory"} entry in your inventory system
-              </DialogDescription>
-            </DialogHeader>
-            <ItemForm
-              type={activeTab === "costumes" ? "costume" : "accessory"}
-              onSubmit={(data) => createItemMutation.mutate({ 
-                type: activeTab === "costumes" ? "costume" : "accessory", 
-                item: data 
-              })}
-              isLoading={createItemMutation.isPending}
-            />
-          </DialogContent>
-        </Dialog>
+        <Button 
+          onClick={() => setLocation("/admin/add-item")}
+          className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 h-12 px-6"
+          data-testid="button-add-item"
+        >
+          <Plus className="h-5 w-5 mr-2" />
+          Add New Item
+        </Button>
       </div>
 
       {/* Enhanced Search and Filter */}
       <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
         <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col lg:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
@@ -685,114 +667,104 @@ export default function InventoryManagement() {
                 />
               </div>
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-48 h-12 border-slate-200 dark:border-slate-700 focus:border-blue-500 bg-white dark:bg-slate-900" data-testid="select-status-filter">
-                <Filter className="h-4 w-4 mr-2 text-slate-400" />
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
-                    <span>All Status</span>
-                  </div>
-                </SelectItem>
-                <SelectItem value="available">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span>Available</span>
-                  </div>
-                </SelectItem>
-                <SelectItem value="rented">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span>Rented</span>
-                  </div>
-                </SelectItem>
-                <SelectItem value="cleaning">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                    <span>Cleaning</span>
-                  </div>
-                </SelectItem>
-                <SelectItem value="damaged">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                    <span>Damaged</span>
-                  </div>
-                </SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex gap-4">
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="w-48 h-12 border-slate-200 dark:border-slate-700 focus:border-blue-500 bg-white dark:bg-slate-900" data-testid="select-category-filter">
+                  <Package className="h-4 w-4 mr-2 text-slate-400" />
+                  <SelectValue placeholder="All Categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                      <span>All Categories</span>
+                    </div>
+                  </SelectItem>
+                  {(categories as Category[] || []).map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      <div className="flex items-center space-x-2">
+                        {category.type === "costume" ? (
+                          <Package className="h-4 w-4 text-blue-500" />
+                        ) : (
+                          <Sparkles className="h-4 w-4 text-green-500" />
+                        )}
+                        <span>{category.name}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-48 h-12 border-slate-200 dark:border-slate-700 focus:border-blue-500 bg-white dark:bg-slate-900" data-testid="select-status-filter">
+                  <Filter className="h-4 w-4 mr-2 text-slate-400" />
+                  <SelectValue placeholder="All Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                      <span>All Status</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="available">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span>Available</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="rented">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <span>Rented</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="cleaning">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                      <span>Cleaning</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="damaged">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                      <span>Damaged</span>
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
-          <TabsTrigger 
-            value="costumes" 
-            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white rounded-lg font-medium transition-all duration-200" 
-            data-testid="tab-costumes"
-          >
-            <Package className="h-4 w-4 mr-2" />
-            Costumes
-          </TabsTrigger>
-          <TabsTrigger 
-            value="accessories" 
-            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-emerald-500 data-[state=active]:text-white rounded-lg font-medium transition-all duration-200" 
-            data-testid="tab-accessories"
-          >
-            <Sparkles className="h-4 w-4 mr-2" />
-            Accessories
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="costumes">
-          <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
-            <CardHeader className="border-b border-slate-100 dark:border-slate-700">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg">
-                  <Package className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <CardTitle className="text-xl font-bold text-slate-900 dark:text-slate-100">Costumes</CardTitle>
-                  <CardDescription className="text-slate-600 dark:text-slate-400">Manage your complete costume collection</CardDescription>
-                </div>
+      {/* Unified Inventory Table */}
+      <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+        <CardHeader className="border-b border-slate-100 dark:border-slate-700">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg">
+                <Package className="h-5 w-5 text-white" />
               </div>
-            </CardHeader>
-            <CardContent className="p-6">
-              <ItemsTable 
-                items={(costumes as InventoryItem[]) || []} 
-                type="costume" 
-                isLoading={costumesLoading}
-              />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="accessories">
-          <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
-            <CardHeader className="border-b border-slate-100 dark:border-slate-700">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg">
-                  <Sparkles className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <CardTitle className="text-xl font-bold text-slate-900 dark:text-slate-100">Accessories</CardTitle>
-                  <CardDescription className="text-slate-600 dark:text-slate-400">Manage your accessory inventory and props</CardDescription>
-                </div>
+              <div>
+                <CardTitle className="text-xl font-bold text-slate-900 dark:text-slate-100">All Inventory Items</CardTitle>
+                <CardDescription className="text-slate-600 dark:text-slate-400">
+                  Manage all costumes and accessories in one unified view
+                </CardDescription>
               </div>
-            </CardHeader>
-            <CardContent className="p-6">
-              <ItemsTable 
-                items={(accessories as InventoryItem[]) || []} 
-                type="accessory" 
-                isLoading={accessoriesLoading}
-              />
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </div>
+            <div className="text-sm text-slate-600 dark:text-slate-400">
+              {filteredItems.length} of {allItems.length} items
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="p-6">
+          <ItemsTable 
+            items={filteredItems}
+            type="unified" 
+            isLoading={isLoading}
+          />
+        </CardContent>
+      </Card>
 
       {/* Enhanced Edit Item Dialog */}
       {editingItem && (
