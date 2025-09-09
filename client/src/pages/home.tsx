@@ -54,29 +54,28 @@ export default function Home() {
       <Header />
       
       {/* Hero Section */}
-      <section className="bright-gradient py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-black/20 to-black/30"></div>
+      <section className="hero-bg py-32 relative overflow-hidden">
         <div className="relative z-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 drop-shadow-2xl tracking-tight">
+            <h1 className="text-6xl md:text-8xl font-bold text-white mb-12 tracking-tight">
               Transform Into Legendary Characters
             </h1>
-            <p className="text-xl md:text-2xl text-white/95 mb-10 max-w-4xl mx-auto drop-shadow-lg leading-relaxed">
+            <p className="text-xl md:text-2xl text-white/90 mb-16 max-w-4xl mx-auto leading-relaxed">
               Premium Indian Mythological Costumes & Accessories<br />
-              <span className="text-lg md:text-xl text-white/80">Bring the divine stories of Krishna, Rama, Durga, and legendary heroes to life</span>
+              <span className="text-lg md:text-xl text-white/70">Bring the divine stories of Krishna, Rama, Durga, and legendary heroes to life</span>
             </p>
             
             {/* Search Bar */}
-            <div className="max-w-3xl mx-auto bg-white/98 backdrop-blur-md rounded-2xl shadow-2xl p-4 flex items-center border border-white/60">
+            <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 flex items-center border border-border">
               <Input
                 type="text"
                 placeholder="Search for characters, themes, or costume types..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="flex-1 border-0 focus-visible:ring-0 text-lg h-12 bg-transparent"
+                className="flex-1 border-0 focus-visible:ring-0 text-lg h-14 bg-transparent"
                 data-testid="input-search"
               />
-              <Button onClick={handleSearch} className="professional-gradient hover:opacity-90 text-white shadow-lg h-12 px-6 ml-2" data-testid="button-search">
+              <Button onClick={handleSearch} className="bg-primary hover:bg-primary/90 text-white h-14 px-8 ml-4 font-semibold" data-testid="button-search">
                 <Search className="h-5 w-5 mr-2" />
                 Search
               </Button>
@@ -86,14 +85,14 @@ export default function Home() {
       </section>
 
       {/* Filters and Categories */}
-      <section className="elegant-gradient border-b border-primary/20 py-10">
+      <section className="section-light border-b border-border py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center justify-between gap-4">
             {/* Tab Toggle */}
             <div className="flex gap-2">
               <Button
                 variant={activeTab === "costumes" ? "default" : "secondary"}
-                className={activeTab === "costumes" ? "professional-gradient text-white shadow-lg font-semibold" : "bg-white/80 text-foreground hover:bg-white"}
+                className={activeTab === "costumes" ? "bg-primary text-white shadow-lg font-semibold h-12 px-6" : "bg-white text-foreground hover:bg-accent h-12 px-6 border border-border"}
                 onClick={() => setActiveTab("costumes")}
                 data-testid="tab-costumes"
               >
@@ -101,7 +100,7 @@ export default function Home() {
               </Button>
               <Button
                 variant={activeTab === "accessories" ? "default" : "secondary"}
-                className={activeTab === "accessories" ? "professional-gradient text-white shadow-lg font-semibold" : "bg-white/80 text-foreground hover:bg-white"}
+                className={activeTab === "accessories" ? "bg-primary text-white shadow-lg font-semibold h-12 px-6" : "bg-white text-foreground hover:bg-accent h-12 px-6 border border-border"}
                 onClick={() => setActiveTab("accessories")}
                 data-testid="tab-accessories"
               >
@@ -113,7 +112,7 @@ export default function Home() {
             <div className="flex flex-wrap gap-2">
               <Badge
                 variant={!filters.category ? "default" : "secondary"}
-                className={`cursor-pointer transition-all hover:scale-105 ${!filters.category ? 'professional-gradient text-white shadow-lg border-0' : 'bg-white/80 hover:bg-white text-foreground border border-primary/20'}`}
+                className={`cursor-pointer transition-all hover:scale-105 ${!filters.category ? 'bg-primary text-white shadow-md border-0' : 'bg-white hover:bg-accent text-foreground border border-border'}`}
                 onClick={() => setFilters({ ...filters, category: undefined })}
                 data-testid="filter-all"
               >
@@ -125,8 +124,8 @@ export default function Home() {
                   variant={filters.category === category.id ? "default" : "secondary"}
                   className={`cursor-pointer transition-all hover:scale-105 ${
                     filters.category === category.id 
-                      ? 'professional-gradient text-white shadow-lg border-0' 
-                      : 'bg-white/80 hover:bg-white text-foreground border border-primary/20'
+                      ? 'bg-primary text-white shadow-md border-0' 
+                      : 'bg-white hover:bg-accent text-foreground border border-border'
                   }`}
                   onClick={() => setFilters({ ...filters, category: category.id })}
                   data-testid={`filter-category-${category.id}`}
@@ -140,7 +139,7 @@ export default function Home() {
             {(filters.category || filters.search || filters.size) && (
               <Button 
                 variant="outline" 
-                className="border-primary/30 text-primary hover:bg-primary/5" 
+                className="border-border text-foreground hover:bg-accent" 
                 onClick={clearFilters} 
                 data-testid="button-clear-filters"
               >
@@ -159,22 +158,22 @@ export default function Home() {
       />
 
       {/* Products Grid */}
-      <section className="py-20 bg-gradient-to-br from-white via-background to-secondary/30">
+      <section className="py-24 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-16">
+          <div className="flex items-end justify-between mb-20">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              <h2 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
                 {activeTab === "costumes" ? "Divine Costume Collection" : "Exquisite Accessories"}
               </h2>
-              <p className="text-xl text-muted-foreground">
-                {activeTab === "costumes" ? "Authentic designs inspired by Indian mythology" : "Complete your transformation with perfect accessories"}
+              <p className="text-xl text-muted-foreground max-w-2xl">
+                {activeTab === "costumes" ? "Authentic designs inspired by Indian mythology, crafted with premium materials and attention to detail" : "Complete your transformation with meticulously curated accessories that bring your character to life"}
               </p>
             </div>
-            <div className="text-right">
-              <p className="text-2xl font-bold text-primary">
+            <div className="text-right bg-accent rounded-2xl p-6">
+              <p className="text-3xl font-bold text-primary">
                 {activeTab === "costumes" ? costumes.length : accessories.length}
               </p>
-              <p className="text-sm text-muted-foreground uppercase tracking-wide">
+              <p className="text-sm text-muted-foreground uppercase tracking-wide font-medium">
                 Available Items
               </p>
             </div>
@@ -213,7 +212,7 @@ export default function Home() {
               <Sparkles className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
               <h3 className="text-2xl font-semibold text-foreground mb-4">No items found</h3>
               <p className="text-lg text-muted-foreground mb-6">Try adjusting your filters or search terms</p>
-              <Button onClick={clearFilters} className="professional-gradient text-white">
+              <Button onClick={clearFilters} className="bg-primary text-white hover:bg-primary/90">
                 Clear All Filters
               </Button>
             </div>
@@ -222,58 +221,57 @@ export default function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="py-24 indian-gradient relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/40"></div>
+      <section className="section-dark py-32 relative overflow-hidden">
         <div className="relative z-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-20">
-              <h2 className="text-5xl font-bold text-white mb-8 drop-shadow-lg tracking-tight">How It Works</h2>
-              <p className="text-2xl text-white/95 drop-shadow-md max-w-3xl mx-auto leading-relaxed">Transform into legendary characters in just four simple steps</p>
+            <div className="text-center mb-24">
+              <h2 className="text-6xl font-bold text-white mb-10 tracking-tight">How It Works</h2>
+              <p className="text-2xl text-white/80 max-w-4xl mx-auto leading-relaxed">Transform into legendary characters through our streamlined rental process</p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-              <div className="text-center bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:scale-105 transition-all duration-300 hover:bg-white/15">
-                <div className="bg-white/20 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl border border-white/30">
-                  <Search className="h-10 w-10 text-white" />
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+              <div className="text-center bg-white/5 rounded-3xl p-10 border border-white/10 hover:-translate-y-2 transition-all duration-300">
+                <div className="bg-white w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg">
+                  <Search className="h-8 w-8 text-primary" />
                 </div>
-                <div className="bg-white/10 rounded-lg px-3 py-1 text-sm font-bold text-white mb-4 inline-block">
-                  STEP 1
+                <div className="bg-white/10 rounded-full px-4 py-2 text-xs font-bold text-white/80 mb-6 inline-block">
+                  01
                 </div>
-                <h3 className="font-bold text-white mb-4 text-xl">Browse & Select</h3>
-                <p className="text-white/90 text-base leading-relaxed">Discover authentic mythological characters from our curated divine collection</p>
+                <h3 className="font-bold text-white mb-6 text-2xl">Browse & Select</h3>
+                <p className="text-white/70 text-lg leading-relaxed">Discover authentic mythological characters from our curated divine collection</p>
               </div>
               
-              <div className="text-center bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:scale-105 transition-all duration-300 hover:bg-white/15">
-                <div className="bg-white/20 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl border border-white/30">
-                  <Calendar className="h-10 w-10 text-white" />
+              <div className="text-center bg-white/5 rounded-3xl p-10 border border-white/10 hover:-translate-y-2 transition-all duration-300">
+                <div className="bg-white w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg">
+                  <Calendar className="h-8 w-8 text-primary" />
                 </div>
-                <div className="bg-white/10 rounded-lg px-3 py-1 text-sm font-bold text-white mb-4 inline-block">
-                  STEP 2
+                <div className="bg-white/10 rounded-full px-4 py-2 text-xs font-bold text-white/80 mb-6 inline-block">
+                  02
                 </div>
-                <h3 className="font-bold text-white mb-4 text-xl">Pick Dates</h3>
-                <p className="text-white/90 text-base leading-relaxed">Choose your rental dates and confirm costume availability</p>
+                <h3 className="font-bold text-white mb-6 text-2xl">Pick Dates</h3>
+                <p className="text-white/70 text-lg leading-relaxed">Choose your rental dates and confirm costume availability</p>
               </div>
               
-              <div className="text-center bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:scale-105 transition-all duration-300 hover:bg-white/15">
-                <div className="bg-white/20 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl border border-white/30">
-                  <CreditCard className="h-10 w-10 text-white" />
+              <div className="text-center bg-white/5 rounded-3xl p-10 border border-white/10 hover:-translate-y-2 transition-all duration-300">
+                <div className="bg-white w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg">
+                  <CreditCard className="h-8 w-8 text-primary" />
                 </div>
-                <div className="bg-white/10 rounded-lg px-3 py-1 text-sm font-bold text-white mb-4 inline-block">
-                  STEP 3
+                <div className="bg-white/10 rounded-full px-4 py-2 text-xs font-bold text-white/80 mb-6 inline-block">
+                  03
                 </div>
-                <h3 className="font-bold text-white mb-4 text-xl">Secure Payment</h3>
-                <p className="text-white/90 text-base leading-relaxed">Complete safe and secure payment with flexible options</p>
+                <h3 className="font-bold text-white mb-6 text-2xl">Secure Payment</h3>
+                <p className="text-white/70 text-lg leading-relaxed">Complete safe and secure payment with flexible options</p>
               </div>
               
-              <div className="text-center bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:scale-105 transition-all duration-300 hover:bg-white/15">
-                <div className="bg-white/20 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl border border-white/30">
-                  <Truck className="h-10 w-10 text-white" />
+              <div className="text-center bg-white/5 rounded-3xl p-10 border border-white/10 hover:-translate-y-2 transition-all duration-300">
+                <div className="bg-white w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg">
+                  <Truck className="h-8 w-8 text-primary" />
                 </div>
-                <div className="bg-white/10 rounded-lg px-3 py-1 text-sm font-bold text-white mb-4 inline-block">
-                  STEP 4
+                <div className="bg-white/10 rounded-full px-4 py-2 text-xs font-bold text-white/80 mb-6 inline-block">
+                  04
                 </div>
-                <h3 className="font-bold text-white mb-4 text-xl">Transform & Shine</h3>
-                <p className="text-white/90 text-base leading-relaxed">Pickup your costume and embody the legendary character</p>
+                <h3 className="font-bold text-white mb-6 text-2xl">Transform & Shine</h3>
+                <p className="text-white/70 text-lg leading-relaxed">Pickup your costume and embody the legendary character</p>
               </div>
             </div>
           </div>
