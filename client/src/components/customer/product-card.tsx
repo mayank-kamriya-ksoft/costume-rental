@@ -24,15 +24,15 @@ export default function ProductCard({ item, type }: ProductCardProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "available":
-        return "bg-gradient-to-r from-green-400 to-emerald-500 text-white shadow-lg";
+        return "bg-green-500 text-white shadow-sm border-0";
       case "rented":
-        return "bg-gradient-to-r from-orange-400 to-red-500 text-white shadow-lg";
+        return "bg-orange-500 text-white shadow-sm border-0";
       case "cleaning":
-        return "bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg";
+        return "bg-yellow-500 text-white shadow-sm border-0";
       case "damaged":
-        return "bg-gradient-to-r from-red-400 to-red-600 text-white shadow-lg";
+        return "bg-red-500 text-white shadow-sm border-0";
       default:
-        return "bg-gradient-to-r from-gray-400 to-gray-600 text-white shadow-lg";
+        return "bg-gray-500 text-white shadow-sm border-0";
     }
   };
 
@@ -56,12 +56,12 @@ export default function ProductCard({ item, type }: ProductCardProps) {
 
   return (
     <div 
-      className="bg-gradient-to-br from-white to-orange-50 rounded-xl shadow-xl overflow-hidden hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer group border border-orange-100"
+      className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer group border border-border"
       onClick={handleCardClick}
       data-testid={`card-${type}-${item.id}`}
     >
       <div className="relative">
-        <div className="w-full h-64 bg-gradient-to-br from-orange-200 via-purple-200 to-yellow-200 flex items-center justify-center">
+        <div className="w-full h-64 bg-gradient-to-br from-secondary via-muted to-accent flex items-center justify-center">
           {item.imageUrl ? (
             <img
               src={item.imageUrl.startsWith('@assets') ? 
@@ -82,58 +82,62 @@ export default function ProductCard({ item, type }: ProductCardProps) {
             </div>
           )}
         </div>
-        <div className="absolute top-3 left-3">
-          <Badge className={`text-xs font-bold ${getStatusColor(item.status)} border-0`}>
-            {item.status === 'available' ? '✅' : 
-             item.status === 'rented' ? '📅' : 
-             item.status === 'cleaning' ? '🧽' : '⚠️'} {getStatusText(item.status)}
+        <div className="absolute top-4 left-4">
+          <Badge className={`text-xs font-semibold ${getStatusColor(item.status)} px-3 py-1`}>
+            {getStatusText(item.status)}
           </Badge>
         </div>
-        <div className="absolute top-3 right-3">
+        <div className="absolute top-4 right-4">
           <Button
             variant="secondary"
             size="sm"
-            className="bg-white/80 hover:bg-white p-2"
+            className="bg-white/90 hover:bg-white p-2 rounded-full shadow-md border-0"
             onClick={(e) => {
               e.stopPropagation();
               setLiked(!liked);
             }}
             data-testid={`button-like-${item.id}`}
           >
-            <Heart className={`h-4 w-4 ${liked ? "fill-current text-red-500" : ""}`} />
+            <Heart className={`h-4 w-4 ${liked ? "fill-current text-red-500" : "text-muted-foreground"}`} />
           </Button>
         </div>
       </div>
-      <div className="p-4">
-        <h3 className="font-semibold text-foreground mb-2" data-testid={`text-name-${item.id}`}>
+      <div className="p-6">
+        <h3 className="font-bold text-foreground mb-3 text-lg leading-tight" data-testid={`text-name-${item.id}`}>
           {item.name}
         </h3>
-        <p className="text-muted-foreground text-sm mb-3 line-clamp-2" data-testid={`text-description-${item.id}`}>
+        <p className="text-muted-foreground text-sm mb-4 line-clamp-2 leading-relaxed" data-testid={`text-description-${item.id}`}>
           {item.description || "No description available"}
         </p>
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xl font-bold bg-gradient-to-r from-orange-600 to-purple-600 bg-clip-text text-transparent" data-testid={`text-price-${item.id}`}>
-            ₹{parseFloat(item.pricePerDay).toFixed(0)}/day
-          </span>
-          {sizes.length > 0 && (
-            <span className="text-sm text-muted-foreground">
-              Sizes: {sizes.join(", ")}
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <span className="text-2xl font-bold text-primary" data-testid={`text-price-${item.id}`}>
+              ₹{parseFloat(item.pricePerDay).toFixed(0)}
             </span>
+            <span className="text-sm text-muted-foreground ml-1">per day</span>
+          </div>
+          {sizes.length > 0 && (
+            <div className="text-right">
+              <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Available Sizes</p>
+              <p className="text-sm font-medium text-foreground">
+                {sizes.join(", ")}
+              </p>
+            </div>
           )}
         </div>
         
         <Dialog open={showRentalForm} onOpenChange={setShowRentalForm}>
           <DialogTrigger asChild>
             <Button
-              className={`w-full font-semibold transition-all ${
+              className={`w-full font-semibold transition-all h-12 rounded-xl ${
                 isAvailable 
-                  ? 'bg-gradient-to-r from-orange-500 to-purple-600 hover:from-orange-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl' 
-                  : 'bg-gray-400 text-gray-700'
+                  ? 'professional-gradient text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5' 
+                  : 'bg-gray-200 text-gray-500 cursor-not-allowed'
               }`}
               disabled={!isAvailable}
               data-testid={`button-rent-${item.id}`}
             >
-              {isAvailable ? "🎭 Rent Now" : "Currently Unavailable"}
+              {isAvailable ? "Rent Now" : "Currently Unavailable"}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
