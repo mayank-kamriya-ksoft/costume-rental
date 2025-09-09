@@ -45,6 +45,7 @@ export default function AdminRouter() {
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/admin/inventory" component={AdminDashboard} />
       <Route path="/admin/add-item" component={AdminDashboard} />
+      <Route path="/admin/categories" component={AdminDashboard} />
       <Route path="/admin/bookings" component={AdminDashboard} />
       <Route path="/admin/customers" component={AdminDashboard} />
       <Route path="/admin/reports" component={AdminDashboard} />

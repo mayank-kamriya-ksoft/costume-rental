@@ -34,6 +34,8 @@ import { apiRequest } from "../../lib/queryClient";
 import { Textarea } from "../../components/ui/textarea";
 import { useToast } from "../../hooks/use-toast";
 import InventoryManagement from "../components/InventoryManagement";
+import CategoryManagement from "../components/CategoryManagement";
+import CustomerManagement from "../components/CustomerManagement";
 
 type AdminStats = {
   totalRevenue?: number;
@@ -42,7 +44,7 @@ type AdminStats = {
   overdueReturns?: number;
 };
 
-type AdminTab = "dashboard" | "inventory" | "add-item" | "bookings" | "customers" | "reports" | "settings";
+type AdminTab = "dashboard" | "inventory" | "add-item" | "categories" | "bookings" | "customers" | "reports" | "settings";
 
 type Category = {
   id: string;
@@ -60,6 +62,7 @@ export default function AdminDashboard() {
   const getActiveTabFromUrl = (url: string): AdminTab => {
     if (url.includes('/add-item')) return 'add-item';
     if (url.includes('/inventory')) return 'inventory';
+    if (url.includes('/categories')) return 'categories';
     if (url.includes('/bookings')) return 'bookings';
     if (url.includes('/customers')) return 'customers';
     if (url.includes('/reports')) return 'reports';
@@ -148,6 +151,7 @@ export default function AdminDashboard() {
     { id: "dashboard" as AdminTab, label: "Dashboard", icon: BarChart3 },
     { id: "inventory" as AdminTab, label: "Inventory", icon: Package },
     { id: "add-item" as AdminTab, label: "Add Item", icon: Package },
+    { id: "categories" as AdminTab, label: "Categories", icon: Tags },
     { id: "bookings" as AdminTab, label: "Bookings", icon: Calendar },
     { id: "customers" as AdminTab, label: "Customers", icon: Users },
     { id: "reports" as AdminTab, label: "Reports", icon: BarChart3 },
@@ -754,6 +758,18 @@ export default function AdminDashboard() {
         );
       case "add-item":
         return renderAddItemForm();
+      case "categories":
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-6">
+            <CategoryManagement />
+          </div>
+        );
+      case "customers":
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-6">
+            <CustomerManagement />
+          </div>
+        );
       default:
         return (
           <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-6">
