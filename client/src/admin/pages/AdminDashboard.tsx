@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Badge } from "../components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
+import { Badge } from "../../components/ui/badge";
 import { 
   BarChart3, 
   Package, 
@@ -14,13 +14,15 @@ import {
   DollarSign,
   TrendingUp
 } from "lucide-react";
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils";
+import { useLocation } from "wouter";
 
 type AdminTab = "dashboard" | "inventory" | "bookings" | "customers" | "reports" | "settings";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<AdminTab>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [, setLocation] = useLocation();
 
   // Fetch admin dashboard statistics
   const { data: stats, isLoading: statsLoading } = useQuery({
@@ -36,8 +38,17 @@ export default function AdminDashboard() {
     { id: "settings" as AdminTab, label: "Settings", icon: Settings },
   ];
 
-  const handleLogout = () => {
-    window.location.href = "/api/admin/auth/logout";
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/auth/logout", { 
+        method: "POST", 
+        credentials: "include" 
+      });
+      setLocation("/admin/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+      setLocation("/admin/login");
+    }
   };
 
   const renderDashboardContent = () => (
@@ -74,7 +85,7 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold" data-testid="text-active-bookings">
-              {statsLoading ? "Loading..." : stats?.activeBookings || 0}
+              {statsLoading ? "Loading..." : stats?.activeRentals || 0}
             </div>
             <p className="text-xs text-muted-foreground">
               +180.1% from last month
@@ -89,7 +100,7 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold" data-testid="text-inventory-count">
-              {statsLoading ? "Loading..." : stats?.totalItems || 0}
+              {statsLoading ? "Loading..." : stats?.availableItems || 0}
             </div>
             <p className="text-xs text-muted-foreground">
               +19% from last month
@@ -99,15 +110,15 @@ export default function AdminDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Customers</CardTitle>
+            <CardTitle className="text-sm font-medium">Overdue Returns</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold" data-testid="text-customer-count">
-              {statsLoading ? "Loading..." : stats?.totalCustomers || 0}
+            <div className="text-2xl font-bold" data-testid="text-overdue-count">
+              {statsLoading ? "Loading..." : stats?.overdueReturns || 0}
             </div>
             <p className="text-xs text-muted-foreground">
-              +201 since last hour
+              -2% from last week
             </p>
           </CardContent>
         </Card>
@@ -192,73 +203,21 @@ export default function AdminDashboard() {
     switch (activeTab) {
       case "dashboard":
         return renderDashboardContent();
-      case "inventory":
-        return (
-          <div className="p-8">
-            <h1 className="text-3xl font-bold text-foreground mb-8">Inventory Management</h1>
-            <Card>
-              <CardContent className="p-6">
-                <p className="text-muted-foreground text-center">
-                  Inventory management features will be implemented here...
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        );
-      case "bookings":
-        return (
-          <div className="p-8">
-            <h1 className="text-3xl font-bold text-foreground mb-8">Booking Management</h1>
-            <Card>
-              <CardContent className="p-6">
-                <p className="text-muted-foreground text-center">
-                  Booking management features will be implemented here...
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        );
-      case "customers":
-        return (
-          <div className="p-8">
-            <h1 className="text-3xl font-bold text-foreground mb-8">Customer Management</h1>
-            <Card>
-              <CardContent className="p-6">
-                <p className="text-muted-foreground text-center">
-                  Customer management features will be implemented here...
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        );
-      case "reports":
-        return (
-          <div className="p-8">
-            <h1 className="text-3xl font-bold text-foreground mb-8">Reports & Analytics</h1>
-            <Card>
-              <CardContent className="p-6">
-                <p className="text-muted-foreground text-center">
-                  Reporting and analytics features will be implemented here...
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        );
-      case "settings":
-        return (
-          <div className="p-8">
-            <h1 className="text-3xl font-bold text-foreground mb-8">System Settings</h1>
-            <Card>
-              <CardContent className="p-6">
-                <p className="text-muted-foreground text-center">
-                  System settings will be implemented here...
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        );
       default:
-        return renderDashboardContent();
+        return (
+          <div className="p-8">
+            <h1 className="text-3xl font-bold text-foreground mb-8">
+              {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Management
+            </h1>
+            <Card>
+              <CardContent className="p-6">
+                <p className="text-muted-foreground text-center">
+                  {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} features will be implemented here...
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        );
     }
   };
 
