@@ -390,82 +390,97 @@ export default function PointOfSale() {
                   Add New Customer
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-md">
+              <DialogContent className="max-w-md bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl">
                 <DialogHeader>
-                  <DialogTitle>Add New Customer</DialogTitle>
+                  <DialogTitle className="text-slate-900 dark:text-slate-100 text-lg font-semibold">Add New Customer</DialogTitle>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">Create a new customer account with login credentials</p>
                 </DialogHeader>
-                <div className="space-y-4">
+                <div className="space-y-4 p-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>First Name *</Label>
+                      <Label className="text-slate-700 dark:text-slate-300 font-medium">First Name *</Label>
                       <Input
                         value={newCustomerData.firstName}
                         onChange={(e) => setNewCustomerData({ ...newCustomerData, firstName: e.target.value })}
+                        className="bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100"
+                        placeholder="Enter first name"
                         data-testid="input-first-name"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>Last Name *</Label>
+                      <Label className="text-slate-700 dark:text-slate-300 font-medium">Last Name *</Label>
                       <Input
                         value={newCustomerData.lastName}
                         onChange={(e) => setNewCustomerData({ ...newCustomerData, lastName: e.target.value })}
+                        className="bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100"
+                        placeholder="Enter last name"
                         data-testid="input-last-name"
                       />
                     </div>
                   </div>
                   
                   <div className="space-y-2">
-                    <Label>Email *</Label>
+                    <Label className="text-slate-700 dark:text-slate-300 font-medium">Email Address *</Label>
                     <Input
                       type="email"
                       value={newCustomerData.email}
                       onChange={(e) => setNewCustomerData({ ...newCustomerData, email: e.target.value })}
+                      className="bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100"
+                      placeholder="Enter email address"
                       data-testid="input-email"
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <Label>Phone *</Label>
+                    <Label className="text-slate-700 dark:text-slate-300 font-medium">Phone Number *</Label>
                     <Input
                       value={newCustomerData.phone}
                       onChange={(e) => setNewCustomerData({ ...newCustomerData, phone: e.target.value })}
+                      className="bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100"
+                      placeholder="Enter phone number"
                       data-testid="input-phone"
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <Label>Address</Label>
+                    <Label className="text-slate-700 dark:text-slate-300 font-medium">Address</Label>
                     <Input
                       value={newCustomerData.address}
                       onChange={(e) => setNewCustomerData({ ...newCustomerData, address: e.target.value })}
+                      className="bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100"
+                      placeholder="Enter address"
                       data-testid="input-address"
                     />
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>City</Label>
+                      <Label className="text-slate-700 dark:text-slate-300 font-medium">City</Label>
                       <Input
                         value={newCustomerData.city}
                         onChange={(e) => setNewCustomerData({ ...newCustomerData, city: e.target.value })}
+                        className="bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100"
+                        placeholder="Enter city"
                         data-testid="input-city"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>Postal Code</Label>
+                      <Label className="text-slate-700 dark:text-slate-300 font-medium">Postal Code</Label>
                       <Input
                         value={newCustomerData.postalCode}
                         onChange={(e) => setNewCustomerData({ ...newCustomerData, postalCode: e.target.value })}
+                        className="bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100"
+                        placeholder="Enter postal code"
                         data-testid="input-postal-code"
                       />
                     </div>
                   </div>
                   
-                  <div className="flex gap-2 pt-4">
+                  <div className="flex gap-3 pt-6 border-t border-slate-200 dark:border-slate-600">
                     <Button 
                       onClick={handleCreateCustomer}
                       disabled={createCustomerMutation.isPending}
-                      className="flex-1"
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2"
                       data-testid="button-save-customer"
                     >
                       {createCustomerMutation.isPending ? "Creating..." : "Create Customer"}
@@ -473,6 +488,7 @@ export default function PointOfSale() {
                     <Button 
                       variant="outline" 
                       onClick={() => setIsNewCustomerDialogOpen(false)}
+                      className="px-6 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
                       data-testid="button-cancel"
                     >
                       Cancel
