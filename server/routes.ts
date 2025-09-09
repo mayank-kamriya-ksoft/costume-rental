@@ -717,6 +717,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post('/api/admin/customers', requireAdminAuth, async (req, res) => {
+    try {
+      const validatedData = insertUserSchema.parse(req.body);
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(validatedData.email);
+      if (existingUser) {
+        return res.status(400).json({ 
+          error: 'User already exists',
+          message: 'An account with this email already exists' 
+        });
+      }
+      
+      // Hash password
+      const hashedPassword = await hashPassword(validatedData.password);
+      
+      // Create user data with hashed password
+      const userToCreate = {
+        ...validatedData,
+        password: hashedPassword,
+      };
+      
+      // Create user
+      const newUser = await storage.createUser(userToCreate);
+      
+      // Return user without password
+      const { password: _, ...userResponse } = newUser;
+      res.status(201).json(userResponse);
+      
+    } catch (error) {
+      console.error('Admin create customer error:', error);
+      
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          error: 'Validation error',
+          message: 'Please check your input and try again',
+          details: error.errors
+        });
+      }
+      
+      res.status(500).json({ 
+        error: 'Customer creation failed',
+        message: 'An error occurred while creating the customer account'
+      });
+    }
+  });
+
   app.put('/api/admin/customers/:id', requireAdminAuth, async (req, res) => {
     try {
       const { id } = req.params;
