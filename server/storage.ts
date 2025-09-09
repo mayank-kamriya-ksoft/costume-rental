@@ -45,6 +45,8 @@ export interface IStorage {
   // Category operations
   getCategories(): Promise<Category[]>;
   createCategory(category: InsertCategory): Promise<Category>;
+  updateCategory(id: string, category: Partial<InsertCategory>): Promise<Category>;
+  deleteCategory(id: string): Promise<void>;
 
   // Costume operations
   getCostumes(filters?: {
@@ -198,6 +200,19 @@ export class DatabaseStorage implements IStorage {
   async createCategory(categoryData: InsertCategory): Promise<Category> {
     const [category] = await db.insert(categories).values(categoryData).returning();
     return category;
+  }
+
+  async updateCategory(id: string, categoryData: Partial<InsertCategory>): Promise<Category> {
+    const [category] = await db
+      .update(categories)
+      .set({ ...categoryData, updatedAt: new Date() })
+      .where(eq(categories.id, id))
+      .returning();
+    return category;
+  }
+
+  async deleteCategory(id: string): Promise<void> {
+    await db.delete(categories).where(eq(categories.id, id));
   }
 
   // Costume operations

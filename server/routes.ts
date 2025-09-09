@@ -568,6 +568,122 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin inventory management routes
+  
+  // Admin costume management
+  app.post('/api/admin/costumes', requireAdminAuth, async (req, res) => {
+    try {
+      const costumeData = req.body;
+      const newCostume = await storage.createCostume(costumeData);
+      res.status(201).json(newCostume);
+    } catch (error) {
+      console.error('Error creating costume:', error);
+      res.status(500).json({ message: 'Failed to create costume' });
+    }
+  });
+
+  app.put('/api/admin/costumes/:id', requireAdminAuth, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const updateData = req.body;
+      const updatedCostume = await storage.updateCostume(id, updateData);
+      if (!updatedCostume) {
+        return res.status(404).json({ message: 'Costume not found' });
+      }
+      res.json(updatedCostume);
+    } catch (error) {
+      console.error('Error updating costume:', error);
+      res.status(500).json({ message: 'Failed to update costume' });
+    }
+  });
+
+  app.delete('/api/admin/costumes/:id', requireAdminAuth, async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteCostume(id);
+      res.json({ message: 'Costume deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting costume:', error);
+      res.status(500).json({ message: 'Failed to delete costume' });
+    }
+  });
+
+  // Admin accessory management
+  app.post('/api/admin/accessories', requireAdminAuth, async (req, res) => {
+    try {
+      const accessoryData = req.body;
+      const newAccessory = await storage.createAccessory(accessoryData);
+      res.status(201).json(newAccessory);
+    } catch (error) {
+      console.error('Error creating accessory:', error);
+      res.status(500).json({ message: 'Failed to create accessory' });
+    }
+  });
+
+  app.put('/api/admin/accessories/:id', requireAdminAuth, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const updateData = req.body;
+      const updatedAccessory = await storage.updateAccessory(id, updateData);
+      if (!updatedAccessory) {
+        return res.status(404).json({ message: 'Accessory not found' });
+      }
+      res.json(updatedAccessory);
+    } catch (error) {
+      console.error('Error updating accessory:', error);
+      res.status(500).json({ message: 'Failed to update accessory' });
+    }
+  });
+
+  app.delete('/api/admin/accessories/:id', requireAdminAuth, async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteAccessory(id);
+      res.json({ message: 'Accessory deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting accessory:', error);
+      res.status(500).json({ message: 'Failed to delete accessory' });
+    }
+  });
+
+  // Admin category management
+  app.post('/api/admin/categories', requireAdminAuth, async (req, res) => {
+    try {
+      const categoryData = req.body;
+      const newCategory = await storage.createCategory(categoryData);
+      res.status(201).json(newCategory);
+    } catch (error) {
+      console.error('Error creating category:', error);
+      res.status(500).json({ message: 'Failed to create category' });
+    }
+  });
+
+  app.put('/api/admin/categories/:id', requireAdminAuth, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const updateData = req.body;
+      const updatedCategory = await storage.updateCategory(id, updateData);
+      if (!updatedCategory) {
+        return res.status(404).json({ message: 'Category not found' });
+      }
+      res.json(updatedCategory);
+    } catch (error) {
+      console.error('Error updating category:', error);
+      res.status(500).json({ message: 'Failed to update category' });
+    }
+  });
+
+  app.delete('/api/admin/categories/:id', requireAdminAuth, async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteCategory(id);
+      res.json({ message: 'Category deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting category:', error);
+      res.status(500).json({ message: 'Failed to delete category' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
