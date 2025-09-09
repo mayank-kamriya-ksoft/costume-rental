@@ -68,6 +68,12 @@ export default function AdminDashboard() {
   };
   
   const [activeTab, setActiveTab] = useState<AdminTab>(getActiveTabFromUrl(location));
+  
+  // Update activeTab when URL changes
+  React.useEffect(() => {
+    const newTab = getActiveTabFromUrl(location);
+    setActiveTab(newTab);
+  }, [location]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   
   // Update URL when tab changes
