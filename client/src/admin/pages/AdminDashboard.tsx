@@ -22,7 +22,6 @@ import {
 import { cn } from "../../lib/utils";
 import { useLocation } from "wouter";
 import InventoryManagement from "../components/InventoryManagement";
-import AddItemPage from "../components/AddItemPage";
 
 type AdminStats = {
   totalRevenue?: number;
@@ -31,7 +30,7 @@ type AdminStats = {
   overdueReturns?: number;
 };
 
-type AdminTab = "dashboard" | "inventory" | "add-item" | "bookings" | "customers" | "reports" | "settings";
+type AdminTab = "dashboard" | "inventory" | "bookings" | "customers" | "reports" | "settings";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<AdminTab>("dashboard");
@@ -303,8 +302,6 @@ export default function AdminDashboard() {
             <InventoryManagement />
           </div>
         );
-      case "add-item":
-        return <AddItemPage />;
       default:
         return (
           <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-6">

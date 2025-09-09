@@ -3,6 +3,7 @@ import { Switch, Route, useLocation } from "wouter";
 import { useAdminAuth } from "./hooks/useAdminAuth";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
+import AddItemPage from "./components/AddItemPage";
 
 export default function AdminRouter() {
   const { isAuthenticated, isLoading, error } = useAdminAuth();
@@ -43,6 +44,7 @@ export default function AdminRouter() {
     <Switch>
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
+      <Route path="/admin/add-item" component={AddItemPage} />
       <Route path="/admin/login" component={() => {
         // If already authenticated and trying to access login, redirect to dashboard
         setLocation("/admin");
