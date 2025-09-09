@@ -37,6 +37,7 @@ import { useToast } from "../../hooks/use-toast";
 import InventoryManagement from "../components/InventoryManagement";
 import CategoryManagement from "../components/CategoryManagement";
 import CustomerManagement from "../components/CustomerManagement";
+import PointOfSale from "../components/PointOfSale";
 
 type AdminStats = {
   totalRevenue?: number;
@@ -778,19 +779,7 @@ export default function AdminDashboard() {
           <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-6">
             <div className="max-w-7xl mx-auto">
               <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-8">Point of Sale</h1>
-              <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
-                <CardContent className="p-12 text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full flex items-center justify-center">
-                    <CreditCard className="h-8 w-8 text-white" />
-                  </div>
-                  <p className="text-slate-600 dark:text-slate-400 text-lg">
-                    POS System - Quick customer and rental management
-                  </p>
-                  <p className="text-slate-500 dark:text-slate-500 text-sm mt-2">
-                    Coming Soon - Under Development
-                  </p>
-                </CardContent>
-              </Card>
+              <PointOfSale />
             </div>
           </div>
         );
