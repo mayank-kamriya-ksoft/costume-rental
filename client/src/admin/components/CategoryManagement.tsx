@@ -179,7 +179,7 @@ export default function CategoryManagement() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
             Category Management
           </h1>
           <p className="text-slate-600 dark:text-slate-400 mt-1">
@@ -306,7 +306,7 @@ export default function CategoryManagement() {
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center space-x-2">
                     {getTypeIcon(category.type)}
-                    <h3 className="font-semibold text-slate-900 dark:text-slate-100" data-testid={`text-category-name-${category.id}`}>
+                    <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100" data-testid={`text-category-name-${category.id}`}>
                       {category.name}
                     </h3>
                   </div>
@@ -445,7 +445,7 @@ export default function CategoryManagement() {
         <Card className="border-0 shadow-lg bg-white dark:bg-slate-800">
           <CardContent className="p-12 text-center">
             <Package className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
+            <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-2">
               No categories found
             </h3>
             <p className="text-slate-600 dark:text-slate-400 mb-4">

@@ -188,7 +188,7 @@ export default function CustomerManagement() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
             Customer Management
           </h1>
           <p className="text-slate-600 dark:text-slate-400 mt-1">
@@ -266,7 +266,7 @@ export default function CustomerManagement() {
                         {customer.firstName.charAt(0)}{customer.lastName.charAt(0)}
                       </div>
                       <div>
-                        <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-100" data-testid={`text-customer-name-${customer.id}`}>
+                        <h3 className="font-semibold text-base text-slate-900 dark:text-slate-100" data-testid={`text-customer-name-${customer.id}`}>
                           {customer.firstName} {customer.lastName}
                         </h3>
                         <div className="flex items-center space-x-2">
@@ -484,7 +484,7 @@ export default function CustomerManagement() {
         <Card className="border-0 shadow-lg bg-white dark:bg-slate-800">
           <CardContent className="p-12 text-center">
             <Users className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
+            <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-2">
               No customers found
             </h3>
             <p className="text-slate-600 dark:text-slate-400">
