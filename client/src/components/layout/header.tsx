@@ -75,45 +75,45 @@ export default function Header({ isAdmin = false }: HeaderProps) {
   };
 
   return (
-    <header className="bg-gradient-to-r from-orange-400 via-purple-500 to-yellow-400 border-b border-border shadow-lg sticky top-0 z-50">
+    <header className="professional-gradient border-b border-primary/20 shadow-lg sticky top-0 z-50 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center" data-testid="link-home">
-            <Crown className="h-8 w-8 text-white mr-2 drop-shadow-lg" />
+            <Crown className="h-10 w-10 text-white mr-3 drop-shadow-lg" />
             <div className="flex flex-col">
-              <span className="text-xl font-bold text-white drop-shadow-lg">Kamdhenu Drama King</span>
-              <span className="text-xs text-white/90 hidden sm:block">Premium Costume Rentals</span>
+              <span className="text-2xl font-bold text-white drop-shadow-lg tracking-tight">Kamdhenu Drama King</span>
+              <span className="text-sm text-white/95 hidden sm:block font-medium">Premium Costume Rentals</span>
             </div>
           </Link>
           
           {/* Contact Info & Navigation */}
-          <div className="hidden lg:flex items-center space-x-6">
-            <div className="flex items-center space-x-4 text-white/90 text-sm">
-              <div className="flex items-center space-x-1">
+          <div className="hidden lg:flex items-center space-x-8">
+            <div className="flex items-center space-x-6 text-white/95 text-sm font-medium">
+              <div className="flex items-center space-x-2 bg-white/10 rounded-lg px-3 py-2 backdrop-blur-sm">
                 <Phone className="h-4 w-4" />
                 <span>9822044498</span>
               </div>
-              <div className="flex items-center space-x-1">
+              <div className="flex items-center space-x-2 bg-white/10 rounded-lg px-3 py-2 backdrop-blur-sm">
                 <MapPin className="h-4 w-4" />
                 <span>Chh. Sambhaji Nagar</span>
               </div>
             </div>
             <nav className="flex items-center space-x-6">
-              <Link href="/" className={`font-medium transition-colors ${
-                location === "/" ? "text-white font-bold" : "text-white/80 hover:text-white"
+              <Link href="/" className={`font-semibold transition-all duration-200 px-3 py-2 rounded-lg ${
+                location === "/" ? "text-white bg-white/20" : "text-white/90 hover:text-white hover:bg-white/10"
               }`} data-testid="nav-browse">
                 Browse Costumes
               </Link>
               {isAuthenticated && (
-                <Link href="/dashboard" className={`font-medium transition-colors ${
-                  location === "/dashboard" ? "text-white font-bold" : "text-white/80 hover:text-white"
+                <Link href="/dashboard" className={`font-semibold transition-all duration-200 px-3 py-2 rounded-lg ${
+                  location === "/dashboard" ? "text-white bg-white/20" : "text-white/90 hover:text-white hover:bg-white/10"
                 }`} data-testid="nav-dashboard">
                   My Orders
                 </Link>
               )}
-              <Link href="/admin" className={`font-medium transition-colors ${
-                location === "/admin" ? "text-white font-bold" : "text-white/80 hover:text-white"
+              <Link href="/admin" className={`font-semibold transition-all duration-200 px-3 py-2 rounded-lg ${
+                location === "/admin" ? "text-white bg-white/20" : "text-white/90 hover:text-white hover:bg-white/10"
               }`} data-testid="nav-admin">
                 Admin Dashboard
               </Link>
@@ -123,9 +123,9 @@ export default function Header({ isAdmin = false }: HeaderProps) {
           {/* User Actions */}
           <div className="flex items-center space-x-4">
             {!isAdmin && (
-              <Button variant="ghost" size="sm" className="relative text-white hover:bg-white/20" data-testid="button-cart">
+              <Button variant="ghost" size="sm" className="relative text-white hover:bg-white/20 rounded-lg p-3" data-testid="button-cart">
                 <ShoppingCart className="h-5 w-5" />
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs bg-white text-orange-600">
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs bg-white text-primary font-bold">
                   0
                 </Badge>
               </Button>
@@ -180,14 +180,14 @@ export default function Header({ isAdmin = false }: HeaderProps) {
               <div className="flex items-center space-x-2">
                 <Button 
                   variant="ghost" 
-                  className="text-white hover:bg-white/20 font-medium" 
+                  className="text-white hover:bg-white/20 font-semibold px-4 py-2 rounded-lg" 
                   onClick={handleLogin}
                   data-testid="button-login"
                 >
                   Sign In
                 </Button>
                 <Button 
-                  className="bg-white text-orange-600 hover:bg-white/90 font-semibold" 
+                  className="bg-white text-primary hover:bg-white/95 font-semibold px-6 py-2 rounded-lg shadow-lg" 
                   onClick={handleRegister}
                   data-testid="button-register"
                 >
