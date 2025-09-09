@@ -200,33 +200,33 @@ export default function Home() {
       />
 
       {/* Products Grid */}
-      <section className="py-32 section-light relative">
+      <section className="py-12 section-light relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="flex items-end justify-between mb-24">
+          <div className="flex items-end justify-between mb-12">
             <div>
-              <div className="flex items-center mb-6">
-                <Sparkles className="h-12 w-12 text-primary mr-4" />
-                <h2 className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-purple-800 via-purple-600 to-amber-600 bg-clip-text text-transparent">
+              <div className="flex items-center mb-4">
+                <Sparkles className="h-8 w-8 text-primary mr-3" />
+                <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-800 via-purple-600 to-amber-600 bg-clip-text text-transparent">
                   {activeTab === "costumes" ? "Divine Costume Collection" : "Exquisite Accessories"}
                 </h2>
               </div>
-              <p className="text-2xl text-gray-700 max-w-3xl leading-relaxed">
+              <p className="text-lg text-gray-700 max-w-2xl leading-relaxed">
                 {activeTab === "costumes" ? 
                   "✨ Authentic designs inspired by Indian mythology, crafted with premium materials and divine attention to detail that brings legends to life ✨" : 
                   "✨ Complete your transformation with meticulously curated accessories that embody the divine essence of legendary characters ✨"}
               </p>
             </div>
-            <div className="text-right bg-gradient-to-br from-purple-100 to-amber-100 rounded-3xl p-8 shadow-xl border-2 border-purple-200">
-              <p className="text-5xl font-bold bg-gradient-to-r from-purple-700 to-amber-600 bg-clip-text text-transparent">
+            <div className="text-right bg-gradient-to-br from-purple-100 to-amber-100 rounded-2xl p-6 shadow-lg border border-purple-200">
+              <p className="text-3xl font-bold bg-gradient-to-r from-purple-700 to-amber-600 bg-clip-text text-transparent">
                 {activeTab === "costumes" ? costumes.length : accessories.length}
               </p>
-              <p className="text-lg text-purple-600 uppercase tracking-wide font-bold mt-2">
+              <p className="text-sm text-purple-600 uppercase tracking-wide font-bold mt-1">
                 Divine Items Available
               </p>
-              <div className="flex justify-center mt-3 space-x-1">
-                <Star className="h-5 w-5 text-amber-500 fill-current" />
-                <Star className="h-5 w-5 text-amber-500 fill-current" />
-                <Star className="h-5 w-5 text-amber-500 fill-current" />
+              <div className="flex justify-center mt-2 space-x-1">
+                <Star className="h-4 w-4 text-amber-500 fill-current" />
+                <Star className="h-4 w-4 text-amber-500 fill-current" />
+                <Star className="h-4 w-4 text-amber-500 fill-current" />
               </div>
             </div>
           </div>
