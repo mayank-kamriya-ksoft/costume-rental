@@ -39,7 +39,8 @@ import {
   Calendar,
   Filter,
   UserCheck,
-  UserX
+  UserX,
+  Plus
 } from "lucide-react";
 import { apiRequest } from "../../lib/queryClient";
 import { useToast } from "../../hooks/use-toast";
@@ -70,6 +71,7 @@ type CustomerFormData = {
   city: string;
   postalCode: string;
   isActive: boolean;
+  password?: string;
 };
 
 export default function CustomerManagement() {
@@ -77,6 +79,7 @@ export default function CustomerManagement() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -89,6 +92,7 @@ export default function CustomerManagement() {
     city: "",
     postalCode: "",
     isActive: true,
+    password: "",
   });
 
   // Build query parameters
@@ -104,6 +108,23 @@ export default function CustomerManagement() {
       const response = await fetch(url, { credentials: 'include' });
       if (!response.ok) throw new Error('Failed to fetch customers');
       return response.json();
+    },
+  });
+
+  // Create customer mutation
+  const createCustomerMutation = useMutation({
+    mutationFn: async (data: CustomerFormData & { password: string }) => {
+      const response = await apiRequest("POST", "/api/admin/customers", data);
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({ title: "Success", description: "Customer created successfully!" });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/customers"] });
+      setIsAddDialogOpen(false);
+      resetForm();
+    },
+    onError: (error: Error) => {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
     },
   });
 
@@ -135,6 +156,7 @@ export default function CustomerManagement() {
       city: "",
       postalCode: "",
       isActive: true,
+      password: "",
     });
   };
 
@@ -156,7 +178,19 @@ export default function CustomerManagement() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (editingCustomer) {
-      updateCustomerMutation.mutate({ id: editingCustomer.id, data: formData });
+      const { password, ...updateData } = formData;
+      updateCustomerMutation.mutate({ id: editingCustomer.id, data: updateData });
+    } else {
+      // Creating new customer - password is required
+      if (!formData.password || formData.password.length < 8) {
+        toast({ 
+          title: "Error", 
+          description: "Password must be at least 8 characters long", 
+          variant: "destructive" 
+        });
+        return;
+      }
+      createCustomerMutation.mutate(formData as CustomerFormData & { password: string });
     }
   };
 
@@ -195,8 +229,18 @@ export default function CustomerManagement() {
             View and manage customer accounts
           </p>
         </div>
-        <div className="text-sm text-slate-600 dark:text-slate-400">
-          Total: {filteredCustomers.length} customers
+        <div className="flex items-center space-x-4">
+          <div className="text-sm text-slate-600 dark:text-slate-400">
+            Total: {filteredCustomers.length} customers
+          </div>
+          <Button
+            onClick={() => setIsAddDialogOpen(true)}
+            className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+            data-testid="button-add-customer"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Customer
+          </Button>
         </div>
       </div>
 
@@ -474,6 +518,110 @@ export default function CustomerManagement() {
                 data-testid="button-update-customer"
               >
                 {updateCustomerMutation.isPending ? "Updating..." : "Update Customer"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Customer Dialog */}
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add New Customer</DialogTitle>
+            <DialogDescription>
+              Create a new customer account with login credentials
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="add-firstName">First Name *</Label>
+                <Input
+                  id="add-firstName"
+                  required
+                  value={formData.firstName}
+                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  data-testid="input-add-customer-firstname"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="add-lastName">Last Name *</Label>
+                <Input
+                  id="add-lastName"
+                  required
+                  value={formData.lastName}
+                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  data-testid="input-add-customer-lastname"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="add-email">Email Address *</Label>
+              <Input
+                id="add-email"
+                type="email"
+                required
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                data-testid="input-add-customer-email"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="add-password">Password *</Label>
+              <Input
+                id="add-password"
+                type="password"
+                required
+                minLength={8}
+                value={formData.password || ""}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                placeholder="Minimum 8 characters"
+                data-testid="input-add-customer-password"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="add-phone">Phone Number</Label>
+              <Input
+                id="add-phone"
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                data-testid="input-add-customer-phone"
+              />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="add-isActive"
+                checked={formData.isActive}
+                onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
+                data-testid="switch-add-customer-active"
+              />
+              <Label htmlFor="add-isActive">Active Account</Label>
+            </div>
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setIsAddDialogOpen(false);
+                  resetForm();
+                }}
+                data-testid="button-cancel-add-customer"
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="submit" 
+                disabled={createCustomerMutation.isPending}
+                data-testid="button-create-customer"
+              >
+                {createCustomerMutation.isPending ? "Creating..." : "Create Customer"}
               </Button>
             </DialogFooter>
           </form>
