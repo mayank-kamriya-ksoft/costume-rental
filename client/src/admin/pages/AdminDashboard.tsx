@@ -52,11 +52,30 @@ type Category = {
 };
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<AdminTab>("dashboard");
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  
+  // Parse URL to determine active tab
+  const getActiveTabFromUrl = (url: string): AdminTab => {
+    if (url.includes('/add-item')) return 'add-item';
+    if (url.includes('/inventory')) return 'inventory';
+    if (url.includes('/bookings')) return 'bookings';
+    if (url.includes('/customers')) return 'customers';
+    if (url.includes('/reports')) return 'reports';
+    if (url.includes('/settings')) return 'settings';
+    return 'dashboard';
+  };
+  
+  const [activeTab, setActiveTab] = useState<AdminTab>(getActiveTabFromUrl(location));
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  
+  // Update URL when tab changes
+  const handleTabChange = (tab: AdminTab) => {
+    setActiveTab(tab);
+    const newPath = tab === 'dashboard' ? '/admin' : `/admin/${tab}`;
+    setLocation(newPath);
+  };
   
   // Form data for add item
   const [formData, setFormData] = useState({
@@ -99,7 +118,7 @@ export default function AdminDashboard() {
       });
       queryClient.invalidateQueries({ queryKey: ["/api/costumes"] });
       queryClient.invalidateQueries({ queryKey: ["/api/accessories"] });
-      setActiveTab("inventory");
+      handleTabChange("inventory");
       // Reset form
       setFormData({
         name: "",
@@ -122,6 +141,7 @@ export default function AdminDashboard() {
   const sidebarItems = [
     { id: "dashboard" as AdminTab, label: "Dashboard", icon: BarChart3 },
     { id: "inventory" as AdminTab, label: "Inventory", icon: Package },
+    { id: "add-item" as AdminTab, label: "Add Item", icon: Package },
     { id: "bookings" as AdminTab, label: "Bookings", icon: Calendar },
     { id: "customers" as AdminTab, label: "Customers", icon: Users },
     { id: "reports" as AdminTab, label: "Reports", icon: BarChart3 },
@@ -682,7 +702,7 @@ export default function AdminDashboard() {
                   <Button 
                     type="button" 
                     variant="outline" 
-                    onClick={() => setActiveTab("inventory")}
+                    onClick={() => handleTabChange("inventory")}
                     disabled={createItemMutation.isPending}
                     className="px-8 h-12 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-base"
                     data-testid="button-cancel"
@@ -800,7 +820,7 @@ export default function AdminDashboard() {
                     ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg hover:from-blue-600 hover:to-purple-600"
                     : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                 )}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => handleTabChange(item.id)}
                 data-testid={`nav-${item.id}`}
               >
                 {isActive && (
