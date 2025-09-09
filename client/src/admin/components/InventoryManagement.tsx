@@ -449,82 +449,174 @@ export default function InventoryManagement() {
     isLoading: boolean;
   }) => {
     if (isLoading) {
-      return <div className="text-center py-8">Loading {type}s...</div>;
+      return (
+        <div className="space-y-4">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="animate-pulse">
+              <div className="flex items-center space-x-4 p-4 border border-slate-200 dark:border-slate-700 rounded-lg">
+                <div className="h-12 w-12 bg-slate-200 dark:bg-slate-700 rounded-lg"></div>
+                <div className="flex-1 space-y-2">
+                  <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/4"></div>
+                  <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+                </div>
+                <div className="h-6 w-16 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+                <div className="h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
     }
 
     const filteredItems = getFilteredItems(items);
 
     if (filteredItems.length === 0) {
       return (
-        <div className="text-center py-8 text-muted-foreground">
-          No {type}s found{searchTerm || statusFilter !== "all" ? " matching your filters" : ""}
+        <div className="text-center py-16">
+          <div className="w-16 h-16 mx-auto mb-4 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center">
+            <Package className="h-8 w-8 text-slate-400" />
+          </div>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
+            No {type}s found
+          </h3>
+          <p className="text-slate-600 dark:text-slate-400">
+            {searchTerm || statusFilter !== "all" 
+              ? "Try adjusting your search or filter criteria" 
+              : `Start by adding your first ${type} to the inventory`}
+          </p>
         </div>
       );
     }
 
     return (
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Price/Day</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Sizes</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredItems.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell>
-                <div>
-                  <div className="font-medium" data-testid={`text-item-${item.id}-name`}>{item.name}</div>
-                  {item.description && (
-                    <div className="text-sm text-muted-foreground">{item.description}</div>
-                  )}
-                </div>
-              </TableCell>
-              <TableCell>
-                {(categories as Category[] || []).find((cat: Category) => cat.id === item.categoryId)?.name || "Unknown"}
-              </TableCell>
-              <TableCell>${item.pricePerDay}</TableCell>
-              <TableCell>
-                <Badge variant={getStatusColor(item.status)} data-testid={`status-${item.id}`}>
-                  {item.status}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                {item.sizes?.length > 0 ? item.sizes.join(", ") : "N/A"}
-              </TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setEditingItem(item)}
-                    data-testid={`button-edit-${item.id}`}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      if (confirm(`Are you sure you want to delete ${item.name}?`)) {
-                        deleteItemMutation.mutate({ type, id: item.id });
-                      }
-                    }}
-                    data-testid={`button-delete-${item.id}`}
-                  >
-                    <Trash2 className="h-4 w-4 text-destructive" />
-                  </Button>
-                </div>
-              </TableCell>
+      <div className="rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-slate-200 dark:border-slate-700">
+              <TableHead className="font-semibold text-slate-700 dark:text-slate-300 h-12">Item Details</TableHead>
+              <TableHead className="font-semibold text-slate-700 dark:text-slate-300 h-12">Category</TableHead>
+              <TableHead className="font-semibold text-slate-700 dark:text-slate-300 h-12">Pricing</TableHead>
+              <TableHead className="font-semibold text-slate-700 dark:text-slate-300 h-12">Status</TableHead>
+              <TableHead className="font-semibold text-slate-700 dark:text-slate-300 h-12">Sizes</TableHead>
+              <TableHead className="font-semibold text-slate-700 dark:text-slate-300 h-12 text-center">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {filteredItems.map((item, index) => (
+              <TableRow 
+                key={item.id} 
+                className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors duration-150 border-slate-200 dark:border-slate-700"
+              >
+                <TableCell className="py-4">
+                  <div className="flex items-center space-x-3">
+                    <div className={cn(
+                      "w-12 h-12 rounded-lg flex items-center justify-center text-white font-semibold text-sm shadow-md",
+                      type === "costume" 
+                        ? "bg-gradient-to-r from-blue-500 to-purple-500" 
+                        : "bg-gradient-to-r from-green-500 to-emerald-500"
+                    )}>
+                      {type === "costume" ? <Package className="h-5 w-5" /> : <Sparkles className="h-5 w-5" />}
+                    </div>
+                    <div>
+                      <div className="font-semibold text-slate-900 dark:text-slate-100" data-testid={`text-item-${item.id}-name`}>
+                        {item.name}
+                      </div>
+                      {item.description && (
+                        <div className="text-sm text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">
+                          {item.description.length > 60 ? `${item.description.substring(0, 60)}...` : item.description}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell className="py-4">
+                  <div className="text-slate-700 dark:text-slate-300 font-medium">
+                    {(categories as Category[] || []).find((cat: Category) => cat.id === item.categoryId)?.name || "Unknown"}
+                  </div>
+                </TableCell>
+                <TableCell className="py-4">
+                  <div className="flex flex-col space-y-1">
+                    <div className="font-semibold text-slate-900 dark:text-slate-100">
+                      ${item.pricePerDay}/day
+                    </div>
+                    <div className="text-xs text-slate-600 dark:text-slate-400">
+                      ${item.securityDeposit} deposit
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell className="py-4">
+                  <Badge 
+                    variant={getStatusColor(item.status)} 
+                    className={cn(
+                      "px-3 py-1 text-xs font-medium",
+                      item.status === "available" && "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400",
+                      item.status === "rented" && "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400",
+                      item.status === "cleaning" && "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400",
+                      item.status === "damaged" && "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400"
+                    )}
+                    data-testid={`status-${item.id}`}
+                  >
+                    <div className={cn(
+                      "w-2 h-2 rounded-full mr-2",
+                      item.status === "available" && "bg-green-500",
+                      item.status === "rented" && "bg-blue-500",
+                      item.status === "cleaning" && "bg-yellow-500",
+                      item.status === "damaged" && "bg-red-500"
+                    )}></div>
+                    {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+                  </Badge>
+                </TableCell>
+                <TableCell className="py-4">
+                  <div className="text-slate-700 dark:text-slate-300">
+                    {item.sizes?.length > 0 ? (
+                      <div className="flex flex-wrap gap-1">
+                        {item.sizes.slice(0, 3).map((size, i) => (
+                          <span key={i} className="px-2 py-1 bg-slate-100 dark:bg-slate-700 text-xs rounded-md">
+                            {size}
+                          </span>
+                        ))}
+                        {item.sizes.length > 3 && (
+                          <span className="px-2 py-1 bg-slate-100 dark:bg-slate-700 text-xs rounded-md">
+                            +{item.sizes.length - 3}
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <span className="text-slate-400">N/A</span>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell className="py-4">
+                  <div className="flex justify-center space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setEditingItem(item)}
+                      className="h-8 w-8 p-0 border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-300 dark:hover:border-blue-700"
+                      data-testid={`button-edit-${item.id}`}
+                    >
+                      <Edit className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        if (confirm(`Are you sure you want to delete ${item.name}?`)) {
+                          deleteItemMutation.mutate({ type, id: item.id });
+                        }
+                      }}
+                      className="h-8 w-8 p-0 border-slate-200 dark:border-slate-700 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300 dark:hover:border-red-700"
+                      data-testid={`button-delete-${item.id}`}
+                    >
+                      <Trash2 className="h-4 w-4 text-red-600 dark:text-red-400" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     );
   };
 
