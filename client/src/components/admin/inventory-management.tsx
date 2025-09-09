@@ -375,8 +375,11 @@ export default function InventoryManagement() {
       </div>
 
       {/* Filters */}
-      <Card className="mb-6">
-        <CardContent className="p-6">
+      <Card className="mb-6 shadow-sm border-2">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg font-semibold text-foreground">Search & Filter</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
@@ -384,7 +387,7 @@ export default function InventoryManagement() {
                 placeholder="Search items..."
                 value={filters.search}
                 onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-                className="pl-10"
+                className="pl-10 h-11 border-2"
                 data-testid="input-search-items"
               />
             </div>
@@ -392,7 +395,7 @@ export default function InventoryManagement() {
               value={filters.category || "all-categories"}
               onValueChange={(value) => setFilters({ ...filters, category: value === "all-categories" ? "" : value })}
             >
-              <SelectTrigger data-testid="filter-category">
+              <SelectTrigger data-testid="filter-category" className="h-11 border-2">
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
               <SelectContent>
@@ -408,7 +411,7 @@ export default function InventoryManagement() {
               value={filters.status || "all-status"}
               onValueChange={(value) => setFilters({ ...filters, status: value === "all-status" ? "" : value })}
             >
-              <SelectTrigger data-testid="filter-status">
+              <SelectTrigger data-testid="filter-status" className="h-11 border-2">
                 <SelectValue placeholder="All Status" />
               </SelectTrigger>
               <SelectContent>
@@ -423,6 +426,7 @@ export default function InventoryManagement() {
               variant="outline"
               onClick={() => setFilters({ search: "", category: "", status: "" })}
               data-testid="button-clear-filters"
+              className="h-11 border-2"
             >
               Clear Filters
             </Button>
@@ -431,38 +435,59 @@ export default function InventoryManagement() {
       </Card>
 
       {/* Items Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Package className="h-5 w-5 mr-2" />
-            {activeTab === "costumes" ? "Costumes" : "Accessories"} ({currentItems.length})
+      <Card className="shadow-sm border-2">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center">
+              <Package className="h-5 w-5 mr-2 text-primary" />
+              <span className="text-lg font-semibold">
+                {activeTab === "costumes" ? "Costumes" : "Accessories"}
+              </span>
+              <Badge variant="secondary" className="ml-3 px-3 py-1">
+                {currentItems.length} items
+              </Badge>
+            </div>
           </CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
             <div className="space-y-4">
               {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="flex items-center space-x-4 p-4 bg-muted/30 rounded-lg animate-pulse">
+                <div key={i} className="flex items-center space-x-4 p-6 bg-muted/20 rounded-lg border border-border animate-pulse">
                   <div className="w-16 h-16 bg-muted rounded-lg"></div>
-                  <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-muted rounded w-3/4"></div>
-                    <div className="h-3 bg-muted rounded w-1/2"></div>
+                  <div className="flex-1 space-y-3">
+                    <div className="h-4 bg-muted rounded-md w-3/4"></div>
+                    <div className="h-3 bg-muted rounded-md w-1/2"></div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-6 bg-muted rounded-full w-20"></div>
+                      <div className="h-6 bg-muted rounded-md w-16"></div>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="w-8 h-8 bg-muted rounded"></div>
+                    <div className="w-8 h-8 bg-muted rounded"></div>
                   </div>
                 </div>
               ))}
             </div>
           ) : currentItems.length === 0 ? (
-            <div className="text-center py-12">
-              <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2">No items found</h3>
-              <p className="text-muted-foreground">Add your first {activeTab.slice(0, -1)} to get started</p>
+            <div className="text-center py-16">
+              <div className="w-24 h-24 mx-auto mb-6 bg-muted/30 rounded-full flex items-center justify-center">
+                <Package className="h-12 w-12 text-muted-foreground" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground mb-3">No items found</h3>
+              <p className="text-muted-foreground mb-6">Add your first {activeTab.slice(0, -1)} to get started</p>
+              <Button onClick={() => setShowAddForm(true)} className="h-11">
+                <Plus className="h-4 w-4 mr-2" />
+                Add First Item
+              </Button>
             </div>
           ) : (
             <div className="space-y-4">
               {currentItems.map((item: Costume | Accessory) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/30 transition-colors"
+                  className="flex items-center justify-between p-6 border-2 border-border rounded-lg hover:bg-muted/20 hover:border-primary/20 transition-all duration-200 hover:shadow-md"
                 >
                   <div className="flex items-center space-x-4">
                     <div className="w-16 h-16 bg-gradient-to-br from-primary/10 to-secondary/20 rounded-lg flex items-center justify-center">
