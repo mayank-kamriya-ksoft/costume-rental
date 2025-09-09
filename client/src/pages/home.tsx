@@ -78,11 +78,11 @@ export default function Home() {
             
             <div className="mb-8 max-w-4xl mx-auto">
               <p className="text-lg md:text-xl text-amber-100 font-semibold mb-3 drop-shadow-lg">
-                ✨ Premium Indian Mythological Costumes & Accessories ✨
+                ✨ Premium Costumes & Accessories for Every Occasion ✨
               </p>
               <p className="text-base md:text-lg text-white/90 leading-relaxed max-w-3xl mx-auto">
-                Bring the divine stories of Krishna, Rama, Durga, and legendary heroes to life with our authentic, 
-                handcrafted costumes that transport you into the realm of ancient mythology
+                Transform into any character you desire with our extensive collection of high-quality costumes and accessories, 
+                perfect for parties, events, cosplay, theater, and special celebrations
               </p>
             </div>
             
@@ -93,7 +93,7 @@ export default function Home() {
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-purple-600" />
                   <Input
                     type="text"
-                    placeholder="Search for divine characters, mythological themes, or costume types..."
+                    placeholder="Search for costumes... (superhero, princess, pirate, anime, historical, etc.)"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-14 pr-4 border-0 focus-visible:ring-2 focus-visible:ring-purple-500 text-lg h-16 bg-transparent placeholder:text-gray-500 text-gray-800 font-medium"
@@ -212,8 +212,8 @@ export default function Home() {
               </div>
               <p className="text-lg text-gray-700 max-w-2xl leading-relaxed">
                 {activeTab === "costumes" ? 
-                  "✨ Authentic designs inspired by Indian mythology, crafted with premium materials and divine attention to detail that brings legends to life ✨" : 
-                  "✨ Complete your transformation with meticulously curated accessories that embody the divine essence of legendary characters ✨"}
+                  "✨ High-quality costumes for every character and occasion, crafted with premium materials and attention to detail that brings your vision to life ✨" : 
+                  "✨ Complete your transformation with meticulously curated accessories that perfect your character look for any event or celebration ✨"}
               </p>
             </div>
             <div className="text-right bg-gradient-to-br from-purple-100 to-amber-100 rounded-2xl p-6 shadow-lg border border-purple-200">
