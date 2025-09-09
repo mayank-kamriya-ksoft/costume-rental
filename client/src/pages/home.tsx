@@ -54,7 +54,7 @@ export default function Home() {
       <Header />
       
       {/* Hero Section */}
-      <section className="hero-bg py-40 relative overflow-hidden">
+      <section className="hero-bg py-16 relative overflow-hidden">
         {/* Floating Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-20 left-10 w-20 h-20 bg-amber-400 rounded-full opacity-20 animate-pulse"></div>
@@ -69,18 +69,18 @@ export default function Home() {
               <Sparkles className="h-16 w-16 text-amber-300 mx-auto mb-4 animate-pulse" />
             </div>
             
-            <h1 className="text-7xl md:text-9xl font-bold text-transparent bg-gradient-to-r from-amber-200 via-amber-100 to-white bg-clip-text mb-12 tracking-tight drop-shadow-2xl">
+            <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-gradient-to-r from-amber-200 via-amber-100 to-white bg-clip-text mb-6 tracking-tight drop-shadow-2xl">
               Transform Into 
               <span className="block bg-gradient-to-r from-white via-amber-100 to-amber-200 bg-clip-text">
                 Legendary Characters
               </span>
             </h1>
             
-            <div className="mb-16 max-w-5xl mx-auto">
-              <p className="text-2xl md:text-3xl text-amber-100 font-semibold mb-4 drop-shadow-lg">
+            <div className="mb-8 max-w-4xl mx-auto">
+              <p className="text-lg md:text-xl text-amber-100 font-semibold mb-3 drop-shadow-lg">
                 ✨ Premium Indian Mythological Costumes & Accessories ✨
               </p>
-              <p className="text-lg md:text-xl text-white/90 leading-relaxed max-w-4xl mx-auto">
+              <p className="text-base md:text-lg text-white/90 leading-relaxed max-w-3xl mx-auto">
                 Bring the divine stories of Krishna, Rama, Durga, and legendary heroes to life with our authentic, 
                 handcrafted costumes that transport you into the realm of ancient mythology
               </p>
