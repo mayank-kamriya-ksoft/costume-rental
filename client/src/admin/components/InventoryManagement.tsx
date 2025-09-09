@@ -11,8 +11,10 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
 import { useToast } from "../../hooks/use-toast";
-import { Plus, Edit, Trash2, Search, Filter } from "lucide-react";
+import { Plus, Edit, Trash2, Search, Filter, Package, Sparkles, Tags, Image, DollarSign } from "lucide-react";
 import { Textarea } from "../../components/ui/textarea";
+import { Separator } from "../../components/ui/separator";
+import { cn } from "../../lib/utils";
 
 type InventoryItem = {
   id: string;
@@ -172,151 +174,272 @@ export default function InventoryManagement() {
     const typeCategories = (categories as Category[] || []).filter((cat: Category) => cat.type === type);
 
     return (
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              required
-              data-testid="input-item-name"
-            />
-          </div>
-          <div>
-            <Label htmlFor="category">Category</Label>
-            <Select value={formData.categoryId} onValueChange={(value) => setFormData({ ...formData, categoryId: value })}>
-              <SelectTrigger data-testid="select-item-category">
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent>
-                {typeCategories.map((category) => (
-                  <SelectItem key={category.id} value={category.id}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+      <div className="max-h-[80vh] overflow-y-auto">
+        <form onSubmit={handleSubmit} className="space-y-8 p-1">
+          {/* Basic Information Section */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2 mb-4">
+              <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
+                <Package className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Basic Information</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Item Name *
+                </Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="Enter item name"
+                  className="h-11 border-slate-200 dark:border-slate-700 focus:border-blue-500 focus:ring-blue-500/20"
+                  required
+                  data-testid="input-item-name"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="category" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Category *
+                </Label>
+                <Select value={formData.categoryId} onValueChange={(value) => setFormData({ ...formData, categoryId: value })}>
+                  <SelectTrigger className="h-11 border-slate-200 dark:border-slate-700 focus:border-blue-500" data-testid="select-item-category">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {typeCategories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
 
-        <div>
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            data-testid="textarea-item-description"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="pricePerDay">Price per Day ($)</Label>
-            <Input
-              id="pricePerDay"
-              type="number"
-              step="0.01"
-              value={formData.pricePerDay}
-              onChange={(e) => setFormData({ ...formData, pricePerDay: e.target.value })}
-              required
-              data-testid="input-item-price"
-            />
+            <div className="space-y-2">
+              <Label htmlFor="description" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                Description
+              </Label>
+              <Textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                placeholder="Enter detailed description of the item"
+                className="min-h-[100px] border-slate-200 dark:border-slate-700 focus:border-blue-500 focus:ring-blue-500/20 resize-none"
+                data-testid="textarea-item-description"
+              />
+            </div>
           </div>
-          <div>
-            <Label htmlFor="securityDeposit">Security Deposit ($)</Label>
-            <Input
-              id="securityDeposit"
-              type="number"
-              step="0.01"
-              value={formData.securityDeposit}
-              onChange={(e) => setFormData({ ...formData, securityDeposit: e.target.value })}
-              required
-              data-testid="input-item-deposit"
-            />
-          </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="sizes">Sizes (comma-separated)</Label>
-            <Input
-              id="sizes"
-              value={formData.sizes}
-              onChange={(e) => setFormData({ ...formData, sizes: e.target.value })}
-              placeholder="S, M, L, XL"
-              data-testid="input-item-sizes"
-            />
-          </div>
-          <div>
-            <Label htmlFor="status">Status</Label>
-            <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
-              <SelectTrigger data-testid="select-item-status">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="available">Available</SelectItem>
-                <SelectItem value="rented">Rented</SelectItem>
-                <SelectItem value="cleaning">Cleaning</SelectItem>
-                <SelectItem value="damaged">Damaged</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+          <Separator className="my-6" />
 
-        <div>
-          <Label htmlFor="imageUrl">Image URL</Label>
-          <Input
-            id="imageUrl"
-            value={formData.imageUrl}
-            onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-            placeholder="https://example.com/image.jpg"
-            data-testid="input-item-image"
-          />
-        </div>
+          {/* Pricing Section */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2 mb-4">
+              <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
+                <DollarSign className="h-4 w-4 text-green-600 dark:text-green-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Pricing & Status</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="pricePerDay" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Price per Day ($) *
+                </Label>
+                <div className="relative">
+                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <Input
+                    id="pricePerDay"
+                    type="number"
+                    step="0.01"
+                    value={formData.pricePerDay}
+                    onChange={(e) => setFormData({ ...formData, pricePerDay: e.target.value })}
+                    placeholder="0.00"
+                    className="pl-10 h-11 border-slate-200 dark:border-slate-700 focus:border-green-500 focus:ring-green-500/20"
+                    required
+                    data-testid="input-item-price"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="securityDeposit" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Security Deposit ($) *
+                </Label>
+                <div className="relative">
+                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <Input
+                    id="securityDeposit"
+                    type="number"
+                    step="0.01"
+                    value={formData.securityDeposit}
+                    onChange={(e) => setFormData({ ...formData, securityDeposit: e.target.value })}
+                    placeholder="0.00"
+                    className="pl-10 h-11 border-slate-200 dark:border-slate-700 focus:border-green-500 focus:ring-green-500/20"
+                    required
+                    data-testid="input-item-deposit"
+                  />
+                </div>
+              </div>
+            </div>
 
-        {type === "costume" && (
-          <div>
-            <Label htmlFor="themes">Themes (comma-separated)</Label>
-            <Input
-              id="themes"
-              value={formData.themes}
-              onChange={(e) => setFormData({ ...formData, themes: e.target.value })}
-              placeholder="Traditional, Modern, Festival"
-              data-testid="input-costume-themes"
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="sizes" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Available Sizes
+                </Label>
+                <Input
+                  id="sizes"
+                  value={formData.sizes}
+                  onChange={(e) => setFormData({ ...formData, sizes: e.target.value })}
+                  placeholder="S, M, L, XL"
+                  className="h-11 border-slate-200 dark:border-slate-700 focus:border-blue-500 focus:ring-blue-500/20"
+                  data-testid="input-item-sizes"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="status" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Status *
+                </Label>
+                <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
+                  <SelectTrigger className="h-11 border-slate-200 dark:border-slate-700 focus:border-blue-500" data-testid="select-item-status">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="available">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <span>Available</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="rented">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <span>Rented</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="cleaning">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                        <span>Cleaning</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="damaged">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                        <span>Damaged</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </div>
-        )}
 
-        {type === "accessory" && (
-          <div>
-            <Label htmlFor="linkedCharacters">Linked Characters (comma-separated)</Label>
-            <Input
-              id="linkedCharacters"
-              value={formData.linkedCharacters}
-              onChange={(e) => setFormData({ ...formData, linkedCharacters: e.target.value })}
-              placeholder="Krishna, Ganesha, Durga"
-              data-testid="input-accessory-characters"
-            />
+          <Separator className="my-6" />
+
+          {/* Media & Details Section */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2 mb-4">
+              <div className="p-2 bg-purple-100 dark:bg-purple-900/20 rounded-lg">
+                <Image className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Media & Additional Details</h3>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="imageUrl" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                Image URL
+              </Label>
+              <Input
+                id="imageUrl"
+                value={formData.imageUrl}
+                onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                placeholder="https://example.com/image.jpg"
+                className="h-11 border-slate-200 dark:border-slate-700 focus:border-purple-500 focus:ring-purple-500/20"
+                data-testid="input-item-image"
+              />
+            </div>
+
+            {type === "costume" && (
+              <div className="space-y-2">
+                <Label htmlFor="themes" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  <div className="flex items-center space-x-1">
+                    <Tags className="h-4 w-4" />
+                    <span>Themes</span>
+                  </div>
+                </Label>
+                <Input
+                  id="themes"
+                  value={formData.themes}
+                  onChange={(e) => setFormData({ ...formData, themes: e.target.value })}
+                  placeholder="Traditional, Modern, Festival"
+                  className="h-11 border-slate-200 dark:border-slate-700 focus:border-purple-500 focus:ring-purple-500/20"
+                  data-testid="input-costume-themes"
+                />
+              </div>
+            )}
+
+            {type === "accessory" && (
+              <div className="space-y-2">
+                <Label htmlFor="linkedCharacters" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  <div className="flex items-center space-x-1">
+                    <Sparkles className="h-4 w-4" />
+                    <span>Linked Characters</span>
+                  </div>
+                </Label>
+                <Input
+                  id="linkedCharacters"
+                  value={formData.linkedCharacters}
+                  onChange={(e) => setFormData({ ...formData, linkedCharacters: e.target.value })}
+                  placeholder="Krishna, Ganesha, Durga"
+                  className="h-11 border-slate-200 dark:border-slate-700 focus:border-purple-500 focus:ring-purple-500/20"
+                  data-testid="input-accessory-characters"
+                />
+              </div>
+            )}
           </div>
-        )}
 
-        <div className="flex justify-end gap-2 pt-4">
-          <Button 
-            type="button" 
-            variant="outline" 
-            onClick={() => item ? setEditingItem(null) : setIsAddDialogOpen(false)}
-            disabled={isLoading}
-            data-testid="button-cancel"
-          >
-            Cancel
-          </Button>
-          <Button type="submit" disabled={isLoading} data-testid="button-save-item">
-            {isLoading ? "Saving..." : (item ? "Update" : "Add")} {type === "costume" ? "Costume" : "Accessory"}
-          </Button>
-        </div>
-      </form>
+          <Separator className="my-8" />
+
+          {/* Action Buttons */}
+          <div className="flex justify-end space-x-3 pt-6">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={() => item ? setEditingItem(null) : setIsAddDialogOpen(false)}
+              disabled={isLoading}
+              className="px-6 h-11 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
+              data-testid="button-cancel"
+            >
+              Cancel
+            </Button>
+            <Button 
+              type="submit" 
+              disabled={isLoading} 
+              className={cn(
+                "px-6 h-11 bg-gradient-to-r text-white shadow-md hover:shadow-lg transition-all duration-200",
+                type === "costume" 
+                  ? "from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600" 
+                  : "from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
+              )}
+              data-testid="button-save-item"
+            >
+              {isLoading ? (
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Saving...</span>
+                </div>
+              ) : (
+                `${item ? "Update" : "Add"} ${type === "costume" ? "Costume" : "Accessory"}`
+              )}
+            </Button>
+          </div>
+        </form>
+      </div>
     );
   };
 
@@ -406,24 +529,41 @@ export default function InventoryManagement() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-8">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Inventory Management</h1>
-          <p className="text-muted-foreground">Manage costumes and accessories</p>
+          <div className="flex items-center space-x-3 mb-2">
+            <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl shadow-lg">
+              <Package className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
+                Inventory Management
+              </h1>
+              <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">Manage your costume and accessory collections</p>
+            </div>
+          </div>
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button data-testid="button-add-item">
+            <Button 
+              className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 h-11 px-6"
+              data-testid="button-add-item"
+            >
               <Plus className="h-4 w-4 mr-2" />
-              Add Item
+              Add New Item
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Add New {activeTab === "costumes" ? "Costume" : "Accessory"}</DialogTitle>
-              <DialogDescription>
-                Add a new {activeTab === "costumes" ? "costume" : "accessory"} to your inventory
+          <DialogContent className="max-w-4xl max-h-[90vh]">
+            <DialogHeader className="pb-4">
+              <DialogTitle className="text-2xl font-bold flex items-center space-x-2">
+                <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg">
+                  <Plus className="h-5 w-5 text-white" />
+                </div>
+                <span>Add New {activeTab === "costumes" ? "Costume" : "Accessory"}</span>
+              </DialogTitle>
+              <DialogDescription className="text-slate-600 dark:text-slate-400">
+                Create a new {activeTab === "costumes" ? "costume" : "accessory"} entry in your inventory system
               </DialogDescription>
             </DialogHeader>
             <ItemForm
@@ -438,33 +578,58 @@ export default function InventoryManagement() {
         </Dialog>
       </div>
 
-      {/* Search and Filter */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex gap-4">
+      {/* Enhanced Search and Filter */}
+      <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+        <CardContent className="p-6">
+          <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
                 <Input
-                  placeholder="Search items..."
+                  placeholder="Search by name, description, or category..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-9"
+                  className="pl-12 h-12 border-slate-200 dark:border-slate-700 focus:border-blue-500 focus:ring-blue-500/20 bg-white dark:bg-slate-900"
                   data-testid="input-search"
                 />
               </div>
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-40" data-testid="select-status-filter">
-                <Filter className="h-4 w-4 mr-2" />
-                <SelectValue />
+              <SelectTrigger className="w-48 h-12 border-slate-200 dark:border-slate-700 focus:border-blue-500 bg-white dark:bg-slate-900" data-testid="select-status-filter">
+                <Filter className="h-4 w-4 mr-2 text-slate-400" />
+                <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="available">Available</SelectItem>
-                <SelectItem value="rented">Rented</SelectItem>
-                <SelectItem value="cleaning">Cleaning</SelectItem>
-                <SelectItem value="damaged">Damaged</SelectItem>
+                <SelectItem value="all">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                    <span>All Status</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="available">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span>Available</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="rented">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <span>Rented</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="cleaning">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                    <span>Cleaning</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="damaged">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                    <span>Damaged</span>
+                  </div>
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -472,18 +637,39 @@ export default function InventoryManagement() {
       </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="costumes" data-testid="tab-costumes">Costumes</TabsTrigger>
-          <TabsTrigger value="accessories" data-testid="tab-accessories">Accessories</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+          <TabsTrigger 
+            value="costumes" 
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white rounded-lg font-medium transition-all duration-200" 
+            data-testid="tab-costumes"
+          >
+            <Package className="h-4 w-4 mr-2" />
+            Costumes
+          </TabsTrigger>
+          <TabsTrigger 
+            value="accessories" 
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-emerald-500 data-[state=active]:text-white rounded-lg font-medium transition-all duration-200" 
+            data-testid="tab-accessories"
+          >
+            <Sparkles className="h-4 w-4 mr-2" />
+            Accessories
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="costumes">
-          <Card>
-            <CardHeader>
-              <CardTitle>Costumes</CardTitle>
-              <CardDescription>Manage your costume inventory</CardDescription>
+          <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+            <CardHeader className="border-b border-slate-100 dark:border-slate-700">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg">
+                  <Package className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl font-bold text-slate-900 dark:text-slate-100">Costumes</CardTitle>
+                  <CardDescription className="text-slate-600 dark:text-slate-400">Manage your complete costume collection</CardDescription>
+                </div>
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               <ItemsTable 
                 items={(costumes as InventoryItem[]) || []} 
                 type="costume" 
@@ -494,12 +680,19 @@ export default function InventoryManagement() {
         </TabsContent>
 
         <TabsContent value="accessories">
-          <Card>
-            <CardHeader>
-              <CardTitle>Accessories</CardTitle>
-              <CardDescription>Manage your accessory inventory</CardDescription>
+          <Card className="border-0 shadow-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm">
+            <CardHeader className="border-b border-slate-100 dark:border-slate-700">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg">
+                  <Sparkles className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl font-bold text-slate-900 dark:text-slate-100">Accessories</CardTitle>
+                  <CardDescription className="text-slate-600 dark:text-slate-400">Manage your accessory inventory and props</CardDescription>
+                </div>
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               <ItemsTable 
                 items={(accessories as InventoryItem[]) || []} 
                 type="accessory" 
@@ -510,14 +703,19 @@ export default function InventoryManagement() {
         </TabsContent>
       </Tabs>
 
-      {/* Edit Item Dialog */}
+      {/* Enhanced Edit Item Dialog */}
       {editingItem && (
         <Dialog open={!!editingItem} onOpenChange={() => setEditingItem(null)}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Edit {editingItem.themes ? "Costume" : "Accessory"}</DialogTitle>
-              <DialogDescription>
-                Update the details for {editingItem.name}
+          <DialogContent className="max-w-4xl max-h-[90vh]">
+            <DialogHeader className="pb-4">
+              <DialogTitle className="text-2xl font-bold flex items-center space-x-2">
+                <div className="p-2 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg">
+                  <Edit className="h-5 w-5 text-white" />
+                </div>
+                <span>Edit {editingItem.themes ? "Costume" : "Accessory"}</span>
+              </DialogTitle>
+              <DialogDescription className="text-slate-600 dark:text-slate-400">
+                Update the details for <span className="font-medium text-slate-800 dark:text-slate-200">{editingItem.name}</span>
               </DialogDescription>
             </DialogHeader>
             <ItemForm
