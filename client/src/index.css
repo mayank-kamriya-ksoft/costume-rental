@@ -4,25 +4,25 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(45, 100%, 98%);
+  --background: hsl(0, 0%, 100%);
   --foreground: hsl(222.2, 84%, 4.9%);
   --card: hsl(0, 0%, 100%);
   --card-foreground: hsl(222.2, 84%, 4.9%);
-  --popover: hsl(0, 0%, 98%);
+  --popover: hsl(0, 0%, 100%);
   --popover-foreground: hsl(222.2, 84%, 4.9%);
-  --primary: hsl(25, 95%, 55%);
+  --primary: hsl(262.1, 83.3%, 57.8%);
   --primary-foreground: hsl(0, 0%, 100%);
-  --secondary: hsl(45, 100%, 92%);
+  --secondary: hsl(210, 40%, 96%);
   --secondary-foreground: hsl(222.2, 84%, 4.9%);
-  --muted: hsl(45, 80%, 95%);
+  --muted: hsl(210, 40%, 96%);
   --muted-foreground: hsl(215.4, 16.3%, 46.9%);
-  --accent: hsl(280, 100%, 75%);
-  --accent-foreground: hsl(0, 0%, 100%);
+  --accent: hsl(210, 40%, 96%);
+  --accent-foreground: hsl(222.2, 84%, 4.9%);
   --destructive: hsl(0, 84.2%, 60.2%);
   --destructive-foreground: hsl(210, 40%, 98%);
-  --border: hsl(45, 60%, 85%);
-  --input: hsl(45, 60%, 90%);
-  --ring: hsl(25, 95%, 55%);
+  --border: hsl(214.3, 31.8%, 91.4%);
+  --input: hsl(214.3, 31.8%, 91.4%);
+  --ring: hsl(262.1, 83.3%, 57.8%);
   --chart-1: hsl(25, 95%, 55%);
   --chart-2: hsl(280, 100%, 70%);
   --chart-3: hsl(45, 100%, 60%);
@@ -211,16 +211,37 @@
   [data-radix-select-content],
   [data-radix-dropdown-menu-content],
   [data-radix-popover-content] {
-    background: hsl(var(--popover)) !important;
-    border: 1px solid hsl(var(--border)) !important;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
-    backdrop-filter: none !important;
+    background: hsl(var(--card)) !important;
+    border: 2px solid hsl(var(--border)) !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    backdrop-filter: blur(4px) !important;
   }
 
   .dark [data-radix-select-content],
   .dark [data-radix-dropdown-menu-content],
   .dark [data-radix-popover-content] {
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  /* Professional form styling */
+  .form-section {
+    @apply space-y-6 p-6 bg-card border rounded-lg shadow-sm;
+  }
+
+  .form-header {
+    @apply pb-4 mb-6 border-b border-border;
+  }
+
+  .form-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+  }
+
+  .form-field {
+    @apply space-y-2;
+  }
+
+  .form-actions {
+    @apply flex gap-3 pt-6 border-t border-border;
   }
 }
 

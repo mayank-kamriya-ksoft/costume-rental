@@ -220,31 +220,34 @@ export default function InventoryManagement() {
               Add New Item
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>
-                {editingItem ? "Edit" : "Add New"} {activeTab === "costumes" ? "Costume" : "Accessory"}
-              </DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Name *</Label>
+          <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="form-header">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-semibold">
+                  {editingItem ? "Edit" : "Add New"} {activeTab === "costumes" ? "Costume" : "Accessory"}
+                </DialogTitle>
+              </DialogHeader>
+            </div>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div className="form-grid">
+                <div className="form-field">
+                  <Label htmlFor="name" className="text-sm font-medium">Name *</Label>
                   <Input
                     id="name"
                     {...register("name")}
                     placeholder="Enter item name"
                     data-testid="input-name"
+                    className="h-11 border-2"
                   />
                   {errors.name && (
-                    <p className="text-sm text-destructive">{errors.name.message}</p>
+                    <p className="text-sm text-destructive font-medium">{errors.name.message}</p>
                   )}
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="categoryId">Category *</Label>
+                <div className="form-field">
+                  <Label htmlFor="categoryId" className="text-sm font-medium">Category *</Label>
                   <Select onValueChange={(value) => setValue("categoryId", value)}>
-                    <SelectTrigger data-testid="select-category">
+                    <SelectTrigger data-testid="select-category" className="h-11 border-2">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
@@ -256,41 +259,47 @@ export default function InventoryManagement() {
                     </SelectContent>
                   </Select>
                   {errors.categoryId && (
-                    <p className="text-sm text-destructive">{errors.categoryId.message}</p>
+                    <p className="text-sm text-destructive font-medium">{errors.categoryId.message}</p>
                   )}
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+              <div className="form-field">
+                <Label htmlFor="description" className="text-sm font-medium">Description</Label>
                 <Textarea
                   id="description"
                   {...register("description")}
                   placeholder="Enter item description"
                   data-testid="textarea-description"
+                  className="min-h-[100px] border-2 resize-none"
+                  rows={4}
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="pricePerDay">Price per Day *</Label>
-                  <Input
-                    id="pricePerDay"
-                    type="number"
-                    step="0.01"
-                    {...register("pricePerDay")}
-                    placeholder="0.00"
-                    data-testid="input-price"
-                  />
+              <div className="form-grid">
+                <div className="form-field">
+                  <Label htmlFor="pricePerDay" className="text-sm font-medium">Price per Day *</Label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">$</span>
+                    <Input
+                      id="pricePerDay"
+                      type="number"
+                      step="0.01"
+                      {...register("pricePerDay")}
+                      placeholder="0.00"
+                      data-testid="input-price"
+                      className="pl-8 h-11 border-2"
+                    />
+                  </div>
                   {errors.pricePerDay && (
-                    <p className="text-sm text-destructive">{errors.pricePerDay.message}</p>
+                    <p className="text-sm text-destructive font-medium">{errors.pricePerDay.message}</p>
                   )}
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="status">Status</Label>
+                <div className="form-field">
+                  <Label htmlFor="status" className="text-sm font-medium">Status</Label>
                   <Select onValueChange={(value) => setValue("status", value as any)}>
-                    <SelectTrigger data-testid="select-status">
+                    <SelectTrigger data-testid="select-status" className="h-11 border-2">
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -303,18 +312,19 @@ export default function InventoryManagement() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="imageUrl">Image URL</Label>
+              <div className="form-field">
+                <Label htmlFor="imageUrl" className="text-sm font-medium">Image URL</Label>
                 <Input
                   id="imageUrl"
                   type="url"
                   {...register("imageUrl")}
                   placeholder="https://example.com/image.jpg"
                   data-testid="input-image-url"
+                  className="h-11 border-2"
                 />
               </div>
 
-              <div className="flex gap-3 pt-4">
+              <div className="form-actions">
                 <Button
                   type="button"
                   variant="outline"
@@ -323,22 +333,22 @@ export default function InventoryManagement() {
                     setEditingItem(null);
                     reset();
                   }}
-                  className="flex-1"
+                  className="flex-1 h-11"
                   data-testid="button-cancel"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
-                  className="flex-1"
+                  className="flex-1 h-11 bg-primary hover:bg-primary/90"
                   disabled={createItemMutation.isPending || updateItemMutation.isPending}
                   data-testid="button-save"
                 >
                   {createItemMutation.isPending || updateItemMutation.isPending
                     ? "Saving..."
                     : editingItem
-                    ? "Update"
-                    : "Create"}
+                    ? "Update Item"
+                    : "Create Item"}
                 </Button>
               </div>
             </form>
