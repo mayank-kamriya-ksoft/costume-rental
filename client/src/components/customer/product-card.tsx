@@ -61,7 +61,7 @@ export default function ProductCard({ item, type }: ProductCardProps) {
       data-testid={`card-${type}-${item.id}`}
     >
       <div className="relative">
-        <div className="w-full h-64 bg-gradient-to-br from-secondary via-muted to-accent flex items-center justify-center">
+        <div className="w-full h-64 bg-muted flex items-center justify-center">
           {item.imageUrl ? (
             <img
               src={item.imageUrl.startsWith('@assets') ? 
@@ -131,7 +131,7 @@ export default function ProductCard({ item, type }: ProductCardProps) {
             <Button
               className={`w-full font-semibold transition-all h-12 rounded-xl ${
                 isAvailable 
-                  ? 'professional-gradient text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5' 
+                  ? 'bg-primary text-white shadow-lg hover:bg-primary/90 hover:shadow-xl hover:-translate-y-0.5' 
                   : 'bg-gray-200 text-gray-500 cursor-not-allowed'
               }`}
               disabled={!isAvailable}

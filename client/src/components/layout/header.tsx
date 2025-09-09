@@ -75,45 +75,45 @@ export default function Header({ isAdmin = false }: HeaderProps) {
   };
 
   return (
-    <header className="professional-gradient border-b border-primary/20 shadow-lg sticky top-0 z-50 backdrop-blur-md">
+    <header className="bg-white border-b border-border shadow-sm sticky top-0 z-50 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center" data-testid="link-home">
-            <Crown className="h-10 w-10 text-white mr-3 drop-shadow-lg" />
+            <Crown className="h-10 w-10 text-primary mr-3" />
             <div className="flex flex-col">
-              <span className="text-2xl font-bold text-white drop-shadow-lg tracking-tight">Kamdhenu Drama King</span>
-              <span className="text-sm text-white/95 hidden sm:block font-medium">Premium Costume Rentals</span>
+              <span className="text-2xl font-bold text-primary tracking-tight">Kamdhenu Drama King</span>
+              <span className="text-sm text-muted-foreground hidden sm:block font-medium">Premium Costume Rentals</span>
             </div>
           </Link>
           
           {/* Contact Info & Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
-            <div className="flex items-center space-x-6 text-white/95 text-sm font-medium">
-              <div className="flex items-center space-x-2 bg-white/10 rounded-lg px-3 py-2 backdrop-blur-sm">
+            <div className="flex items-center space-x-6 text-muted-foreground text-sm font-medium">
+              <div className="flex items-center space-x-2 bg-accent rounded-lg px-3 py-2">
                 <Phone className="h-4 w-4" />
                 <span>9822044498</span>
               </div>
-              <div className="flex items-center space-x-2 bg-white/10 rounded-lg px-3 py-2 backdrop-blur-sm">
+              <div className="flex items-center space-x-2 bg-accent rounded-lg px-3 py-2">
                 <MapPin className="h-4 w-4" />
                 <span>Chh. Sambhaji Nagar</span>
               </div>
             </div>
             <nav className="flex items-center space-x-6">
-              <Link href="/" className={`font-semibold transition-all duration-200 px-3 py-2 rounded-lg ${
-                location === "/" ? "text-white bg-white/20" : "text-white/90 hover:text-white hover:bg-white/10"
+              <Link href="/" className={`font-semibold transition-all duration-200 px-4 py-2 rounded-lg ${
+                location === "/" ? "text-primary bg-accent" : "text-foreground hover:text-primary hover:bg-accent"
               }`} data-testid="nav-browse">
                 Browse Costumes
               </Link>
               {isAuthenticated && (
-                <Link href="/dashboard" className={`font-semibold transition-all duration-200 px-3 py-2 rounded-lg ${
-                  location === "/dashboard" ? "text-white bg-white/20" : "text-white/90 hover:text-white hover:bg-white/10"
+                <Link href="/dashboard" className={`font-semibold transition-all duration-200 px-4 py-2 rounded-lg ${
+                  location === "/dashboard" ? "text-primary bg-accent" : "text-foreground hover:text-primary hover:bg-accent"
                 }`} data-testid="nav-dashboard">
                   My Orders
                 </Link>
               )}
-              <Link href="/admin" className={`font-semibold transition-all duration-200 px-3 py-2 rounded-lg ${
-                location === "/admin" ? "text-white bg-white/20" : "text-white/90 hover:text-white hover:bg-white/10"
+              <Link href="/admin" className={`font-semibold transition-all duration-200 px-4 py-2 rounded-lg ${
+                location === "/admin" ? "text-primary bg-accent" : "text-foreground hover:text-primary hover:bg-accent"
               }`} data-testid="nav-admin">
                 Admin Dashboard
               </Link>
@@ -123,9 +123,9 @@ export default function Header({ isAdmin = false }: HeaderProps) {
           {/* User Actions */}
           <div className="flex items-center space-x-4">
             {!isAdmin && (
-              <Button variant="ghost" size="sm" className="relative text-white hover:bg-white/20 rounded-lg p-3" data-testid="button-cart">
+              <Button variant="ghost" size="sm" className="relative text-foreground hover:bg-accent rounded-lg p-3" data-testid="button-cart">
                 <ShoppingCart className="h-5 w-5" />
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs bg-white text-primary font-bold">
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs bg-primary text-white font-bold">
                   0
                 </Badge>
               </Button>
@@ -180,14 +180,14 @@ export default function Header({ isAdmin = false }: HeaderProps) {
               <div className="flex items-center space-x-2">
                 <Button 
                   variant="ghost" 
-                  className="text-white hover:bg-white/20 font-semibold px-4 py-2 rounded-lg" 
+                  className="text-foreground hover:bg-accent font-semibold px-4 py-2 rounded-lg" 
                   onClick={handleLogin}
                   data-testid="button-login"
                 >
                   Sign In
                 </Button>
                 <Button 
-                  className="bg-white text-primary hover:bg-white/95 font-semibold px-6 py-2 rounded-lg shadow-lg" 
+                  className="bg-primary text-white hover:bg-primary/90 font-semibold px-6 py-2 rounded-lg shadow-sm" 
                   onClick={handleRegister}
                   data-testid="button-register"
                 >
@@ -202,7 +202,7 @@ export default function Header({ isAdmin = false }: HeaderProps) {
             <Button
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-white/20"
+              className="text-foreground hover:bg-accent"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               data-testid="button-mobile-menu"
             >
@@ -213,9 +213,9 @@ export default function Header({ isAdmin = false }: HeaderProps) {
         
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-white/20 bg-black/10">
-            <div className="flex flex-col space-y-3">
-              <div className="flex flex-col space-y-2 text-white/90 text-sm border-b border-white/20 pb-3">
+          <div className="lg:hidden py-6 border-t border-border bg-accent/50">
+            <div className="flex flex-col space-y-4">
+              <div className="flex flex-col space-y-3 text-muted-foreground text-sm border-b border-border pb-4">
                 <div className="flex items-center space-x-2">
                   <Phone className="h-4 w-4" />
                   <span>9822044498</span>
@@ -228,7 +228,7 @@ export default function Header({ isAdmin = false }: HeaderProps) {
               <nav className="flex flex-col space-y-3">
                 <Link 
                   href="/" 
-                  className="text-white hover:text-white/80 transition-colors font-medium"
+                  className="text-foreground hover:text-primary transition-colors font-medium py-2"
                   onClick={() => setMobileMenuOpen(false)}
                   data-testid="mobile-nav-browse"
                 >
@@ -237,7 +237,7 @@ export default function Header({ isAdmin = false }: HeaderProps) {
                 {isAuthenticated && (
                   <Link 
                     href="/dashboard" 
-                    className="text-white hover:text-white/80 transition-colors font-medium"
+                    className="text-foreground hover:text-primary transition-colors font-medium py-2"
                     onClick={() => setMobileMenuOpen(false)}
                     data-testid="mobile-nav-dashboard"
                   >
@@ -246,7 +246,7 @@ export default function Header({ isAdmin = false }: HeaderProps) {
                 )}
                 <Link 
                   href="/admin" 
-                  className="text-white hover:text-white/80 transition-colors font-medium"
+                  className="text-foreground hover:text-primary transition-colors font-medium py-2"
                   onClick={() => setMobileMenuOpen(false)}
                   data-testid="mobile-nav-admin"
                 >
