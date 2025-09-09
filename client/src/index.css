@@ -4,38 +4,38 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(0, 0%, 100%);
-  --foreground: hsl(222, 22%, 15%);
+  --background: hsl(45, 100%, 99%);
+  --foreground: hsl(220, 30%, 15%);
   --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(222, 22%, 15%);
+  --card-foreground: hsl(220, 30%, 15%);
   --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(222, 22%, 15%);
-  --primary: hsl(222, 47%, 11%);
-  --primary-foreground: hsl(0, 0%, 100%);
-  --secondary: hsl(210, 40%, 96%);
-  --secondary-foreground: hsl(222, 22%, 25%);
-  --muted: hsl(210, 40%, 96%);
-  --muted-foreground: hsl(215, 16%, 47%);
-  --accent: hsl(210, 40%, 94%);
-  --accent-foreground: hsl(222, 22%, 20%);
+  --popover-foreground: hsl(220, 30%, 15%);
+  --primary: hsl(280, 85%, 35%);
+  --primary-foreground: hsl(45, 100%, 95%);
+  --secondary: hsl(45, 90%, 92%);
+  --secondary-foreground: hsl(280, 30%, 25%);
+  --muted: hsl(45, 60%, 95%);
+  --muted-foreground: hsl(220, 20%, 50%);
+  --accent: hsl(25, 100%, 88%);
+  --accent-foreground: hsl(280, 40%, 25%);
   --destructive: hsl(0, 84%, 60%);
-  --destructive-foreground: hsl(210, 40%, 98%);
-  --border: hsl(214, 32%, 91%);
-  --input: hsl(214, 32%, 91%);
-  --ring: hsl(222, 47%, 11%);
+  --destructive-foreground: hsl(45, 100%, 98%);
+  --border: hsl(45, 40%, 88%);
+  --input: hsl(45, 30%, 92%);
+  --ring: hsl(280, 85%, 45%);
   --chart-1: hsl(25, 95%, 55%);
   --chart-2: hsl(280, 100%, 70%);
   --chart-3: hsl(45, 100%, 60%);
   --chart-4: hsl(120, 80%, 45%);
   --chart-5: hsl(341.4894, 75.2000%, 50.9804%);
   --sidebar: hsl(45, 100%, 98%);
-  --sidebar-foreground: hsl(222.2, 84%, 4.9%);
-  --sidebar-primary: hsl(25, 95%, 55%);
-  --sidebar-primary-foreground: hsl(0, 0%, 100%);
-  --sidebar-accent: hsl(45, 100%, 92%);
-  --sidebar-accent-foreground: hsl(222.2, 84%, 4.9%);
-  --sidebar-border: hsl(45, 60%, 85%);
-  --sidebar-ring: hsl(25, 95%, 55%);
+  --sidebar-foreground: hsl(280, 30%, 15%);
+  --sidebar-primary: hsl(280, 85%, 45%);
+  --sidebar-primary-foreground: hsl(45, 100%, 95%);
+  --sidebar-accent: hsl(45, 90%, 90%);
+  --sidebar-accent-foreground: hsl(280, 30%, 20%);
+  --sidebar-border: hsl(45, 50%, 85%);
+  --sidebar-ring: hsl(280, 85%, 45%);
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-mono: Menlo, monospace;
@@ -188,34 +188,88 @@
   }
 
   .hero-bg {
-    background: hsl(220, 40%, 15%);
+    background: linear-gradient(135deg, 
+      hsl(280, 85%, 25%) 0%, 
+      hsl(280, 90%, 35%) 25%, 
+      hsl(25, 95%, 50%) 50%, 
+      hsl(280, 85%, 40%) 75%, 
+      hsl(280, 90%, 30%) 100%);
     position: relative;
+    overflow: hidden;
   }
 
   .hero-bg::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M40 40L20 60L40 80L60 60z M40 40L20 20L40 0L60 20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    animation: float 20s ease-in-out infinite;
+  }
+
+  .hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, 
+      hsl(45, 100%, 60%, 0.15) 0%, 
+      transparent 70%);
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
   }
 
   .section-light {
-    background: hsl(210, 40%, 98%);
+    background: linear-gradient(135deg, 
+      hsl(45, 100%, 98%) 0%, 
+      hsl(45, 80%, 96%) 50%, 
+      hsl(25, 60%, 97%) 100%);
+    position: relative;
+  }
+
+  .section-light::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f59e0b' fill-opacity='0.02'%3E%3Cpath d='M20 20l10-10v20l-10-10zm-10 10l10-10h-20l10 10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    z-index: 0;
   }
 
   .section-dark {
-    background: hsl(220, 40%, 15%);
+    background: linear-gradient(135deg, 
+      hsl(280, 85%, 15%) 0%, 
+      hsl(280, 90%, 25%) 25%, 
+      hsl(280, 85%, 20%) 75%, 
+      hsl(280, 90%, 15%) 100%);
     color: hsl(0, 0%, 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .section-dark::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23fbbf24' fill-opacity='0.05'%3E%3Cpath d='M30 30l15-15v30l-15-15zm-15 15l15-15h-30l15 15z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    z-index: 0;
   }
 
   .premium-card {
-    background: hsl(0, 0%, 100%);
-    border: 1px solid hsl(214, 32%, 91%);
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    background: linear-gradient(145deg, 
+      hsl(0, 0%, 100%) 0%, 
+      hsl(45, 100%, 99%) 100%);
+    border: 2px solid hsl(45, 40%, 92%);
+    box-shadow: 0 4px 6px -1px rgba(168, 85, 247, 0.1), 
+                0 2px 4px -1px rgba(245, 158, 11, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .premium-card:hover {
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 25px 50px -12px rgba(168, 85, 247, 0.25), 
+                0 10px 20px -5px rgba(245, 158, 11, 0.1);
+    border-color: hsl(280, 85%, 45%);
   }
 
   .accent-warm {
