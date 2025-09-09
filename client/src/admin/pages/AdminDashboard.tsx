@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { useLocation } from "wouter";
+import InventoryManagement from "../components/InventoryManagement";
 
 type AdminTab = "dashboard" | "inventory" | "bookings" | "customers" | "reports" | "settings";
 
@@ -203,6 +204,12 @@ export default function AdminDashboard() {
     switch (activeTab) {
       case "dashboard":
         return renderDashboardContent();
+      case "inventory":
+        return (
+          <div className="p-8">
+            <InventoryManagement />
+          </div>
+        );
       default:
         return (
           <div className="p-8">
