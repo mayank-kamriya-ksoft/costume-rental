@@ -43,6 +43,12 @@ export default function AdminRouter() {
     <Switch>
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
+      <Route path="/admin/inventory" component={AdminDashboard} />
+      <Route path="/admin/add-item" component={AdminDashboard} />
+      <Route path="/admin/bookings" component={AdminDashboard} />
+      <Route path="/admin/customers" component={AdminDashboard} />
+      <Route path="/admin/reports" component={AdminDashboard} />
+      <Route path="/admin/settings" component={AdminDashboard} />
       <Route path="/admin/login" component={() => {
         // If already authenticated and trying to access login, redirect to dashboard
         setLocation("/admin");
