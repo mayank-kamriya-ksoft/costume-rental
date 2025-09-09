@@ -162,15 +162,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
+      console.log('Admin login successful for user:', adminUser.email, 'ID:', adminUser.id);
+      
       // Set admin session
       req.session.adminUserId = adminUser.id;
       req.session.adminUser = adminUser;
       
-      // Return admin user without password
-      const { password: _, ...adminResponse } = adminUser;
-      res.json({ 
-        user: adminResponse,
-        message: 'Admin login successful'
+      console.log('Admin session set - adminUserId:', req.session.adminUserId, 'adminUser:', !!req.session.adminUser);
+      
+      // Force session save
+      req.session.save((err) => {
+        if (err) {
+          console.error('Admin session save error:', err);
+          return res.status(500).json({ 
+            error: 'Session error',
+            message: 'Failed to create admin session'
+          });
+        }
+        
+        console.log('Admin session saved successfully');
+        
+        // Return admin user without password
+        const { password: _, ...adminResponse } = adminUser;
+        res.json({ 
+          user: adminResponse,
+          message: 'Admin login successful'
+        });
       });
       
     } catch (error) {
