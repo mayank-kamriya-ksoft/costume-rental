@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -37,7 +37,7 @@
   --sidebar-border: hsl(45, 60%, 85%);
   --sidebar-ring: hsl(25, 95%, 55%);
   --font-sans: 'Inter', system-ui, sans-serif;
-  --font-serif: Georgia, serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: 0.5rem;
   --shadow-2xs: 0px 2px 0px 0px hsl(262.1, 83.3%, 57.8%, 0.00);
@@ -93,27 +93,51 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-tight;
+    @apply font-bold tracking-tight;
   }
 
   h1 {
-    @apply text-4xl lg:text-5xl;
+    @apply text-4xl lg:text-6xl xl:text-7xl;
   }
 
   h2 {
-    @apply text-3xl lg:text-4xl;
+    @apply text-3xl lg:text-5xl xl:text-6xl;
   }
 
   h3 {
-    @apply text-2xl lg:text-3xl;
+    @apply text-2xl lg:text-4xl xl:text-5xl;
   }
 
   h4 {
-    @apply text-xl lg:text-2xl;
+    @apply text-xl lg:text-3xl xl:text-4xl;
   }
 
   p {
     @apply leading-7;
+  }
+
+  .text-hero {
+    @apply font-serif text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight;
+  }
+
+  .text-section-title {
+    @apply font-serif text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
+  }
+
+  .text-elegant {
+    @apply font-serif;
+  }
+
+  .spacing-section {
+    @apply py-16 md:py-20 lg:py-24;
+  }
+
+  .spacing-container {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  .content-width {
+    @apply max-w-7xl mx-auto;
   }
 
   .line-clamp-1 {
