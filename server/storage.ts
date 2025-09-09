@@ -150,14 +150,16 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createAdminUser(adminUserData: InsertAdminUser): Promise<AdminUser> {
-    const [adminUser] = await db.insert(adminUsers).values(adminUserData).returning();
+    const [adminUser] = await db.insert(adminUsers).values([adminUserData]).returning();
     return adminUser;
   }
   
   async updateAdminUser(id: string, adminUserData: Partial<InsertAdminUser>): Promise<AdminUser> {
+    const updateData = { ...adminUserData };
+    delete (updateData as any).updatedAt;
     const [adminUser] = await db
       .update(adminUsers)
-      .set({ ...adminUserData, updatedAt: new Date() })
+      .set(updateData)
       .where(eq(adminUsers.id, id))
       .returning();
     return adminUser;
@@ -205,7 +207,7 @@ export class DatabaseStorage implements IStorage {
   async updateCategory(id: string, categoryData: Partial<InsertCategory>): Promise<Category> {
     const [category] = await db
       .update(categories)
-      .set({ ...categoryData, updatedAt: new Date() })
+      .set(categoryData)
       .where(eq(categories.id, id))
       .returning();
     return category;
@@ -254,14 +256,16 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createCostume(costumeData: InsertCostume): Promise<Costume> {
-    const [costume] = await db.insert(costumes).values(costumeData).returning();
+    const [costume] = await db.insert(costumes).values([costumeData]).returning();
     return costume;
   }
 
   async updateCostume(id: string, costumeData: Partial<InsertCostume>): Promise<Costume> {
+    const updateData = { ...costumeData };
+    delete (updateData as any).updatedAt;
     const [costume] = await db
       .update(costumes)
-      .set({ ...costumeData, updatedAt: new Date() })
+      .set(updateData)
       .where(eq(costumes.id, id))
       .returning();
     return costume;
@@ -309,14 +313,16 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createAccessory(accessoryData: InsertAccessory): Promise<Accessory> {
-    const [accessory] = await db.insert(accessories).values(accessoryData).returning();
+    const [accessory] = await db.insert(accessories).values([accessoryData]).returning();
     return accessory;
   }
 
   async updateAccessory(id: string, accessoryData: Partial<InsertAccessory>): Promise<Accessory> {
+    const updateData = { ...accessoryData };
+    delete (updateData as any).updatedAt;
     const [accessory] = await db
       .update(accessories)
-      .set({ ...accessoryData, updatedAt: new Date() })
+      .set(updateData)
       .where(eq(accessories.id, id))
       .returning();
     return accessory;
