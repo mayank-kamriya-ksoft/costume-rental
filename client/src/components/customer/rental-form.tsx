@@ -269,19 +269,19 @@ export default function RentalForm({ item, type, selectedSize, onSuccess, onCanc
           </div>
           <div className="flex justify-between text-sm">
             <span>Daily Rate:</span>
-            <span>${parseFloat(item.pricePerDay).toFixed(2)}</span>
+            <span>₹{parseFloat(item.pricePerDay).toFixed(2)}</span>
           </div>
           <div className="flex justify-between font-medium">
             <span>Subtotal:</span>
-            <span>${calculateTotal().toFixed(2)}</span>
+            <span>₹{calculateTotal().toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-sm text-muted-foreground">
             <span>Security Deposit:</span>
-            <span>${calculateDeposit().toFixed(2)}</span>
+            <span>₹{calculateDeposit().toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-lg font-bold border-t pt-2">
             <span>Total Due:</span>
-            <span>${(calculateTotal() + calculateDeposit()).toFixed(2)}</span>
+            <span>₹{(calculateTotal() + calculateDeposit()).toFixed(2)}</span>
           </div>
         </div>
       )}

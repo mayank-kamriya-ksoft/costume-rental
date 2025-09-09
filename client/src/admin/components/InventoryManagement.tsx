@@ -243,7 +243,7 @@ export default function InventoryManagement() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="pricePerDay" className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                  Price per Day ($) *
+                  Price per Day (₹) *
                 </Label>
                 <div className="relative">
                   <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -262,7 +262,7 @@ export default function InventoryManagement() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="securityDeposit" className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                  Security Deposit ($) *
+                  Security Deposit (₹) *
                 </Label>
                 <div className="relative">
                   <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -540,10 +540,10 @@ export default function InventoryManagement() {
                 <TableCell className="py-4">
                   <div className="flex flex-col space-y-1">
                     <div className="font-semibold text-slate-900 dark:text-slate-100">
-                      ${item.pricePerDay}/day
+                      ₹{item.pricePerDay}/day
                     </div>
                     <div className="text-xs text-slate-600 dark:text-slate-400">
-                      ${item.securityDeposit} deposit
+                      ₹{item.securityDeposit} deposit
                     </div>
                   </div>
                 </TableCell>

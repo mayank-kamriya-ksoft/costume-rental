@@ -74,7 +74,7 @@ export default function DashboardStats() {
               <div>
                 <p className="text-muted-foreground text-sm">Total Revenue</p>
                 <p className="text-2xl font-bold text-foreground" data-testid="text-revenue">
-                  ${stats?.totalRevenue?.toFixed(2) || "0.00"}
+                  ₹{stats?.totalRevenue?.toFixed(2) || "0.00"}
                 </p>
               </div>
               <div className="bg-green-100 p-3 rounded-full">
