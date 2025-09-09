@@ -75,41 +75,50 @@ export default function Header({ isAdmin = false }: HeaderProps) {
   };
 
   return (
-    <header className="bg-white border-b border-border shadow-sm sticky top-0 z-50 backdrop-blur-md">
+    <header className="bg-gradient-to-r from-white via-amber-50/50 to-purple-50/50 border-b-2 border-purple-200 shadow-xl sticky top-0 z-50 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center" data-testid="link-home">
-            <Crown className="h-10 w-10 text-primary mr-3" />
+        <div className="flex justify-between items-center h-20">
+          {/* Enhanced Logo */}
+          <Link href="/" className="flex items-center group hover:scale-105 transition-all duration-300" data-testid="link-home">
+            <div className="relative">
+              <Crown className="h-14 w-14 text-purple-600 mr-4 group-hover:text-amber-500 transition-colors duration-300 drop-shadow-lg" />
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-400 rounded-full animate-pulse opacity-80"></div>
+            </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-bold text-primary tracking-tight">Kamdhenu Drama King</span>
-              <span className="text-sm text-muted-foreground hidden sm:block font-medium">Premium Costume Rentals</span>
+              <span className="text-3xl font-bold bg-gradient-to-r from-purple-700 via-purple-600 to-amber-600 bg-clip-text text-transparent tracking-tight">
+                Kamdhenu Drama King
+              </span>
+              <span className="text-sm text-purple-600 font-semibold hidden sm:block">✨ Premium Mythological Costume Rentals ✨</span>
             </div>
           </Link>
           
-          {/* Contact Info & Navigation */}
+          {/* Enhanced Contact Info & Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
-            <div className="flex items-center space-x-6 text-muted-foreground text-sm font-medium">
-              <div className="flex items-center space-x-2 bg-accent rounded-lg px-3 py-2">
-                <Phone className="h-4 w-4" />
-                <span>9822044498</span>
+            <div className="flex items-center space-x-4 text-sm font-bold">
+              <div className="flex items-center space-x-2 bg-gradient-to-r from-purple-100 to-amber-100 border border-purple-200 rounded-2xl px-4 py-3 shadow-lg hover:shadow-xl transition-all duration-300">
+                <Phone className="h-5 w-5 text-purple-600" />
+                <span className="text-purple-700">9822044498</span>
               </div>
-              <div className="flex items-center space-x-2 bg-accent rounded-lg px-3 py-2">
-                <MapPin className="h-4 w-4" />
-                <span>Chh. Sambhaji Nagar</span>
+              <div className="flex items-center space-x-2 bg-gradient-to-r from-amber-100 to-purple-100 border border-amber-200 rounded-2xl px-4 py-3 shadow-lg hover:shadow-xl transition-all duration-300">
+                <MapPin className="h-5 w-5 text-amber-600" />
+                <span className="text-amber-700">Sambhaji Nagar</span>
               </div>
             </div>
-            <nav className="flex items-center space-x-6">
-              <Link href="/" className={`font-semibold transition-all duration-200 px-4 py-2 rounded-lg ${
-                location === "/" ? "text-primary bg-accent" : "text-foreground hover:text-primary hover:bg-accent"
+            <nav className="flex items-center space-x-4">
+              <Link href="/" className={`font-bold transition-all duration-300 px-6 py-3 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 ${
+                location === "/" ? 
+                  "bg-gradient-to-r from-purple-600 to-purple-700 text-white" : 
+                  "bg-gradient-to-r from-white to-purple-50 text-purple-700 hover:from-purple-100 hover:to-purple-200 border-2 border-purple-200"
               }`} data-testid="nav-browse">
-                Browse Costumes
+                🌟 Browse Costumes
               </Link>
               {isAuthenticated && (
-                <Link href="/dashboard" className={`font-semibold transition-all duration-200 px-4 py-2 rounded-lg ${
-                  location === "/dashboard" ? "text-primary bg-accent" : "text-foreground hover:text-primary hover:bg-accent"
+                <Link href="/dashboard" className={`font-bold transition-all duration-300 px-6 py-3 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 ${
+                  location === "/dashboard" ? 
+                    "bg-gradient-to-r from-amber-500 to-amber-600 text-white" : 
+                    "bg-gradient-to-r from-white to-amber-50 text-amber-700 hover:from-amber-100 hover:to-amber-200 border-2 border-amber-200"
                 }`} data-testid="nav-dashboard">
-                  My Orders
+                ✨ My Orders
                 </Link>
               )}
             </nav>
