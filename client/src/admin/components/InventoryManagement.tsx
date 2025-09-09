@@ -13,7 +13,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { useToast } from "../../hooks/use-toast";
 import { Plus, Edit, Trash2, Search, Filter, Package, Sparkles, Tags, Image, DollarSign } from "lucide-react";
 import { Textarea } from "../../components/ui/textarea";
-import { Separator } from "../../components/ui/separator";
 import { cn } from "../../lib/utils";
 
 type InventoryItem = {
@@ -234,7 +233,7 @@ export default function InventoryManagement() {
             </div>
           </div>
 
-          <Separator className="my-6" />
+          <div className="border-t border-slate-200 dark:border-slate-700 my-6"></div>
 
           {/* Pricing Section */}
           <div className="space-y-4">
@@ -339,7 +338,7 @@ export default function InventoryManagement() {
             </div>
           </div>
 
-          <Separator className="my-6" />
+          <div className="border-t border-slate-200 dark:border-slate-700 my-6"></div>
 
           {/* Media & Details Section */}
           <div className="space-y-4">
@@ -403,7 +402,7 @@ export default function InventoryManagement() {
             )}
           </div>
 
-          <Separator className="my-8" />
+          <div className="border-t border-slate-200 dark:border-slate-700 my-8"></div>
 
           {/* Action Buttons */}
           <div className="flex justify-end space-x-3 pt-6">
