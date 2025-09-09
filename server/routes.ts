@@ -684,6 +684,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Customer management routes (admin only)
+  app.get('/api/admin/customers', requireAdminAuth, async (req, res) => {
+    try {
+      const { search, isActive } = req.query;
+      const filters: any = {};
+      
+      if (search) filters.search = search as string;
+      if (isActive !== undefined) filters.isActive = isActive === 'true';
+      
+      const customers = await storage.getUsers(filters);
+      res.json(customers);
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+      res.status(500).json({ message: 'Failed to fetch customers' });
+    }
+  });
+
+  app.get('/api/admin/customers/:id', requireAdminAuth, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const customer = await storage.getUser(id);
+      if (!customer) {
+        return res.status(404).json({ message: 'Customer not found' });
+      }
+      // Remove password from response
+      const { password: _, ...customerWithoutPassword } = customer;
+      res.json(customerWithoutPassword);
+    } catch (error) {
+      console.error('Error fetching customer:', error);
+      res.status(500).json({ message: 'Failed to fetch customer' });
+    }
+  });
+
+  app.put('/api/admin/customers/:id', requireAdminAuth, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const updateData = req.body;
+      // Don't allow password updates through this endpoint
+      delete updateData.password;
+      
+      const updatedCustomer = await storage.updateUser(id, updateData);
+      // Remove password from response
+      const { password: _, ...customerWithoutPassword } = updatedCustomer;
+      res.json(customerWithoutPassword);
+    } catch (error) {
+      console.error('Error updating customer:', error);
+      res.status(500).json({ message: 'Failed to update customer' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

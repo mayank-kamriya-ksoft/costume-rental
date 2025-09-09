@@ -28,6 +28,7 @@ export interface IStorage {
   // User operations
   getUser(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
+  getUsers(filters?: { search?: string; isActive?: boolean }): Promise<User[]>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: string, user: Partial<InsertUser>): Promise<User>;
   
@@ -103,6 +104,28 @@ export class DatabaseStorage implements IStorage {
   async getUserByEmail(email: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.email, email));
     return user;
+  }
+
+  async getUsers(filters?: { search?: string; isActive?: boolean }): Promise<User[]> {
+    let query = db.select().from(users);
+    
+    if (filters?.search) {
+      query = query.where(or(
+        ilike(users.firstName, `%${filters.search}%`),
+        ilike(users.lastName, `%${filters.search}%`),
+        ilike(users.email, `%${filters.search}%`)
+      ));
+    }
+    
+    if (filters?.isActive !== undefined) {
+      query = query.where(eq(users.isActive, filters.isActive));
+    }
+    
+    const userList = await query.orderBy(desc(users.createdAt));
+    return userList.map(user => {
+      const { password: _, ...userWithoutPassword } = user;
+      return userWithoutPassword as User;
+    });
   }
 
   async createUser(userData: InsertUser): Promise<User> {
