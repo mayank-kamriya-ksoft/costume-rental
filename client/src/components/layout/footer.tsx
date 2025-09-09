@@ -2,7 +2,7 @@ import { Crown, Phone, MapPin, Mail, Clock, Star } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-r from-orange-500 via-purple-600 to-yellow-500 text-white">
+    <footer className="bg-primary text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Shop Info */}
@@ -66,9 +66,6 @@ export default function Footer() {
               </a>
               <a href="/" className="block text-white/90 hover:text-white transition-colors">
                 Accessories
-              </a>
-              <a href="/admin" className="block text-white/90 hover:text-white transition-colors">
-                Admin Dashboard
               </a>
               <div className="pt-2">
                 <p className="text-sm text-white/80">Popular Categories:</p>

@@ -112,11 +112,6 @@ export default function Header({ isAdmin = false }: HeaderProps) {
                   My Orders
                 </Link>
               )}
-              <Link href="/admin" className={`font-semibold transition-all duration-200 px-4 py-2 rounded-lg ${
-                location === "/admin" ? "text-primary bg-accent" : "text-foreground hover:text-primary hover:bg-accent"
-              }`} data-testid="nav-admin">
-                Admin Dashboard
-              </Link>
             </nav>
           </div>
           
@@ -244,14 +239,6 @@ export default function Header({ isAdmin = false }: HeaderProps) {
                     My Orders
                   </Link>
                 )}
-                <Link 
-                  href="/admin" 
-                  className="text-foreground hover:text-primary transition-colors font-medium py-2"
-                  onClick={() => setMobileMenuOpen(false)}
-                  data-testid="mobile-nav-admin"
-                >
-                  Admin Dashboard
-                </Link>
               </nav>
             </div>
           </div>

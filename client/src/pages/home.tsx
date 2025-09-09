@@ -60,9 +60,9 @@ export default function Home() {
             <h1 className="text-6xl md:text-8xl font-bold text-white mb-12 tracking-tight">
               Transform Into Legendary Characters
             </h1>
-            <p className="text-xl md:text-2xl text-white/90 mb-16 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-white mb-16 max-w-4xl mx-auto leading-relaxed">
               Premium Indian Mythological Costumes & Accessories<br />
-              <span className="text-lg md:text-xl text-white/70">Bring the divine stories of Krishna, Rama, Durga, and legendary heroes to life</span>
+              <span className="text-lg md:text-xl text-white/80">Bring the divine stories of Krishna, Rama, Durga, and legendary heroes to life</span>
             </p>
             
             {/* Search Bar */}
@@ -238,7 +238,7 @@ export default function Home() {
                   01
                 </div>
                 <h3 className="font-bold text-white mb-6 text-2xl">Browse & Select</h3>
-                <p className="text-white/70 text-lg leading-relaxed">Discover authentic mythological characters from our curated divine collection</p>
+                <p className="text-white/80 text-lg leading-relaxed">Discover authentic mythological characters from our curated divine collection</p>
               </div>
               
               <div className="text-center bg-white/5 rounded-3xl p-10 border border-white/10 hover:-translate-y-2 transition-all duration-300">
@@ -249,7 +249,7 @@ export default function Home() {
                   02
                 </div>
                 <h3 className="font-bold text-white mb-6 text-2xl">Pick Dates</h3>
-                <p className="text-white/70 text-lg leading-relaxed">Choose your rental dates and confirm costume availability</p>
+                <p className="text-white/80 text-lg leading-relaxed">Choose your rental dates and confirm costume availability</p>
               </div>
               
               <div className="text-center bg-white/5 rounded-3xl p-10 border border-white/10 hover:-translate-y-2 transition-all duration-300">
@@ -260,7 +260,7 @@ export default function Home() {
                   03
                 </div>
                 <h3 className="font-bold text-white mb-6 text-2xl">Secure Payment</h3>
-                <p className="text-white/70 text-lg leading-relaxed">Complete safe and secure payment with flexible options</p>
+                <p className="text-white/80 text-lg leading-relaxed">Complete safe and secure payment with flexible options</p>
               </div>
               
               <div className="text-center bg-white/5 rounded-3xl p-10 border border-white/10 hover:-translate-y-2 transition-all duration-300">
@@ -271,7 +271,7 @@ export default function Home() {
                   04
                 </div>
                 <h3 className="font-bold text-white mb-6 text-2xl">Transform & Shine</h3>
-                <p className="text-white/70 text-lg leading-relaxed">Pickup your costume and embody the legendary character</p>
+                <p className="text-white/80 text-lg leading-relaxed">Pickup your costume and embody the legendary character</p>
               </div>
             </div>
           </div>
