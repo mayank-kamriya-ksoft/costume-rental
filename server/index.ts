@@ -65,6 +65,15 @@ app.use((req, res, next) => {
   // Serve attached assets (images, etc.) before Vite middleware
   app.use('/attached_assets', express.static(path.resolve(import.meta.dirname, '..', 'attached_assets')));
 
+  // Serve admin panel static HTML before Vite middleware
+  app.get('/admin', (req, res) => {
+    res.sendFile(path.resolve(import.meta.dirname, '..', 'admin', 'index.html'));
+  });
+  
+  app.get('/admin/*', (req, res) => {
+    res.sendFile(path.resolve(import.meta.dirname, '..', 'admin', 'index.html'));
+  });
+
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes

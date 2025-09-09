@@ -1,8 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertCostumeSchema, insertAccessorySchema, insertBookingSchema, insertBookingItemSchema, registrationSchema, loginSchema } from "@shared/schema";
-import { hashPassword, loginUser, requireAuth, optionalAuth } from "./auth";
+import { insertCostumeSchema, insertAccessorySchema, insertBookingSchema, insertBookingItemSchema, registrationSchema, loginSchema, adminLoginSchema } from "@shared/schema";
+import { hashPassword, loginUser, requireAuth, optionalAuth, requireAdminAuth, optionalAdminAuth } from "./auth";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -144,6 +144,79 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ user: userWithoutPassword });
     } else {
       res.status(401).json({ error: 'Not authenticated' });
+    }
+  });
+
+  // Admin Authentication Routes
+  
+  // Admin Login Route
+  app.post('/api/admin/auth/login', async (req, res) => {
+    try {
+      const { email, password } = adminLoginSchema.parse(req.body);
+      
+      const adminUser = await storage.authenticateAdminUser(email, password);
+      if (!adminUser) {
+        return res.status(401).json({ 
+          error: 'Invalid credentials',
+          message: 'Invalid admin email or password' 
+        });
+      }
+      
+      // Set admin session
+      req.session.adminUserId = adminUser.id;
+      req.session.adminUser = adminUser;
+      
+      // Return admin user without password
+      const { password: _, ...adminResponse } = adminUser;
+      res.json({ 
+        user: adminResponse,
+        message: 'Admin login successful'
+      });
+      
+    } catch (error) {
+      console.error('Admin login error:', error);
+      
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          error: 'Validation error',
+          message: 'Please check your admin credentials',
+          details: error.errors
+        });
+      }
+      
+      res.status(500).json({ 
+        error: 'Login failed',
+        message: 'An error occurred during admin login'
+      });
+    }
+  });
+  
+  // Admin Logout Route
+  app.post('/api/admin/auth/logout', (req, res) => {
+    req.session.adminUserId = undefined;
+    req.session.adminUser = undefined;
+    res.json({ message: 'Admin logged out successfully' });
+  });
+  
+  // Get current admin user
+  app.get('/api/admin/auth/user', optionalAdminAuth, (req, res) => {
+    console.log('Admin session check - adminUserId:', req.session.adminUserId, 'adminUser:', !!req.session.adminUser);
+    if (req.session.adminUser) {
+      const { password: _, ...adminUserWithoutPassword } = req.session.adminUser;
+      res.json(adminUserWithoutPassword);
+    } else {
+      res.status(401).json({ error: 'Admin not authenticated' });
+    }
+  });
+
+  // Admin Dashboard Stats
+  app.get('/api/admin/stats', requireAdminAuth, async (req, res) => {
+    try {
+      const stats = await storage.getDashboardStats();
+      res.json(stats);
+    } catch (error) {
+      console.error('Error fetching admin stats:', error);
+      res.status(500).json({ message: 'Failed to fetch admin statistics' });
     }
   });
   

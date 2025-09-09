@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import session from 'express-session';
 import type { RequestHandler } from 'express';
 import { storage } from './storage';
-import type { User } from '@shared/schema';
+import type { User, AdminUser } from '@shared/schema';
 
 // Session configuration
 export const sessionConfig = {
@@ -23,6 +23,8 @@ declare module 'express-session' {
   interface SessionData {
     userId?: string;
     user?: User;
+    adminUserId?: string;
+    adminUser?: AdminUser;
   }
 }
 
@@ -58,6 +60,32 @@ export const optionalAuth: RequestHandler = async (req, res, next) => {
       }
     } catch (error) {
       console.error('Error loading user session:', error);
+    }
+  }
+  next();
+};
+
+// Admin authentication middleware
+export const requireAdminAuth: RequestHandler = (req, res, next) => {
+  if (!req.session.adminUserId) {
+    return res.status(401).json({ 
+      error: 'Admin authentication required',
+      message: 'Please log in as admin to access this resource'
+    });
+  }
+  next();
+};
+
+// Optional admin auth middleware
+export const optionalAdminAuth: RequestHandler = async (req, res, next) => {
+  if (req.session.adminUserId && !req.session.adminUser) {
+    try {
+      const adminUser = await storage.getAdminUser(req.session.adminUserId);
+      if (adminUser) {
+        req.session.adminUser = adminUser;
+      }
+    } catch (error) {
+      console.error('Error loading admin user session:', error);
     }
   }
   next();

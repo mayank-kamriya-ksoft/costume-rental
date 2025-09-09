@@ -1,5 +1,6 @@
 import {
   users,
+  adminUsers,
   costumes,
   accessories,
   categories,
@@ -7,6 +8,8 @@ import {
   bookingItems,
   type User,
   type InsertUser,
+  type AdminUser,
+  type InsertAdminUser,
   type Costume,
   type InsertCostume,
   type Accessory,
@@ -30,6 +33,14 @@ export interface IStorage {
   
   // Authentication
   authenticateUser(email: string, password: string): Promise<User | null>;
+  
+  // Admin user operations
+  getAdminUser(id: string): Promise<AdminUser | undefined>;
+  getAdminUserByEmail(email: string): Promise<AdminUser | undefined>;
+  createAdminUser(adminUser: InsertAdminUser): Promise<AdminUser>;
+  updateAdminUser(id: string, adminUser: Partial<InsertAdminUser>): Promise<AdminUser>;
+  authenticateAdminUser(email: string, password: string): Promise<AdminUser | null>;
+  updateAdminLastLogin(id: string): Promise<void>;
 
   // Category operations
   getCategories(): Promise<Category[]>;
@@ -123,6 +134,60 @@ export class DatabaseStorage implements IStorage {
     }
     
     return null;
+  }
+
+  // Admin user operations
+  async getAdminUser(id: string): Promise<AdminUser | undefined> {
+    const [adminUser] = await db.select().from(adminUsers).where(eq(adminUsers.id, id));
+    return adminUser;
+  }
+  
+  async getAdminUserByEmail(email: string): Promise<AdminUser | undefined> {
+    const [adminUser] = await db.select().from(adminUsers).where(eq(adminUsers.email, email));
+    return adminUser;
+  }
+
+  async createAdminUser(adminUserData: InsertAdminUser): Promise<AdminUser> {
+    const [adminUser] = await db.insert(adminUsers).values(adminUserData).returning();
+    return adminUser;
+  }
+  
+  async updateAdminUser(id: string, adminUserData: Partial<InsertAdminUser>): Promise<AdminUser> {
+    const [adminUser] = await db
+      .update(adminUsers)
+      .set({ ...adminUserData, updatedAt: new Date() })
+      .where(eq(adminUsers.id, id))
+      .returning();
+    return adminUser;
+  }
+  
+  async authenticateAdminUser(email: string, password: string): Promise<AdminUser | null> {
+    const adminUser = await this.getAdminUserByEmail(email);
+    if (!adminUser || !adminUser.password || !adminUser.isActive) {
+      return null;
+    }
+    
+    // Use bcrypt for password comparison
+    const bcrypt = await import('bcryptjs');
+    const isValidPassword = await bcrypt.compare(password, adminUser.password);
+    
+    if (isValidPassword) {
+      // Update last login
+      await this.updateAdminLastLogin(adminUser.id);
+      
+      // Return admin user without password
+      const { password: _, ...adminUserWithoutPassword } = adminUser;
+      return adminUserWithoutPassword as AdminUser;
+    }
+    
+    return null;
+  }
+
+  async updateAdminLastLogin(id: string): Promise<void> {
+    await db
+      .update(adminUsers)
+      .set({ lastLoginAt: new Date() })
+      .where(eq(adminUsers.id, id));
   }
 
   // Category operations
