@@ -77,6 +77,10 @@ export default function PointOfSale() {
   const [customerSearch, setCustomerSearch] = useState("");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [itemSearch, setItemSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("available");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
   const [startDate, setStartDate] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [endDate, setEndDate] = useState(format(addDays(new Date(), 3), 'yyyy-MM-dd'));
   const [notes, setNotes] = useState("");
@@ -128,14 +132,34 @@ export default function PointOfSale() {
     },
   });
 
-  // Combine inventory items
-  const inventoryItems: InventoryItem[] = [
+  // Fetch categories for filtering
+  const { data: categories = [] } = useQuery({
+    queryKey: ["/api/categories"],
+    queryFn: async () => {
+      const response = await fetch("/api/categories");
+      if (!response.ok) throw new Error('Failed to fetch categories');
+      return response.json();
+    },
+  });
+
+  // Combine and filter inventory items
+  const allInventoryItems: InventoryItem[] = [
     ...costumes.map((item: any) => ({ ...item, type: 'costume' as const })),
     ...accessories.map((item: any) => ({ ...item, type: 'accessory' as const }))
-  ].filter(item => 
-    item.status === 'available' && 
-    (itemSearch === "" || item.name.toLowerCase().includes(itemSearch.toLowerCase()))
-  );
+  ];
+
+  const filteredItems = allInventoryItems.filter(item => {
+    const matchesSearch = itemSearch === "" || item.name.toLowerCase().includes(itemSearch.toLowerCase());
+    const matchesCategory = categoryFilter === "all" || item.categoryId === categoryFilter;
+    const matchesStatus = statusFilter === "all" || item.status === statusFilter;
+    
+    return matchesSearch && matchesCategory && matchesStatus;
+  });
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const inventoryItems = filteredItems.slice(startIndex, startIndex + itemsPerPage);
 
   // Create new customer mutation
   const createCustomerMutation = useMutation({
@@ -527,18 +551,62 @@ export default function PointOfSale() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label>Search Items</Label>
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="Search costumes and accessories..."
-                  value={itemSearch}
-                  onChange={(e) => setItemSearch(e.target.value)}
-                  className="pl-10"
-                  data-testid="input-item-search"
-                />
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Search Items</Label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="Search costumes and accessories..."
+                    value={itemSearch}
+                    onChange={(e) => setItemSearch(e.target.value)}
+                    className="pl-10"
+                    data-testid="input-item-search"
+                  />
+                </div>
               </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Category</Label>
+                  <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="All Categories" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Categories</SelectItem>
+                      {categories.map((category: any) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Status</Label>
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Available" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Status</SelectItem>
+                      <SelectItem value="available">Available</SelectItem>
+                      <SelectItem value="rented">Rented</SelectItem>
+                      <SelectItem value="maintenance">Maintenance</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+
+            {/* Pagination Info */}
+            <div className="flex justify-between items-center text-sm text-gray-600">
+              <span>
+                Showing {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredItems.length)} of {filteredItems.length} items
+              </span>
+              <span>Page {currentPage} of {totalPages}</span>
             </div>
 
             <div className="space-y-2 max-h-96 overflow-y-auto">
@@ -597,10 +665,63 @@ export default function PointOfSale() {
               
               {inventoryItems.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
-                  {itemSearch ? `No items found matching "${itemSearch}"` : "No available items"}
+                  {itemSearch || categoryFilter !== "all" || statusFilter !== "available" 
+                    ? `No items found matching your criteria` 
+                    : "No available items"}
                 </div>
               )}
             </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-2 pt-4">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  data-testid="button-prev-page"
+                >
+                  Previous
+                </Button>
+                
+                <div className="flex gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                    if (
+                      page === 1 ||
+                      page === totalPages ||
+                      (page >= currentPage - 1 && page <= currentPage + 1)
+                    ) {
+                      return (
+                        <Button
+                          key={page}
+                          size="sm"
+                          variant={currentPage === page ? "default" : "outline"}
+                          onClick={() => setCurrentPage(page)}
+                          className="w-8 h-8 p-0"
+                          data-testid={`button-page-${page}`}
+                        >
+                          {page}
+                        </Button>
+                      );
+                    } else if (page === currentPage - 2 || page === currentPage + 2) {
+                      return <span key={page} className="px-2 text-gray-400">...</span>;
+                    }
+                    return null;
+                  })}
+                </div>
+
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  data-testid="button-next-page"
+                >
+                  Next
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

@@ -40,16 +40,16 @@ export default function Header({ isAdmin = false }: HeaderProps) {
   const queryClient = useQueryClient();
   
   const logoutMutation = useMutation({
-    mutationFn: () => apiRequest('POST', '/api/auth/logout'),
+    mutationFn: () => apiRequest('POST', isAdmin ? '/api/admin/auth/logout' : '/api/auth/logout'),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
+      queryClient.invalidateQueries({ queryKey: isAdmin ? ['/api/admin/auth/user'] : ['/api/auth/user'] });
       toast({
         title: "Logged out",
         description: "You have been successfully logged out.",
       });
-      // Redirect to login page after successful logout
+      // Redirect to appropriate login page after successful logout
       setTimeout(() => {
-        setLocation('/login');
+        setLocation(isAdmin ? '/admin/login' : '/login');
       }, 100);
     },
     onError: () => {
