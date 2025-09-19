@@ -303,17 +303,19 @@ export default function PointOfSale() {
     const securityDeposit = totalAmount * 0.5; // 50% security deposit
 
     const bookingData = {
-      userId: selectedCustomer.id,
-      customerName: `${selectedCustomer.firstName} ${selectedCustomer.lastName}`,
-      customerEmail: selectedCustomer.email,
-      customerPhone: selectedCustomer.phone || "",
-      startDate: startDateObj.toISOString(),
-      endDate: endDateObj.toISOString(),
-      totalAmount,
-      securityDeposit,
-      status: "active",
-      paymentStatus: "pending",
-      notes,
+      booking: {
+        userId: selectedCustomer.id,
+        customerName: `${selectedCustomer.firstName} ${selectedCustomer.lastName}`,
+        customerEmail: selectedCustomer.email,
+        customerPhone: selectedCustomer.phone || "",
+        startDate: startDateObj.toISOString(),
+        endDate: endDateObj.toISOString(),
+        totalAmount,
+        securityDeposit,
+        status: "active",
+        paymentStatus: "pending",
+        notes
+      },
       items: cart.map(item => ({
         itemType: item.type,
         itemId: item.id,
