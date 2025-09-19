@@ -171,22 +171,54 @@ export const insertCostumeSchema = createInsertSchema(costumes).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  pricePerDay: z.preprocess(
+    (val) => typeof val === 'string' ? val.trim() : val,
+    z.coerce.number().nonnegative('Price must be a positive number')
+  ).transform((num) => num.toFixed(2)),
+  securityDeposit: z.preprocess(
+    (val) => typeof val === 'string' ? val.trim() : val,
+    z.coerce.number().nonnegative('Security deposit must be a positive number')
+  ).transform((num) => num.toFixed(2)),
 });
 
 export const insertAccessorySchema = createInsertSchema(accessories).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  pricePerDay: z.preprocess(
+    (val) => typeof val === 'string' ? val.trim() : val,
+    z.coerce.number().nonnegative('Price must be a positive number')
+  ).transform((num) => num.toFixed(2)),
+  securityDeposit: z.preprocess(
+    (val) => typeof val === 'string' ? val.trim() : val,
+    z.coerce.number().nonnegative('Security deposit must be a positive number')
+  ).transform((num) => num.toFixed(2)),
 });
 
 export const insertBookingSchema = createInsertSchema(bookings).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  totalAmount: z.preprocess(
+    (val) => typeof val === 'string' ? val.trim() : val,
+    z.coerce.number().nonnegative('Total amount must be a positive number')
+  ).transform((num) => num.toFixed(2)),
+  securityDeposit: z.preprocess(
+    (val) => typeof val === 'string' ? val.trim() : val,
+    z.coerce.number().nonnegative('Security deposit must be a positive number')
+  ).transform((num) => num.toFixed(2)),
 });
 
 export const insertBookingItemSchema = createInsertSchema(bookingItems).omit({
   id: true,
+}).extend({
+  pricePerDay: z.preprocess(
+    (val) => typeof val === 'string' ? val.trim() : val,
+    z.coerce.number().nonnegative('Price must be a positive number')
+  ).transform((num) => num.toFixed(2)),
 });
 
 // Admin login schema

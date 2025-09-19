@@ -10,7 +10,8 @@ if (!process.env.DATABASE_URL) {
 
 // Disable prefetch for Supabase connection pooling
 const client = postgres(process.env.DATABASE_URL, { 
-  prepare: false 
+  prepare: false,
+  ssl: 'require'
 });
 
 export const db = drizzle(client, { schema });
