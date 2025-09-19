@@ -80,14 +80,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       console.log('Login successful for user:', user.email, 'ID:', user.id);
       
-      // Create session and save it
-      req.session.userId = user.id;
-      req.session.user = user;
-      
-      console.log('Session set - userId:', req.session.userId, 'user:', !!req.session.user);
-      
-      // Force session save
-      req.session.save((err) => {
+      // Regenerate session ID to prevent session fixation
+      req.session.regenerate((err) => {
+        if (err) {
+          console.error('Session regeneration error:', err);
+          return res.status(500).json({ 
+            error: 'Session error',
+            message: 'Failed to create secure session'
+          });
+        }
+        
+        // Create session and save it
+        req.session.userId = user.id;
+        req.session.user = user;
+        
+        console.log('Session set - userId:', req.session.userId, 'user:', !!req.session.user);
+        
+        // Force session save
+        req.session.save((err) => {
         if (err) {
           console.error('Session save error:', err);
           return res.status(500).json({ 
@@ -101,6 +111,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           user,
           message: 'Login successful'
         });
+      });
+      
       });
       
     } catch (error) {
@@ -164,14 +176,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       console.log('Admin login successful for user:', adminUser.email, 'ID:', adminUser.id);
       
-      // Set admin session
-      req.session.adminUserId = adminUser.id;
-      req.session.adminUser = adminUser;
-      
-      console.log('Admin session set - adminUserId:', req.session.adminUserId, 'adminUser:', !!req.session.adminUser);
-      
-      // Force session save
-      req.session.save((err) => {
+      // Regenerate session ID to prevent session fixation
+      req.session.regenerate((err) => {
+        if (err) {
+          console.error('Admin session regeneration error:', err);
+          return res.status(500).json({ 
+            error: 'Session error',
+            message: 'Failed to create secure admin session'
+          });
+        }
+        
+        // Set admin session
+        req.session.adminUserId = adminUser.id;
+        req.session.adminUser = adminUser;
+        
+        console.log('Admin session set - adminUserId:', req.session.adminUserId, 'adminUser:', !!req.session.adminUser);
+        
+        // Force session save
+        req.session.save((err) => {
         if (err) {
           console.error('Admin session save error:', err);
           return res.status(500).json({ 
@@ -188,6 +210,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           user: adminResponse,
           message: 'Admin login successful'
         });
+      });
+      
       });
       
     } catch (error) {
@@ -210,9 +234,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Admin Logout Route
   app.post('/api/admin/auth/logout', (req, res) => {
-    req.session.adminUserId = undefined;
-    req.session.adminUser = undefined;
-    res.json({ message: 'Admin logged out successfully' });
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Admin logout error:', err);
+        return res.status(500).json({ 
+          error: 'Logout failed',
+          message: 'An error occurred during admin logout'
+        });
+      }
+      
+      res.clearCookie('connect.sid');
+      res.json({ message: 'Admin logged out successfully' });
+    });
   });
   
   // Get current admin user
@@ -437,7 +470,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/bookings/:id", async (req, res) => {
+  app.get("/api/bookings/:id", requireAuth, async (req, res) => {
     try {
       const booking = await storage.getBooking(req.params.id);
       if (!booking) {
