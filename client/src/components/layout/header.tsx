@@ -47,6 +47,10 @@ export default function Header({ isAdmin = false }: HeaderProps) {
         title: "Logged out",
         description: "You have been successfully logged out.",
       });
+      // Redirect to login page after successful logout
+      setTimeout(() => {
+        setLocation('/login');
+      }, 100);
     },
     onError: () => {
       toast({
