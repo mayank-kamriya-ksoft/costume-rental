@@ -38,6 +38,7 @@ import InventoryManagement from "../components/InventoryManagement";
 import CategoryManagement from "../components/CategoryManagement";
 import CustomerManagement from "../components/CustomerManagement";
 import PointOfSale from "../components/PointOfSale";
+import EnhancedBookingManagement from "../../components/admin/enhanced-booking-management";
 
 type AdminStats = {
   totalRevenue?: number;
@@ -106,6 +107,12 @@ export default function AdminDashboard() {
   // Fetch admin dashboard statistics
   const { data: stats, isLoading: statsLoading } = useQuery<AdminStats>({
     queryKey: ["/api/admin/stats"],
+  });
+
+  // Fetch recent bookings for dashboard
+  const { data: recentBookings = [] } = useQuery({
+    queryKey: ["/api/bookings", { limit: 3 }],
+    select: (data: any[]) => data.slice(0, 3), // Get only top 3 most recent
   });
   
   // Categories for add item form
@@ -331,30 +338,45 @@ export default function AdminDashboard() {
                       <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded-full w-16"></div>
                     </div>
                   </div>
+                ) : recentBookings.length > 0 ? (
+                  recentBookings.map((booking: any) => {
+                    const getStatusColors = (status: string) => {
+                      switch (status) {
+                        case "active":
+                          return { bg: "bg-blue-500", badge: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 border-blue-300" };
+                        case "completed":
+                          return { bg: "bg-green-500", badge: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 border-green-300" };
+                        case "pending":
+                          return { bg: "bg-amber-500", badge: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300 border-amber-300" };
+                        case "cancelled":
+                          return { bg: "bg-red-500", badge: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 border-red-300" };
+                        default:
+                          return { bg: "bg-gray-500", badge: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300 border-gray-300" };
+                      }
+                    };
+                    const colors = getStatusColors(booking.status);
+                    return (
+                      <div key={booking.id} className={`flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-700/50 border-l-4 border-l-${colors.bg.split('-')[1]}-500`}>
+                        <div>
+                          <p className="font-semibold text-slate-900 dark:text-slate-100">
+                            {booking.items?.[0]?.itemName || "Multiple Items"}
+                            {booking.items?.length > 1 && ` +${booking.items.length - 1}`}
+                          </p>
+                          <p className="text-sm text-slate-600 dark:text-slate-400">
+                            {booking.customerName} - #{booking.id.slice(-8).toUpperCase()}
+                          </p>
+                        </div>
+                        <Badge className={colors.badge} data-testid={`status-booking-${booking.status}`}>
+                          {booking.status}
+                        </Badge>
+                      </div>
+                    );
+                  })
                 ) : (
-                  <>
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-700/50 border-l-4 border-green-500">
-                      <div>
-                        <p className="font-semibold text-slate-900 dark:text-slate-100">Krishna Costume</p>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">John Doe - #B001</p>
-                      </div>
-                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 border-green-300" data-testid="status-booking-confirmed">Confirmed</Badge>
-                    </div>
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-700/50 border-l-4 border-amber-500">
-                      <div>
-                        <p className="font-semibold text-slate-900 dark:text-slate-100">Lakshmi Costume</p>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">Jane Smith - #B002</p>
-                      </div>
-                      <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300 border-amber-300" data-testid="status-booking-pending">Pending</Badge>
-                    </div>
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-700/50 border-l-4 border-green-500">
-                      <div>
-                        <p className="font-semibold text-slate-900 dark:text-slate-100">Hanuman Costume</p>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">Mike Johnson - #B003</p>
-                      </div>
-                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 border-green-300" data-testid="status-booking-confirmed">Confirmed</Badge>
-                    </div>
-                  </>
+                  <div className="text-center py-8">
+                    <Calendar className="h-8 w-8 text-slate-400 mx-auto mb-2" />
+                    <p className="text-slate-500 dark:text-slate-400 text-sm">No recent bookings</p>
+                  </div>
                 )}
               </div>
             </CardContent>
@@ -772,6 +794,12 @@ export default function AdminDashboard() {
         return (
           <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-6">
             <CustomerManagement />
+          </div>
+        );
+      case "bookings":
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-6">
+            <EnhancedBookingManagement />
           </div>
         );
       case "pos":
