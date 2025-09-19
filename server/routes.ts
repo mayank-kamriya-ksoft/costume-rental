@@ -319,7 +319,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/costumes", async (req, res) => {
+  app.post("/api/costumes", requireAdminAuth, async (req, res) => {
     try {
       const validatedData = insertCostumeSchema.parse(req.body);
       const costume = await storage.createCostume(validatedData);
@@ -333,7 +333,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/costumes/:id", async (req, res) => {
+  app.put("/api/costumes/:id", requireAdminAuth, async (req, res) => {
     try {
       const validatedData = insertCostumeSchema.partial().parse(req.body);
       const costume = await storage.updateCostume(req.params.id, validatedData);
@@ -347,7 +347,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/costumes/:id", async (req, res) => {
+  app.delete("/api/costumes/:id", requireAdminAuth, async (req, res) => {
     try {
       await storage.deleteCostume(req.params.id);
       res.status(204).send();
@@ -387,7 +387,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/accessories", async (req, res) => {
+  app.post("/api/accessories", requireAdminAuth, async (req, res) => {
     try {
       const validatedData = insertAccessorySchema.parse(req.body);
       const accessory = await storage.createAccessory(validatedData);
@@ -401,7 +401,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/accessories/:id", async (req, res) => {
+  app.put("/api/accessories/:id", requireAdminAuth, async (req, res) => {
     try {
       const validatedData = insertAccessorySchema.partial().parse(req.body);
       const accessory = await storage.updateAccessory(req.params.id, validatedData);
@@ -415,7 +415,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/accessories/:id", async (req, res) => {
+  app.delete("/api/accessories/:id", requireAdminAuth, async (req, res) => {
     try {
       await storage.deleteAccessory(req.params.id);
       res.status(204).send();
@@ -426,7 +426,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Booking routes
-  app.get("/api/bookings", async (req, res) => {
+  app.get("/api/bookings", requireAdminAuth, async (req, res) => {
     try {
       const status = req.query.status as string;
       const bookings = await storage.getBookings(status);
@@ -486,7 +486,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/bookings/:id", async (req, res) => {
+  app.put("/api/bookings/:id", requireAdminAuth, async (req, res) => {
     try {
       const validatedData = insertBookingSchema.partial().parse(req.body);
       const booking = await storage.updateBooking(req.params.id, validatedData);
@@ -500,7 +500,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/bookings/:id/status", async (req, res) => {
+  app.patch("/api/bookings/:id/status", requireAdminAuth, async (req, res) => {
     try {
       const { status } = z.object({ status: z.string() }).parse(req.body);
       await storage.updateBookingStatus(req.params.id, status);
@@ -558,7 +558,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Dashboard stats
-  app.get("/api/dashboard/stats", async (req, res) => {
+  app.get("/api/dashboard/stats", requireAdminAuth, async (req, res) => {
     try {
       const stats = await storage.getDashboardStats();
       res.json(stats);
