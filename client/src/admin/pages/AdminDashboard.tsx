@@ -904,6 +904,19 @@ export default function AdminDashboard() {
             );
           })}
         </nav>
+        
+        {/* Logout Button */}
+        <div className="absolute bottom-4 left-4 right-4">
+          <Button
+            variant="outline"
+            className="w-full justify-start gap-4 h-12 rounded-xl text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20"
+            onClick={handleLogout}
+            data-testid="button-admin-logout"
+          >
+            <LogOut className="h-5 w-5" />
+            {sidebarOpen && <span className="font-medium">Logout</span>}
+          </Button>
+        </div>
       </div>
 
       {/* Main Content */}
