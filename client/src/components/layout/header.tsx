@@ -42,20 +42,28 @@ export default function Header({ isAdmin = false }: HeaderProps) {
   const logoutMutation = useMutation({
     mutationFn: () => apiRequest('POST', isAdmin ? '/api/admin/auth/logout' : '/api/auth/logout'),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: isAdmin ? ['/api/admin/auth/user'] : ['/api/auth/user'] });
+      // Clear all React Query cache to prevent stale data
+      queryClient.clear();
+      
+      // Show success toast
       toast({
-        title: "Logged out",
-        description: "You have been successfully logged out.",
+        title: "✅ Logged out successfully",
+        description: "You have been securely logged out from your account.",
+        variant: "success",
       });
+      
       // Redirect to appropriate login page after successful logout
       setTimeout(() => {
+        // Use replace to prevent back button from showing protected content
+        window.history.replaceState(null, '', isAdmin ? '/admin/login' : '/login');
         setLocation(isAdmin ? '/admin/login' : '/login');
-      }, 100);
+      }, 500);
     },
-    onError: () => {
+    onError: (error: any) => {
+      const errorMessage = error?.message || "An unexpected error occurred during logout.";
       toast({
-        title: "Error",
-        description: "Failed to log out. Please try again.",
+        title: "❌ Logout Failed",
+        description: errorMessage,
         variant: "destructive",
       });
     },

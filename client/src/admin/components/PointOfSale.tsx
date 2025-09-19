@@ -169,8 +169,9 @@ export default function PointOfSale() {
     },
     onSuccess: (newCustomer) => {
       toast({ 
-        title: "Success", 
-        description: "Customer created successfully!" 
+        title: "✅ Customer Created", 
+        description: "New customer has been successfully added to the system!",
+        variant: "success"
       });
       setSelectedCustomer(newCustomer);
       setIsNewCustomerDialogOpen(false);
@@ -188,8 +189,8 @@ export default function PointOfSale() {
     },
     onError: (error: any) => {
       toast({ 
-        title: "Error", 
-        description: error.message || "Failed to create customer", 
+        title: "❌ Failed to Create Customer", 
+        description: error.message || "Please check the information and try again.", 
         variant: "destructive" 
       });
     },
@@ -203,8 +204,9 @@ export default function PointOfSale() {
     },
     onSuccess: () => {
       toast({ 
-        title: "Success", 
-        description: "Booking created successfully!" 
+        title: "🎉 Booking Created Successfully!", 
+        description: "The rental booking has been processed and confirmed.",
+        variant: "success"
       });
       // Reset the form
       setCart([]);
@@ -215,8 +217,8 @@ export default function PointOfSale() {
     },
     onError: (error: any) => {
       toast({ 
-        title: "Error", 
-        description: error.message || "Failed to create booking", 
+        title: "❌ Booking Failed", 
+        description: error.message || "Please check the details and try again.", 
         variant: "destructive" 
       });
     },

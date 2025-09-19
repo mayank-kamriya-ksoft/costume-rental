@@ -108,8 +108,9 @@ export default function RentalForm({ item, type, selectedSize, onSuccess, onCanc
     },
     onSuccess: () => {
       toast({
-        title: "Booking Confirmed!",
-        description: "Your rental booking has been created successfully.",
+        title: "🎉 Booking Confirmed!",
+        description: "Your rental has been successfully booked and is ready for pickup!",
+        variant: "success",
       });
       queryClient.invalidateQueries({ queryKey: ["/api/costumes"] });
       queryClient.invalidateQueries({ queryKey: ["/api/accessories"] });
@@ -118,8 +119,8 @@ export default function RentalForm({ item, type, selectedSize, onSuccess, onCanc
     },
     onError: (error) => {
       toast({
-        title: "Booking Failed",
-        description: error.message || "Failed to create booking. Please try again.",
+        title: "❌ Booking Failed",
+        description: error.message || "Unable to process your booking. Please check your details and try again.",
         variant: "destructive",
       });
     },
