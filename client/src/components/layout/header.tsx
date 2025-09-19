@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
+import { useLogout } from "@/hooks/useLogout";
 import { 
   ShoppingCart, 
   Menu, 
@@ -36,38 +37,7 @@ export default function Header({ isAdmin = false }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const { user, isAuthenticated, isLoading } = useAuth();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
-  
-  const logoutMutation = useMutation({
-    mutationFn: () => apiRequest('POST', isAdmin ? '/api/admin/auth/logout' : '/api/auth/logout'),
-    onSuccess: () => {
-      // Clear all React Query cache to prevent stale data
-      queryClient.clear();
-      
-      // Show success toast
-      toast({
-        title: "✅ Logged out successfully",
-        description: "You have been securely logged out from your account.",
-        variant: "success",
-      });
-      
-      // Redirect to appropriate login page after successful logout
-      setTimeout(() => {
-        // Use replace to prevent back button from showing protected content
-        window.history.replaceState(null, '', isAdmin ? '/admin/login' : '/login');
-        setLocation(isAdmin ? '/admin/login' : '/login');
-      }, 500);
-    },
-    onError: (error: any) => {
-      const errorMessage = error?.message || "An unexpected error occurred during logout.";
-      toast({
-        title: "❌ Logout Failed",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    },
-  });
+  const { logout, isPending: isLoggingOut } = useLogout({ isAdmin });
   
   const handleLogin = () => {
     setLocation("/login");
@@ -78,7 +48,7 @@ export default function Header({ isAdmin = false }: HeaderProps) {
   };
   
   const handleLogout = () => {
-    logoutMutation.mutate();
+    logout();
   };
   
   const getInitials = (firstName?: string, lastName?: string) => {
@@ -181,11 +151,11 @@ export default function Header({ isAdmin = false }: HeaderProps) {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
                     onClick={handleLogout} 
-                    disabled={logoutMutation.isPending}
+                    disabled={isLoggingOut}
                     data-testid="menu-logout"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
-                    {logoutMutation.isPending ? "Logging out..." : "Log out"}
+                    {isLoggingOut ? "Logging out..." : "Log out"}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

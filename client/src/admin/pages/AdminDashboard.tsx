@@ -34,6 +34,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "../../lib/queryClient";
 import { Textarea } from "../../components/ui/textarea";
 import { useToast } from "../../hooks/use-toast";
+import { useLogout } from "../../hooks/useLogout";
 import InventoryManagement from "../components/InventoryManagement";
 import CategoryManagement from "../components/CategoryManagement";
 import CustomerManagement from "../components/CustomerManagement";
@@ -169,18 +170,7 @@ export default function AdminDashboard() {
     { id: "settings" as AdminTab, label: "Settings", icon: Settings },
   ];
 
-  const handleLogout = async () => {
-    try {
-      await fetch("/api/admin/auth/logout", { 
-        method: "POST", 
-        credentials: "include" 
-      });
-      setLocation("/admin/login");
-    } catch (error) {
-      console.error("Logout error:", error);
-      setLocation("/admin/login");
-    }
-  };
+  const { logout, isPending: isLoggingOut } = useLogout({ isAdmin: true });
 
   const renderDashboardContent = () => (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
@@ -211,9 +201,9 @@ export default function AdminDashboard() {
                 AD
               </AvatarFallback>
             </Avatar>
-            <Button variant="ghost" onClick={handleLogout} className="text-slate-600 dark:text-slate-400 hover:text-red-600" data-testid="button-admin-logout">
+            <Button variant="ghost" onClick={logout} className="text-slate-600 dark:text-slate-400 hover:text-red-600" data-testid="button-admin-logout" disabled={isLoggingOut}>
               <LogOut className="h-4 w-4 mr-2" />
-              Logout
+              {isLoggingOut ? "Logging out..." : "Logout"}
             </Button>
           </div>
         </div>
@@ -910,11 +900,12 @@ export default function AdminDashboard() {
           <Button
             variant="outline"
             className="w-full justify-start gap-4 h-12 rounded-xl text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20"
-            onClick={handleLogout}
+            onClick={logout}
+            disabled={isLoggingOut}
             data-testid="button-admin-logout"
           >
             <LogOut className="h-5 w-5" />
-            {sidebarOpen && <span className="font-medium">Logout</span>}
+            {sidebarOpen && <span className="font-medium">{isLoggingOut ? "Logging out..." : "Logout"}</span>}
           </Button>
         </div>
       </div>
