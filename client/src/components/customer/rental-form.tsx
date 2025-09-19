@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,6 +14,7 @@ import { format, differenceInDays, addDays } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 import type { Costume, Accessory } from "@shared/schema";
 
 const rentalFormSchema = z.object({
@@ -43,6 +44,7 @@ export default function RentalForm({ item, type, selectedSize, onSuccess, onCanc
   const [endDate, setEndDate] = useState<Date>();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { user, isAuthenticated } = useAuth();
 
   const {
     register,
@@ -56,6 +58,17 @@ export default function RentalForm({ item, type, selectedSize, onSuccess, onCanc
       size: selectedSize || "",
     },
   });
+
+  // Pre-fill form with authenticated user data
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      setValue("customerName", `${user.firstName} ${user.lastName}`);
+      setValue("customerEmail", user.email);
+      if (user.phone) {
+        setValue("customerPhone", user.phone);
+      }
+    }
+  }, [isAuthenticated, user, setValue]);
 
   const watchedStartDate = watch("startDate");
   const watchedEndDate = watch("endDate");
@@ -130,12 +143,25 @@ export default function RentalForm({ item, type, selectedSize, onSuccess, onCanc
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {isAuthenticated && user && (
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
+          <div className="flex items-center gap-2 text-blue-800 dark:text-blue-200">
+            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+            <span className="text-sm font-medium">Your information has been automatically filled from your account</span>
+          </div>
+        </div>
+      )}
+
       <div className="space-y-2">
         <Label htmlFor="customerName">Full Name *</Label>
         <Input
           id="customerName"
           {...register("customerName")}
           placeholder="Enter your full name"
+          className={isAuthenticated ? "bg-gray-50 dark:bg-gray-800" : ""}
+          readOnly={isAuthenticated}
           data-testid="input-customer-name"
         />
         {errors.customerName && (
@@ -150,6 +176,8 @@ export default function RentalForm({ item, type, selectedSize, onSuccess, onCanc
           type="email"
           {...register("customerEmail")}
           placeholder="Enter your email"
+          className={isAuthenticated ? "bg-gray-50 dark:bg-gray-800" : ""}
+          readOnly={isAuthenticated}
           data-testid="input-customer-email"
         />
         {errors.customerEmail && (
@@ -163,6 +191,8 @@ export default function RentalForm({ item, type, selectedSize, onSuccess, onCanc
           id="customerPhone"
           {...register("customerPhone")}
           placeholder="Enter your phone number"
+          className={isAuthenticated ? "bg-gray-50 dark:bg-gray-800" : ""}
+          readOnly={isAuthenticated}
           data-testid="input-customer-phone"
         />
       </div>
