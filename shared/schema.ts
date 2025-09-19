@@ -202,6 +202,8 @@ export const insertBookingSchema = createInsertSchema(bookings).omit({
   createdAt: true,
   updatedAt: true,
 }).extend({
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
   totalAmount: z.preprocess(
     (val) => typeof val === 'string' ? val.trim() : val,
     z.coerce.number().nonnegative('Total amount must be a positive number')
