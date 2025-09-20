@@ -280,10 +280,10 @@ export default function CustomerManagement() {
 
       {/* Customers List */}
       {isLoading ? (
-        <div className="space-y-4">
+        <div className="space-y-2">
           {[...Array(5)].map((_, i) => (
             <Card key={i} className="border-0 shadow-lg">
-              <CardContent className="p-6">
+              <CardContent className="p-4">
                 <div className="animate-pulse space-y-4">
                   <div className="flex justify-between">
                     <div className="space-y-2">
@@ -299,14 +299,14 @@ export default function CustomerManagement() {
           ))}
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-2">
           {filteredCustomers.map((customer) => (
             <Card key={customer.id} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white dark:bg-slate-800">
-              <CardContent className="p-6">
+              <CardContent className="p-4">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                         {customer.firstName.charAt(0)}{customer.lastName.charAt(0)}
                       </div>
                       <div>
@@ -322,7 +322,7 @@ export default function CustomerManagement() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
                       <div className="flex items-center space-x-2">
                         <Mail className="h-4 w-4 text-slate-400" />
                         <span className="text-slate-600 dark:text-slate-400" data-testid={`text-customer-email-${customer.id}`}>
