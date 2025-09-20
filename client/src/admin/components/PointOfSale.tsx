@@ -364,7 +364,7 @@ export default function PointOfSale() {
   };
 
   return (
-    <div className="h-screen max-h-screen overflow-hidden p-6">
+    <div className="overflow-hidden p-6">
       <div className="grid grid-cols-12 gap-6 h-3/4 mb-6">
         {/* Left Side - 2/3 of screen */}
         <div className="col-span-8 flex flex-col gap-6">
