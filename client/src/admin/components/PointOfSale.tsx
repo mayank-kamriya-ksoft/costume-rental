@@ -100,7 +100,7 @@ export default function PointOfSale() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Search customers
+  // Search customers - only when user types
   const { data: customers = [] } = useQuery<Customer[]>({
     queryKey: ["/api/admin/customers", customerSearch],
     queryFn: async () => {
@@ -109,10 +109,10 @@ export default function PointOfSale() {
       if (!response.ok) throw new Error('Failed to fetch customers');
       return response.json();
     },
-    enabled: customerSearch.length >= 2 || customerSearch === "", // Search when at least 2 characters or show all
+    enabled: customerSearch.length >= 2, // Only search when user types at least 2 characters
   });
 
-  // Fetch inventory items
+  // Fetch inventory items - only when user searches
   const { data: costumes = [] } = useQuery({
     queryKey: ["/api/costumes", itemSearch],
     queryFn: async () => {
@@ -121,6 +121,7 @@ export default function PointOfSale() {
       if (!response.ok) throw new Error('Failed to fetch costumes');
       return response.json();
     },
+    enabled: itemSearch.length >= 2, // Only search when user types
   });
 
   const { data: accessories = [] } = useQuery({
@@ -131,6 +132,7 @@ export default function PointOfSale() {
       if (!response.ok) throw new Error('Failed to fetch accessories');
       return response.json();
     },
+    enabled: itemSearch.length >= 2, // Only search when user types
   });
 
   // Fetch categories for filtering
@@ -362,96 +364,100 @@ export default function PointOfSale() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
-      {/* Customer Selection */}
-      <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+    <div className="h-screen max-h-screen overflow-hidden p-6">
+      {/* Top Row - Customer Selection & Cart */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-1/2 mb-6">
+        {/* Customer Selection */}
+        <Card className="flex flex-col">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <User className="h-5 w-5" />
               Customer Selection
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label>Search Customer</Label>
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="Search by name or email..."
-                  value={customerSearch}
-                  onChange={(e) => setCustomerSearch(e.target.value)}
-                  className="pl-10"
-                  data-testid="input-customer-search"
-                />
+          <CardContent className="flex-1 overflow-hidden">
+            <div className="space-y-3 h-full flex flex-col">
+              <div className="space-y-2">
+                <Label>Search Customer</Label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="Type to search customers..."
+                    value={customerSearch}
+                    onChange={(e) => setCustomerSearch(e.target.value)}
+                    className="pl-10"
+                    data-testid="input-customer-search"
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="space-y-2 max-h-64 overflow-y-auto">
-              {customers.map((customer) => (
-                <div
-                  key={customer.id}
-                  className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                    selectedCustomer?.id === customer.id 
-                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
-                  onClick={() => setSelectedCustomer(customer)}
-                  data-testid={`customer-${customer.id}`}
-                >
-                  <div className="font-medium">{customer.firstName} {customer.lastName}</div>
-                  <div className="text-sm text-gray-600 flex items-center gap-4">
-                    <span className="flex items-center gap-1">
-                      <Mail className="h-3 w-3" />
-                      {customer.email}
-                    </span>
-                    {customer.phone && (
-                      <span className="flex items-center gap-1">
-                        <Phone className="h-3 w-3" />
-                        {customer.phone}
-                      </span>
-                    )}
+              <div className="flex-1 overflow-y-auto space-y-2">
+                {customerSearch.length < 2 ? (
+                  <div className="text-center py-8 text-gray-500">
+                    <User className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+                    <p>Type at least 2 characters to search customers</p>
                   </div>
-                </div>
-              ))}
-              
-              {customerSearch.length >= 2 && customers.length === 0 && (
-                <div className="text-center py-4 text-gray-500">
-                  No customers found matching "{customerSearch}"
-                </div>
-              )}
-            </div>
+                ) : customers.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500">
+                    <p>No customers found matching "{customerSearch}"</p>
+                  </div>
+                ) : (
+                  customers.map((customer) => (
+                    <div
+                      key={customer.id}
+                      className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+                        selectedCustomer?.id === customer.id 
+                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                      onClick={() => setSelectedCustomer(customer)}
+                      data-testid={`customer-${customer.id}`}
+                    >
+                      <div className="font-medium">{customer.firstName} {customer.lastName}</div>
+                      <div className="text-sm text-gray-600 flex items-center gap-4">
+                        <span className="flex items-center gap-1">
+                          <Mail className="h-3 w-3" />
+                          {customer.email}
+                        </span>
+                        {customer.phone && (
+                          <span className="flex items-center gap-1">
+                            <Phone className="h-3 w-3" />
+                            {customer.phone}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
 
-            <Dialog open={isNewCustomerDialogOpen} onOpenChange={setIsNewCustomerDialogOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="w-full" data-testid="button-add-customer">
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  Add New Customer
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-md bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl">
+              <Dialog open={isNewCustomerDialogOpen} onOpenChange={setIsNewCustomerDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="w-full mt-auto" data-testid="button-add-customer">
+                    <UserPlus className="h-4 w-4 mr-2" />
+                    Add New Customer
+                  </Button>
+                </DialogTrigger>
+              <DialogContent className="max-w-md">
                 <DialogHeader>
-                  <DialogTitle className="text-slate-900 dark:text-slate-100 text-lg font-semibold">Add New Customer</DialogTitle>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">Create a new customer account with login credentials</p>
+                  <DialogTitle>Add New Customer</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4 p-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label className="text-slate-700 dark:text-slate-300 font-medium">First Name *</Label>
+                      <Label>First Name *</Label>
                       <Input
                         value={newCustomerData.firstName}
                         onChange={(e) => setNewCustomerData({ ...newCustomerData, firstName: e.target.value })}
-                        className="bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100"
                         placeholder="Enter first name"
                         data-testid="input-first-name"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-slate-700 dark:text-slate-300 font-medium">Last Name *</Label>
+                      <Label>Last Name *</Label>
                       <Input
                         value={newCustomerData.lastName}
                         onChange={(e) => setNewCustomerData({ ...newCustomerData, lastName: e.target.value })}
-                        className="bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100"
                         placeholder="Enter last name"
                         data-testid="input-last-name"
                       />
@@ -459,67 +465,31 @@ export default function PointOfSale() {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label className="text-slate-700 dark:text-slate-300 font-medium">Email Address *</Label>
+                    <Label>Email Address *</Label>
                     <Input
                       type="email"
                       value={newCustomerData.email}
                       onChange={(e) => setNewCustomerData({ ...newCustomerData, email: e.target.value })}
-                      className="bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100"
                       placeholder="Enter email address"
                       data-testid="input-email"
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <Label className="text-slate-700 dark:text-slate-300 font-medium">Phone Number *</Label>
+                    <Label>Phone Number *</Label>
                     <Input
                       value={newCustomerData.phone}
                       onChange={(e) => setNewCustomerData({ ...newCustomerData, phone: e.target.value })}
-                      className="bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100"
                       placeholder="Enter phone number"
                       data-testid="input-phone"
                     />
                   </div>
                   
-                  <div className="space-y-2">
-                    <Label className="text-slate-700 dark:text-slate-300 font-medium">Address</Label>
-                    <Input
-                      value={newCustomerData.address}
-                      onChange={(e) => setNewCustomerData({ ...newCustomerData, address: e.target.value })}
-                      className="bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100"
-                      placeholder="Enter address"
-                      data-testid="input-address"
-                    />
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label className="text-slate-700 dark:text-slate-300 font-medium">City</Label>
-                      <Input
-                        value={newCustomerData.city}
-                        onChange={(e) => setNewCustomerData({ ...newCustomerData, city: e.target.value })}
-                        className="bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100"
-                        placeholder="Enter city"
-                        data-testid="input-city"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-slate-700 dark:text-slate-300 font-medium">Postal Code</Label>
-                      <Input
-                        value={newCustomerData.postalCode}
-                        onChange={(e) => setNewCustomerData({ ...newCustomerData, postalCode: e.target.value })}
-                        className="bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100"
-                        placeholder="Enter postal code"
-                        data-testid="input-postal-code"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-3 pt-6 border-t border-slate-200 dark:border-slate-600">
+                  <div className="flex gap-3 pt-4">
                     <Button 
                       onClick={handleCreateCustomer}
                       disabled={createCustomerMutation.isPending}
-                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2"
+                      className="flex-1"
                       data-testid="button-save-customer"
                     >
                       {createCustomerMutation.isPending ? "Creating..." : "Create Customer"}
@@ -527,7 +497,6 @@ export default function PointOfSale() {
                     <Button 
                       variant="outline" 
                       onClick={() => setIsNewCustomerDialogOpen(false)}
-                      className="px-6 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
                       data-testid="button-cancel"
                     >
                       Cancel
@@ -538,41 +507,114 @@ export default function PointOfSale() {
             </Dialog>
 
             {selectedCustomer && (
-              <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200">
-                <CardContent className="p-4">
-                  <div className="font-medium text-blue-900 dark:text-blue-100">
-                    Selected Customer
-                  </div>
-                  <div className="text-blue-800 dark:text-blue-200">
-                    {selectedCustomer.firstName} {selectedCustomer.lastName}
-                  </div>
-                  <div className="text-sm text-blue-600 dark:text-blue-300">
-                    {selectedCustomer.email}
-                  </div>
+              <Card className="bg-blue-50 border-blue-200 mt-auto">
+                <CardContent className="p-3">
+                  <div className="font-medium text-blue-900">Selected Customer</div>
+                  <div className="text-blue-800">{selectedCustomer.firstName} {selectedCustomer.lastName}</div>
+                  <div className="text-sm text-blue-600">{selectedCustomer.email}</div>
                 </CardContent>
               </Card>
             )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Cart */}
+        <Card className="flex flex-col">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <ShoppingCart className="h-5 w-5" />
+              Cart ({cart.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex-1 overflow-hidden">
+            <div className="space-y-3 h-full flex flex-col">
+              {cart.length === 0 ? (
+                <div className="text-center py-8 text-gray-500 flex-1 flex items-center justify-center">
+                  <div>
+                    <ShoppingCart className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+                    <p>Cart is empty</p>
+                    <p className="text-sm">Add items from inventory</p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="flex-1 overflow-y-auto space-y-2">
+                    {cart.map((item, index) => (
+                      <Card key={`${item.id}-${item.size}`} className="p-3">
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <h4 className="font-medium text-sm">{item.name}</h4>
+                            <p className="text-xs text-gray-500">
+                              Type: {item.type} {item.size && `• Size: ${item.size}`}
+                            </p>
+                            <p className="text-xs font-medium text-green-600">₹{item.pricePerDay}/day</p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => updateCartQuantity(item.id, item.size, item.quantity - 1)}
+                                className="h-6 w-6 p-0"
+                              >
+                                -
+                              </Button>
+                              <span className="text-sm w-8 text-center">{item.quantity}</span>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => updateCartQuantity(item.id, item.size, item.quantity + 1)}
+                                className="h-6 w-6 p-0"
+                              >
+                                +
+                              </Button>
+                            </div>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => removeFromCart(item.id, item.size)}
+                              className="h-6 w-6 p-0"
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                  
+                  <div className="mt-auto pt-3 border-t">
+                    <div className="text-lg font-bold flex items-center">
+                      <IndianRupee className="h-5 w-5 mr-1" />
+                      Total: ₹{calculateTotal().toFixed(2)}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Inventory Selection */}
-      <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+      {/* Bottom Row - Inventory & Rental Details */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-1/2">
+        {/* Inventory */}
+        <Card className="flex flex-col">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <Package className="h-5 w-5" />
               Inventory
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-4">
+          <CardContent className="flex-1 overflow-hidden">
+            <div className="space-y-3 h-full flex flex-col">
               <div className="space-y-2">
                 <Label>Search Items</Label>
                 <div className="relative">
                   <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
-                    placeholder="Search costumes and accessories..."
+                    placeholder="Type to search inventory..."
                     value={itemSearch}
                     onChange={(e) => setItemSearch(e.target.value)}
                     className="pl-10"
@@ -581,12 +623,12 @@ export default function PointOfSale() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Category</Label>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-1">
+                  <Label className="text-sm">Category</Label>
                   <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="All Categories" />
+                    <SelectTrigger className="h-8">
+                      <SelectValue placeholder="All" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Categories</SelectItem>
@@ -598,11 +640,10 @@ export default function PointOfSale() {
                     </SelectContent>
                   </Select>
                 </div>
-
-                <div className="space-y-2">
-                  <Label>Status</Label>
+                <div className="space-y-1">
+                  <Label className="text-sm">Status</Label>
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-8">
                       <SelectValue placeholder="Available" />
                     </SelectTrigger>
                     <SelectContent>
@@ -614,272 +655,163 @@ export default function PointOfSale() {
                   </Select>
                 </div>
               </div>
-            </div>
 
-            {/* Pagination Info */}
-            <div className="flex justify-between items-center text-sm text-gray-600">
-              <span>
-                Showing {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredItems.length)} of {filteredItems.length} items
-              </span>
-              <span>Page {currentPage} of {totalPages}</span>
-            </div>
-
-            <div className="space-y-2 max-h-96 overflow-y-auto">
-              {inventoryItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="p-3 border rounded-lg hover:border-gray-300 transition-colors"
-                >
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <div className="font-medium">{item.name}</div>
-                      <div className="text-sm text-gray-600 mb-2">
-                        {item.description}
-                      </div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="outline" className="text-xs">
-                          {item.type}
-                        </Badge>
-                        <span className="text-sm font-medium text-green-600">
-                          ${item.pricePerDay}/day
-                        </span>
-                      </div>
-                    </div>
+              <div className="flex-1 overflow-y-auto">
+                {itemSearch.length < 2 ? (
+                  <div className="text-center py-8 text-gray-500">
+                    <Package className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+                    <p>Type at least 2 characters to search inventory</p>
                   </div>
-                  
-                  {item.sizes.length > 0 ? (
-                    <div className="space-y-2">
-                      <Label className="text-xs">Available Sizes:</Label>
-                      <div className="flex flex-wrap gap-1">
-                        {item.sizes.map((size) => (
+                ) : inventoryItems.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500">
+                    <p>No items found matching "{itemSearch}"</p>
+                  </div>
+                ) : (
+                  <div className="grid gap-2">
+                    {inventoryItems.map((item) => (
+                      <Card key={item.id} className="p-3 hover:shadow-md transition-shadow">
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <h4 className="font-medium text-sm">{item.name}</h4>
+                              <p className="text-xs text-gray-500 line-clamp-2">{item.description}</p>
+                              <div className="flex items-center gap-2 mt-1">
+                                <Badge variant="outline" className="text-xs">
+                                  {item.type}
+                                </Badge>
+                                <Badge variant={item.status === 'available' ? 'default' : 'secondary'} className="text-xs">
+                                  {item.status}
+                                </Badge>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-bold text-sm text-green-600">₹{item.pricePerDay}/day</p>
+                              <p className="text-xs text-gray-500">Deposit: ₹{item.securityDeposit}</p>
+                            </div>
+                          </div>
+                          
+                          {item.sizes && item.sizes.length > 0 && (
+                            <div className="space-y-1">
+                              <Label className="text-xs">Size</Label>
+                              <div className="flex flex-wrap gap-1">
+                                {item.sizes.map((size) => (
+                                  <Button
+                                    key={size}
+                                    size="sm"
+                                    variant={selectedSizes[item.id] === size ? "default" : "outline"}
+                                    onClick={() => handleSizeSelect(item.id, size)}
+                                    className="text-xs h-6 px-2"
+                                  >
+                                    {size}
+                                  </Button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          
                           <Button
-                            key={size}
                             size="sm"
-                            variant={selectedSizes[item.id] === size ? "default" : "outline"}
-                            onClick={() => handleSizeSelect(item.id, size)}
-                            className="h-8 px-3 text-xs"
-                            data-testid={`button-select-size-${item.id}-${size}`}
+                            onClick={() => addToCart(item, selectedSizes[item.id])}
+                            disabled={item.status !== 'available' || (item.sizes.length > 0 && !selectedSizes[item.id])}
+                            className="w-full h-7 text-xs"
                           >
-                            {size}
+                            <Plus className="h-3 w-3 mr-1" />
+                            Add to Cart
                           </Button>
-                        ))}
-                      </div>
-                      <Button
-                        size="sm"
-                        onClick={() => addToCart(item, selectedSizes[item.id])}
-                        disabled={!selectedSizes[item.id]}
-                        className="w-full mt-2"
-                        data-testid={`button-add-${item.id}`}
-                      >
-                        Add to Cart
-                      </Button>
-                    </div>
-                  ) : (
-                    <Button
-                      size="sm"
-                      onClick={() => addToCart(item)}
-                      className="w-full"
-                      data-testid={`button-add-${item.id}`}
-                    >
-                      Add to Cart
-                    </Button>
-                  )}
-                </div>
-              ))}
-              
-              {inventoryItems.length === 0 && (
-                <div className="text-center py-8 text-gray-500">
-                  {itemSearch || categoryFilter !== "all" || statusFilter !== "available" 
-                    ? `No items found matching your criteria` 
-                    : "No available items"}
-                </div>
-              )}
-            </div>
-
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div className="flex justify-center items-center gap-2 pt-4">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage(currentPage - 1)}
-                  data-testid="button-prev-page"
-                >
-                  Previous
-                </Button>
-                
-                <div className="flex gap-1">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                    if (
-                      page === 1 ||
-                      page === totalPages ||
-                      (page >= currentPage - 1 && page <= currentPage + 1)
-                    ) {
-                      return (
-                        <Button
-                          key={page}
-                          size="sm"
-                          variant={currentPage === page ? "default" : "outline"}
-                          onClick={() => setCurrentPage(page)}
-                          className="w-8 h-8 p-0"
-                          data-testid={`button-page-${page}`}
-                        >
-                          {page}
-                        </Button>
-                      );
-                    } else if (page === currentPage - 2 || page === currentPage + 2) {
-                      return <span key={page} className="px-2 text-gray-400">...</span>;
-                    }
-                    return null;
-                  })}
-                </div>
-
-                <Button
-                  size="sm"
-                  variant="outline"
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage(currentPage + 1)}
-                  data-testid="button-next-page"
-                >
-                  Next
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Cart and Checkout */}
-      <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <ShoppingCart className="h-5 w-5" />
-              Cart ({cart.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {cart.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                Cart is empty
-              </div>
-            ) : (
-              <div className="space-y-3 max-h-60 overflow-y-auto">
-                {cart.map((item, index) => (
-                  <div key={`${item.id}-${item.size || 'no-size'}-${index}`} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div className="flex-1">
-                      <div className="font-medium text-sm">{item.name}</div>
-                      {item.size && <div className="text-xs text-gray-600">Size: {item.size}</div>}
-                      <div className="text-xs text-green-600">${item.pricePerDay}/day</div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => updateCartQuantity(item.id, item.size, item.quantity - 1)}
-                          className="h-6 w-6 p-0"
-                          data-testid={`button-decrease-${item.id}`}
-                        >
-                          -
-                        </Button>
-                        <span className="text-sm w-8 text-center">{item.quantity}</span>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => updateCartQuantity(item.id, item.size, item.quantity + 1)}
-                          className="h-6 w-6 p-0"
-                          data-testid={`button-increase-${item.id}`}
-                        >
-                          +
-                        </Button>
-                      </div>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => removeFromCart(item.id, item.size)}
-                        className="h-6 w-6 p-0 text-red-600 hover:text-red-700"
-                        data-testid={`button-remove-${item.id}`}
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </div>
+                        </div>
+                      </Card>
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
-            )}
+            </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        {/* Rental Details */}
+        <Card className="flex flex-col">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <Calendar className="h-5 w-5" />
               Rental Details
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <CardContent className="flex-1 overflow-hidden">
+            <div className="space-y-4 h-full flex flex-col">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Start Date</Label>
+                  <Input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    data-testid="input-start-date"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>End Date</Label>
+                  <Input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    data-testid="input-end-date"
+                  />
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <Label>Start Date</Label>
-                <Input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  data-testid="input-start-date"
+                <Label>Notes (Optional)</Label>
+                <Textarea
+                  placeholder="Any special instructions or notes..."
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  className="resize-none h-20"
+                  data-testid="textarea-notes"
                 />
               </div>
-              <div className="space-y-2">
-                <Label>End Date</Label>
-                <Input
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  data-testid="input-end-date"
-                />
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label>Notes (Optional)</Label>
-              <Textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Any special instructions or notes..."
-                rows={3}
-                data-testid="textarea-notes"
-              />
-            </div>
 
-            {cart.length > 0 && (
-              <div className="pt-4 border-t space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Days:</span>
-                  <span>
-                    {Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 3600 * 24))}
-                  </span>
+              {cart.length > 0 && (
+                <div className="flex-1 min-h-0">
+                  <div className="border rounded-lg p-3 space-y-2 h-full overflow-y-auto">
+                    <h4 className="font-medium text-sm">Booking Summary</h4>
+                    <div className="space-y-1 text-sm">
+                      <div className="flex justify-between">
+                        <span>Items:</span>
+                        <span>{cart.reduce((total, item) => total + item.quantity, 0)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Days:</span>
+                        <span>
+                          {Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 3600 * 24))}
+                        </span>
+                      </div>
+                      <div className="flex justify-between font-medium">
+                        <span>Subtotal:</span>
+                        <span>₹{calculateTotal().toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Security Deposit (50%):</span>
+                        <span>₹{(calculateTotal() * 0.5).toFixed(2)}</span>
+                      </div>
+                      <div className="border-t pt-2 flex justify-between font-bold">
+                        <span>Total Amount:</span>
+                        <span>₹{(calculateTotal() * 1.5).toFixed(2)}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-between text-lg font-bold">
-                  <span>Total:</span>
-                  <span className="text-green-600">${calculateTotal().toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between text-sm text-gray-600">
-                  <span>Security Deposit (50%):</span>
-                  <span>${(calculateTotal() * 0.5).toFixed(2)}</span>
-                </div>
-              </div>
-            )}
+              )}
 
-            <Button
-              onClick={handleCreateBooking}
-              disabled={!selectedCustomer || cart.length === 0 || createBookingMutation.isPending}
-              className="w-full"
-              data-testid="button-create-booking"
-            >
-              <CreditCard className="h-4 w-4 mr-2" />
-              {createBookingMutation.isPending ? "Creating..." : "Create Booking"}
-            </Button>
+              <Button
+                onClick={handleCreateBooking}
+                disabled={!selectedCustomer || cart.length === 0 || createBookingMutation.isPending}
+                className="w-full mt-auto"
+                data-testid="button-create-booking"
+              >
+                <CreditCard className="h-4 w-4 mr-2" />
+                {createBookingMutation.isPending ? "Creating Booking..." : "Create Booking"}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>

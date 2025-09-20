@@ -23,7 +23,7 @@ interface Booking {
   id: string;
   customerName: string;
   customerEmail: string;
-  customerPhone?: string;
+  customerPhone: string | null;
   startDate: string;
   endDate: string;
   totalAmount: string;

@@ -1,0 +1,1 @@
+// This is a backup of the original PointOfSale.tsx before redesign
