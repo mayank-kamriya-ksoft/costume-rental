@@ -108,7 +108,7 @@ export default function Header({ isAdmin = false }: HeaderProps) {
             {!isAdmin && (
               <Button variant="ghost" size="sm" className="relative text-foreground hover:bg-accent rounded-lg p-3" data-testid="button-cart">
                 <ShoppingCart className="h-5 w-5" />
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs bg-primary text-white font-bold">
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs bg-primary text-black font-bold">
                   0
                 </Badge>
               </Button>
@@ -170,7 +170,7 @@ export default function Header({ isAdmin = false }: HeaderProps) {
                   Sign In
                 </Button>
                 <Button 
-                  className="bg-primary text-white hover:bg-primary/90 font-semibold px-6 py-2 rounded-lg shadow-sm" 
+                  className="text-foreground hover:bg-accent font-semibold px-4 py-2 rounded-lg" 
                   onClick={handleRegister}
                   data-testid="button-register"
                 >
