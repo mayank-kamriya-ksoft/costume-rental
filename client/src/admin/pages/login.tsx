@@ -25,7 +25,7 @@ export default function AdminLogin() {
     onSuccess: () => {
       toast({
         title: "Success",
-        description: "Admin login successful. Redirecting to dashboard...",
+        description: "Welcome back! Taking you to your dashboard...",
       });
       setTimeout(() => {
         window.location.href = "/admin";

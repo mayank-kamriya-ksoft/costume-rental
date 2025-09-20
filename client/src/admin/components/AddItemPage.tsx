@@ -62,7 +62,7 @@ export default function AddItemPage() {
       setLocation("/admin");
     },
     onError: (error: Error) => {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+      toast({ title: "Unable to Add Item", description: error.message || "Something went wrong while adding the item. Please try again.", variant: "destructive" });
     },
   });
 
@@ -71,8 +71,8 @@ export default function AddItemPage() {
     
     if (!formData.categoryId) {
       toast({
-        title: "Error",
-        description: "Please select a category",
+        title: "Category Required",
+        description: "Please select a category for your item",
         variant: "destructive",
       });
       return;

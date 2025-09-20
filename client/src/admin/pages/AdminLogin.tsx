@@ -26,7 +26,7 @@ export default function AdminLogin() {
     onSuccess: () => {
       toast({
         title: "Success",
-        description: "Admin login successful. Redirecting to dashboard...",
+        description: "Welcome back! Taking you to your dashboard...",
       });
       
       // Invalidate admin auth query to trigger re-authentication check
