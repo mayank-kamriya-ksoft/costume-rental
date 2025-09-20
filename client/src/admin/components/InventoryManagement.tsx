@@ -10,7 +10,7 @@ import { Badge } from "../../components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../../components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
 import { useToast } from "../../hooks/use-toast";
-import { Plus, Edit, Trash2, Search, Filter, Package, Sparkles, Tags, Image, DollarSign } from "lucide-react";
+import { Plus, Edit, Trash2, Search, Filter, Package, Sparkles, Tags, Image, IndianRupee } from "lucide-react";
 import { Textarea } from "../../components/ui/textarea";
 import { cn } from "../../lib/utils";
 import { useLocation } from "wouter";
@@ -235,7 +235,7 @@ export default function InventoryManagement() {
           <div className="space-y-4">
             <div className="flex items-center space-x-2 mb-4">
               <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
-                <DollarSign className="h-4 w-4 text-green-600 dark:text-green-400" />
+                <IndianRupee className="h-4 w-4 text-green-600 dark:text-green-400" />
               </div>
               <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Pricing & Status</h3>
             </div>
@@ -246,7 +246,7 @@ export default function InventoryManagement() {
                   Price per Day (₹) *
                 </Label>
                 <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <Input
                     id="pricePerDay"
                     type="number"
@@ -265,7 +265,7 @@ export default function InventoryManagement() {
                   Security Deposit (₹) *
                 </Label>
                 <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <Input
                     id="securityDeposit"
                     type="number"

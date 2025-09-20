@@ -17,7 +17,7 @@ import {
   User, 
   ShoppingCart, 
   Calendar, 
-  DollarSign,
+  IndianRupee,
   Package,
   CreditCard,
   X,

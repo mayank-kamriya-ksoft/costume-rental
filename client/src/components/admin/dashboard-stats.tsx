@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
-  DollarSign, 
+  IndianRupee, 
   Calendar, 
   Package, 
   AlertTriangle,
@@ -78,7 +78,7 @@ export default function DashboardStats() {
                 </p>
               </div>
               <div className="bg-green-100 p-3 rounded-full">
-                <DollarSign className="h-5 w-5 text-green-600" />
+                <IndianRupee className="h-5 w-5 text-green-600" />
               </div>
             </div>
             <div className="mt-4 flex items-center">
@@ -181,7 +181,7 @@ export default function DashboardStats() {
                     </div>
                     <div className="text-right">
                       <p className="font-semibold text-foreground" data-testid={`text-amount-${booking.id}`}>
-                        ${parseFloat(booking.totalAmount).toFixed(0)}
+                        ₹${parseFloat(booking.totalAmount).toFixed(0)}
                       </p>
                       <Badge
                         variant={booking.status === 'active' ? 'default' : 'secondary'}
@@ -226,7 +226,7 @@ export default function DashboardStats() {
               </div>
 
               <div className="flex items-center p-3 bg-green-50 border border-green-200 rounded-lg">
-                <DollarSign className="h-5 w-5 text-green-600 mr-3" />
+                <IndianRupee className="h-5 w-5 text-green-600 mr-3" />
                 <div>
                   <p className="font-medium text-foreground">Revenue Growing</p>
                   <p className="text-sm text-muted-foreground">

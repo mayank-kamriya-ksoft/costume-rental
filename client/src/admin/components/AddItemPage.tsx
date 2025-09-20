@@ -7,7 +7,7 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
 import { useToast } from "../../hooks/use-toast";
-import { ArrowLeft, Package, Sparkles, Tags, Image, DollarSign, Save } from "lucide-react";
+import { ArrowLeft, Package, Sparkles, Tags, Image, IndianRupee, Save } from "lucide-react";
 import { Textarea } from "../../components/ui/textarea";
 import { cn } from "../../lib/utils";
 import { useLocation } from "wouter";
@@ -209,7 +209,7 @@ export default function AddItemPage() {
                 <div className="space-y-6">
                   <div className="flex items-center space-x-2 mb-6">
                     <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
-                      <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
+                      <IndianRupee className="h-5 w-5 text-green-600 dark:text-green-400" />
                     </div>
                     <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Pricing & Availability</h3>
                   </div>
@@ -217,10 +217,10 @@ export default function AddItemPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
                       <Label htmlFor="pricePerDay" className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                        Price per Day ($) *
+                        Price per Day (₹) *
                       </Label>
                       <div className="relative">
-                        <DollarSign className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+                        <IndianRupee className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
                         <Input
                           id="pricePerDay"
                           type="number"
@@ -236,10 +236,10 @@ export default function AddItemPage() {
                     </div>
                     <div className="space-y-3">
                       <Label htmlFor="securityDeposit" className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                        Security Deposit ($) *
+                        Security Deposit (₹) *
                       </Label>
                       <div className="relative">
-                        <DollarSign className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+                        <IndianRupee className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
                         <Input
                           id="securityDeposit"
                           type="number"

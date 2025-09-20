@@ -14,7 +14,7 @@ import {
   Phone, 
   Mail, 
   Clock, 
-  DollarSign,
+  IndianRupee,
   CheckCircle,
   AlertCircle,
   Search,
@@ -295,7 +295,7 @@ export default function EnhancedBookingManagement() {
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div className="space-y-1">
                         <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
-                          <DollarSign className="h-3 w-3" />
+                          <IndianRupee className="h-3 w-3" />
                           <span className="font-medium">Total:</span>
                         </div>
                         <div className="text-slate-900 dark:text-slate-100 pl-5 font-semibold">

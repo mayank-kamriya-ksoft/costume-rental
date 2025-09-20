@@ -13,7 +13,7 @@ import {
   Phone, 
   Mail, 
   Clock, 
-  DollarSign,
+  IndianRupee,
   CheckCircle,
   AlertCircle
 } from "lucide-react";
@@ -216,7 +216,7 @@ export default function BookingManagement() {
                             • {item.itemName} {item.size && `(Size ${item.size})`}
                           </span>
                           <span className="font-medium">
-                            ${parseFloat(item.pricePerDay).toFixed(0)}/day
+                            ₹${parseFloat(item.pricePerDay).toFixed(0)}/day
                           </span>
                         </li>
                       ))}
@@ -232,7 +232,7 @@ export default function BookingManagement() {
                       <div>
                         <span className="text-muted-foreground">Total Amount:</span>
                         <p className="font-medium text-foreground flex items-center">
-                          <DollarSign className="h-3 w-3 mr-1" />
+                          <IndianRupee className="h-3 w-3 mr-1" />
                           {parseFloat(booking.totalAmount).toFixed(2)}
                         </p>
                       </div>

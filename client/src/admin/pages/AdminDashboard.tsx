@@ -15,7 +15,7 @@ import {
   Settings,
   Menu,
   LogOut,
-  DollarSign,
+  IndianRupee,
   TrendingUp,
   Bell,
   Search,
@@ -217,7 +217,7 @@ export default function AdminDashboard() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">Total Revenue</CardTitle>
               <div className="p-2 bg-emerald-500 rounded-lg shadow-md">
-                <DollarSign className="h-4 w-4 text-white" />
+                <IndianRupee className="h-4 w-4 text-white" />
               </div>
             </CardHeader>
             <CardContent>
@@ -225,7 +225,7 @@ export default function AdminDashboard() {
                 {statsLoading ? (
                   <div className="animate-pulse bg-emerald-200 dark:bg-emerald-700 h-8 w-20 rounded"></div>
                 ) : (
-                  `$${stats?.totalRevenue || 0}`
+                  `₹${stats?.totalRevenue || 0}`
                 )}
               </div>
               <div className="flex items-center text-xs">
@@ -558,7 +558,7 @@ export default function AdminDashboard() {
                 <div className="space-y-6">
                   <div className="flex items-center space-x-2 mb-6">
                     <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
-                      <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
+                      <IndianRupee className="h-5 w-5 text-green-600 dark:text-green-400" />
                     </div>
                     <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Pricing & Availability</h3>
                   </div>
