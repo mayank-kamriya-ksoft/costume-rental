@@ -95,6 +95,7 @@ export default function PointOfSale() {
     postalCode: "",
     password: ""
   });
+  const [selectedSizes, setSelectedSizes] = useState<{ [itemId: string]: string }>({});
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -225,6 +226,14 @@ export default function PointOfSale() {
       });
     },
   });
+
+  // Helper function to handle size selection
+  const handleSizeSelect = (itemId: string, size: string) => {
+    setSelectedSizes(prev => ({
+      ...prev,
+      [itemId]: size
+    }));
+  };
 
   const addToCart = (item: InventoryItem, size?: string) => {
     const existingItem = cart.find(cartItem => 
@@ -646,15 +655,24 @@ export default function PointOfSale() {
                           <Button
                             key={size}
                             size="sm"
-                            variant="outline"
-                            onClick={() => addToCart(item, size)}
+                            variant={selectedSizes[item.id] === size ? "default" : "outline"}
+                            onClick={() => handleSizeSelect(item.id, size)}
                             className="h-8 px-3 text-xs"
-                            data-testid={`button-add-${item.id}-${size}`}
+                            data-testid={`button-select-size-${item.id}-${size}`}
                           >
                             {size}
                           </Button>
                         ))}
                       </div>
+                      <Button
+                        size="sm"
+                        onClick={() => addToCart(item, selectedSizes[item.id])}
+                        disabled={!selectedSizes[item.id]}
+                        className="w-full mt-2"
+                        data-testid={`button-add-${item.id}`}
+                      >
+                        Add to Cart
+                      </Button>
                     </div>
                   ) : (
                     <Button
