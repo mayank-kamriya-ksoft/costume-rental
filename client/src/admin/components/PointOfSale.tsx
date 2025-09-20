@@ -208,6 +208,8 @@ export default function PointOfSale() {
         description: "The rental booking has been processed and confirmed.",
         variant: "success"
       });
+      // Invalidate bookings cache to refresh admin/bookings page
+      queryClient.invalidateQueries({ queryKey: ["/api/bookings"] });
       // Reset the form
       setCart([]);
       setSelectedCustomer(null);
