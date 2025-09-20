@@ -365,7 +365,7 @@ export default function PointOfSale() {
 
   return (
     <div className="h-screen max-h-screen overflow-hidden p-6">
-      <div className="grid grid-cols-12 gap-6 h-5/6 mb-6">
+      <div className="grid grid-cols-12 gap-6 h-3/4 mb-6">
         {/* Left Side - 2/3 of screen */}
         <div className="col-span-8 flex flex-col gap-6">
           {/* Top: Inventory Search */}
@@ -760,68 +760,98 @@ export default function PointOfSale() {
       </div>
 
       {/* Bottom: Rental Details */}
-      <Card className="h-1/6">
-        <CardHeader className="pb-2">
+      <Card className="h-1/4">
+        <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
             <Calendar className="h-5 w-5 text-purple-600" />
             Rental Details & Booking
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-12 gap-4 items-end">
-            <div className="col-span-2">
-              <Label className="text-sm">Start Date</Label>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-4 gap-6">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Start Date</Label>
               <Input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="h-9"
+                className="h-10"
                 data-testid="input-start-date"
               />
             </div>
-            <div className="col-span-2">
-              <Label className="text-sm">End Date</Label>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">End Date</Label>
               <Input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="h-9"
+                className="h-10"
                 data-testid="input-end-date"
               />
             </div>
-            <div className="col-span-4">
-              <Label className="text-sm">Notes (Optional)</Label>
+            <div className="space-y-2 col-span-2">
+              <Label className="text-sm font-medium">Notes (Optional)</Label>
               <Input
-                placeholder="Any special instructions..."
+                placeholder="Any special instructions or requirements..."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="h-9"
+                className="h-10"
                 data-testid="textarea-notes"
               />
             </div>
-            {cart.length > 0 && (
-              <div className="col-span-2 text-center">
-                <div className="text-sm text-gray-600">Total Amount</div>
-                <div className="text-lg font-bold text-green-600">
-                  ₹{(calculateTotal() * 1.5).toFixed(2)}
-                </div>
-                <div className="text-xs text-gray-500">
-                  {Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 3600 * 24))} days
+          </div>
+          
+          {cart.length > 0 && (
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                <h4 className="font-semibold text-base mb-3">Booking Summary</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span>Items:</span>
+                    <span className="font-medium">{cart.reduce((total, item) => total + item.quantity, 0)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Rental Days:</span>
+                    <span className="font-medium">
+                      {Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 3600 * 24))}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Subtotal:</span>
+                    <span className="font-medium text-green-600">₹{calculateTotal().toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Security Deposit (50%):</span>
+                    <span className="font-medium">₹{(calculateTotal() * 0.5).toFixed(2)}</span>
+                  </div>
+                  <div className="border-t pt-2 flex justify-between">
+                    <span className="font-semibold">Total Amount:</span>
+                    <span className="font-bold text-lg text-green-600">₹{(calculateTotal() * 1.5).toFixed(2)}</span>
+                  </div>
                 </div>
               </div>
-            )}
-            <div className="col-span-2">
-              <Button
-                onClick={handleCreateBooking}
-                disabled={!selectedCustomer || cart.length === 0 || createBookingMutation.isPending}
-                className="w-full h-9"
-                data-testid="button-create-booking"
-              >
-                <CreditCard className="h-4 w-4 mr-2" />
-                {createBookingMutation.isPending ? "Creating..." : "Create Booking"}
-              </Button>
+              
+              <div className="flex items-center">
+                <Button
+                  onClick={handleCreateBooking}
+                  disabled={!selectedCustomer || cart.length === 0 || createBookingMutation.isPending}
+                  className="w-full h-16 text-lg"
+                  data-testid="button-create-booking"
+                >
+                  <CreditCard className="h-6 w-6 mr-3" />
+                  {createBookingMutation.isPending ? "Creating Booking..." : "Create Booking"}
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
+          
+          {cart.length === 0 && (
+            <div className="text-center py-8 text-gray-500">
+              <CreditCard className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+              <p className="text-lg font-medium">Ready to Create Booking</p>
+              <p className="text-sm">Add items to cart and select a customer to continue</p>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
