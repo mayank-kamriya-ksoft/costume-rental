@@ -299,7 +299,7 @@ export default function CustomerManagement() {
           ))}
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-2 max-h-[400px] overflow-y-auto">
           {filteredCustomers.map((customer) => (
             <Card key={customer.id} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white dark:bg-slate-800">
               <CardContent className="p-4">

@@ -30,7 +30,7 @@ interface Booking {
   securityDeposit: string;
   status: string;
   paymentStatus: string;
-  items: {
+  items?: {
     itemName: string;
     itemType: string;
     size?: string;
@@ -154,7 +154,7 @@ export default function BookingManagement() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 max-h-[500px] overflow-y-auto">
           {bookings.map((booking: Booking) => {
             const isBookingOverdue = isOverdue(booking.endDate, booking.status);
             return (
@@ -178,109 +178,100 @@ export default function BookingManagement() {
                   </div>
                 </CardHeader>
                 
-                <CardContent className="space-y-4">
-                  {/* Customer Info */}
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                      <User className="h-4 w-4 text-primary" />
+                <CardContent className="space-y-3 p-3">
+                  {/* Customer Info - Compact */}
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                      <User className="h-3 w-3 text-primary" />
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground" data-testid={`text-customer-${booking.id}`}>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-sm text-foreground truncate" data-testid={`text-customer-${booking.id}`}>
                         {booking.customerName}
                       </h3>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <Mail className="h-3 w-3" />
-                          {booking.customerEmail}
-                        </div>
-                        {booking.customerPhone && (
-                          <div className="flex items-center gap-1">
-                            <Phone className="h-3 w-3" />
-                            {booking.customerPhone}
-                          </div>
-                        )}
+                      <div className="text-xs text-muted-foreground truncate">
+                        {booking.customerEmail}
                       </div>
                     </div>
                   </div>
 
-                  {/* Rental Items */}
-                  <div className="border-t border-border pt-4">
-                    <h4 className="font-medium text-foreground mb-2 flex items-center">
-                      <Calendar className="h-4 w-4 mr-2" />
-                      Items Rented:
-                    </h4>
-                    <ul className="space-y-1 text-sm text-muted-foreground mb-4">
-                      {booking.items.map((item, index) => (
-                        <li key={index} className="flex items-center justify-between">
-                          <span>
-                            • {item.itemName} {item.size && `(Size ${item.size})`}
-                          </span>
-                          <span className="font-medium">
-                            ₹${parseFloat(item.pricePerDay).toFixed(0)}/day
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                    
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="text-muted-foreground">Rental Period:</span>
-                        <p className="font-medium text-foreground">
-                          {format(new Date(booking.startDate), "MMM dd")} - {format(new Date(booking.endDate), "MMM dd, yyyy")}
-                        </p>
+                  {/* Rental Details - Compact */}
+                  <div className="border-t border-border pt-2 space-y-2">
+                    <div className="text-xs text-muted-foreground">
+                      <div className="flex items-center justify-between mb-1">
+                        <span>Period:</span>
+                        <span className="font-medium">
+                          {format(new Date(booking.startDate), "MMM dd")} - {format(new Date(booking.endDate), "MMM dd")}
+                        </span>
                       </div>
-                      <div>
-                        <span className="text-muted-foreground">Total Amount:</span>
-                        <p className="font-medium text-foreground flex items-center">
+                      <div className="flex items-center justify-between">
+                        <span>Total:</span>
+                        <span className="font-medium flex items-center">
                           <IndianRupee className="h-3 w-3 mr-1" />
-                          {parseFloat(booking.totalAmount).toFixed(2)}
-                        </p>
+                          {parseFloat(booking.totalAmount).toFixed(0)}
+                        </span>
                       </div>
                     </div>
+                    
+                    {booking.items && booking.items.length > 0 && (
+                      <div className="text-xs text-muted-foreground">
+                        <div className="font-medium mb-1">{booking.items.length} item(s):</div>
+                        <div className="max-h-12 overflow-y-auto">
+                          {booking.items.slice(0, 2).map((item, index) => (
+                            <div key={index} className="truncate">
+                              • {item.itemName}
+                            </div>
+                          ))}
+                          {booking.items.length > 2 && (
+                            <div className="text-muted-foreground/70">+{booking.items.length - 2} more...</div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Actions */}
-                  <div className="flex gap-2 pt-4">
+                  {/* Actions - Compact */}
+                  <div className="flex gap-1 pt-2">
                     {booking.status === "active" && (
                       <Button
                         onClick={() => handleStatusChange(booking.id, "completed")}
-                        className="flex-1"
+                        size="sm"
+                        className="flex-1 text-xs"
                         disabled={updateBookingStatusMutation.isPending}
                         data-testid={`button-complete-${booking.id}`}
                       >
-                        <CheckCircle className="h-4 w-4 mr-2" />
-                        Mark Returned
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                        Complete
                       </Button>
                     )}
                     
                     {isBookingOverdue && (
                       <Button
                         variant="destructive"
+                        size="sm"
                         onClick={() => {
-                          // Send reminder functionality would go here
                           toast({
                             title: "Reminder Sent",
                             description: `Overdue reminder sent to ${booking.customerName}`,
                           });
                         }}
-                        className="flex-1"
+                        className="flex-1 text-xs"
                         data-testid={`button-reminder-${booking.id}`}
                       >
-                        <AlertCircle className="h-4 w-4 mr-2" />
-                        Send Reminder
+                        <AlertCircle className="h-3 w-3 mr-1" />
+                        Remind
                       </Button>
                     )}
                     
                     <Button
                       variant="outline"
-                      className="px-4"
+                      size="sm"
                       onClick={() => {
-                        // Contact customer functionality would go here
                         window.location.href = `mailto:${booking.customerEmail}?subject=Regarding your rental booking #${booking.id.slice(-8)}`;
                       }}
+                      className="text-xs px-2"
                       data-testid={`button-contact-${booking.id}`}
                     >
-                      Contact
+                      <Mail className="h-3 w-3" />
                     </Button>
                   </div>
                 </CardContent>
