@@ -109,16 +109,23 @@ export class DatabaseStorage implements IStorage {
   async getUsers(filters?: { search?: string; isActive?: boolean }): Promise<User[]> {
     let query = db.select().from(users);
     
+    const conditions = [];
+    
     if (filters?.search) {
-      query = query.where(or(
+      conditions.push(or(
         ilike(users.firstName, `%${filters.search}%`),
         ilike(users.lastName, `%${filters.search}%`),
-        ilike(users.email, `%${filters.search}%`)
+        ilike(users.email, `%${filters.search}%`),
+        ilike(users.phone, `%${filters.search}%`)
       ));
     }
     
     if (filters?.isActive !== undefined) {
-      query = query.where(eq(users.isActive, filters.isActive));
+      conditions.push(eq(users.isActive, filters.isActive));
+    }
+    
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions));
     }
     
     const userList = await query.orderBy(desc(users.createdAt));

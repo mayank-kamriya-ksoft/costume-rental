@@ -79,6 +79,7 @@ export default function EnhancedBookingManagement() {
     const matchesSearch = !searchQuery || 
       booking.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       booking.customerEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (booking.customerPhone && booking.customerPhone.toLowerCase().includes(searchQuery.toLowerCase())) ||
       booking.id.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesStatus && matchesSearch;
   });
@@ -170,7 +171,7 @@ export default function EnhancedBookingManagement() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
             <Input
-              placeholder="Search by customer, email, or booking ID..."
+              placeholder="Search by customer, email, phone, or booking ID..."
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);

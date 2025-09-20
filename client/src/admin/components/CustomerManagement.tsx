@@ -252,7 +252,7 @@ export default function CustomerManagement() {
             <div className="flex items-center space-x-2 flex-1">
               <Search className="h-4 w-4 text-slate-400" />
               <Input
-                placeholder="Search customers by name or email..."
+                placeholder="Search customers by name, email, or phone..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
