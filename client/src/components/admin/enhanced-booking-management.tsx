@@ -20,7 +20,9 @@ import {
   Search,
   ChevronLeft,
   ChevronRight,
-  Filter
+  Filter,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 import type { Booking as BookingType } from "@shared/schema";
 
@@ -51,8 +53,21 @@ export default function EnhancedBookingManagement() {
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [expandedBookings, setExpandedBookings] = useState<Set<string>>(new Set());
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  const toggleBookingExpansion = (bookingId: string) => {
+    setExpandedBookings(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(bookingId)) {
+        newSet.delete(bookingId);
+      } else {
+        newSet.add(bookingId);
+      }
+      return newSet;
+    });
+  };
 
   const { data: allBookings = [], isLoading } = useQuery<BookingType[]>({
     queryKey: ["/api/bookings"],
@@ -232,45 +247,74 @@ export default function EnhancedBookingManagement() {
         </Card>
       ) : (
         <>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="space-y-4">
             {currentBookings.map((booking: Booking) => {
               const isBookingOverdue = isOverdue(booking.endDate, booking.status);
+              const isExpanded = expandedBookings.has(booking.id);
               return (
                 <Card 
                   key={booking.id} 
                   className={`${isBookingOverdue ? "border-red-300 bg-red-50 dark:border-red-800 dark:bg-red-900/10" : "border-slate-200 dark:border-slate-700"} bg-white dark:bg-slate-800 hover:shadow-lg transition-all duration-200`}
                   data-testid={`booking-card-${booking.id}`}
                 >
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-1">
-                        <CardTitle className="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                          <User className="h-4 w-4" />
-                          {booking.customerName}
-                        </CardTitle>
-                        <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                          <Mail className="h-3 w-3" />
-                          {booking.customerEmail}
+                  {/* Compact List Header - Always Visible */}
+                  <CardHeader className="py-4">
+                    <div className="flex items-center justify-between">
+                      {/* Left Side - Customer Info */}
+                      <div className="flex items-center gap-4 flex-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleBookingExpansion(booking.id)}
+                          className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700"
+                        >
+                          {isExpanded ? (
+                            <ChevronUp className="h-4 w-4" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4" />
+                          )}
+                        </Button>
+                        <div className="flex items-center gap-2">
+                          <User className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+                          <span className="font-semibold text-slate-900 dark:text-slate-100">
+                            {booking.customerName}
+                          </span>
                         </div>
-                        {booking.customerPhone && (
-                          <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                            <Phone className="h-3 w-3" />
-                            {booking.customerPhone}
-                          </div>
-                        )}
                       </div>
-                      <div className="text-right space-y-2">
-                        <Badge className={getStatusColor(booking.status)} data-testid={`status-${booking.id}`}>
-                          {booking.status}
-                        </Badge>
-                        <Badge className={getPaymentStatusColor(booking.paymentStatus)} data-testid={`payment-${booking.id}`}>
-                          {booking.paymentStatus}
-                        </Badge>
+                      
+                      {/* Middle - Dates */}
+                      <div className="hidden md:flex items-center gap-4 text-sm text-slate-600 dark:text-slate-400">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          <span>{format(new Date(booking.startDate), 'MMM dd')} - {format(new Date(booking.endDate), 'MMM dd')}</span>
+                        </div>
+                      </div>
+
+                      {/* Right Side - Status & Amount */}
+                      <div className="flex items-center gap-4">
+                        <div className="text-right">
+                          <div className="font-semibold text-slate-900 dark:text-slate-100">
+                            ₹{parseFloat(booking.totalAmount).toFixed(0)}
+                          </div>
+                          <div className="text-xs text-slate-500 dark:text-slate-400">
+                            {booking.items?.length || 0} items
+                          </div>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <Badge className={getStatusColor(booking.status)} data-testid={`status-${booking.id}`}>
+                            {booking.status}
+                          </Badge>
+                          <Badge className={getPaymentStatusColor(booking.paymentStatus)} data-testid={`payment-${booking.id}`} variant="outline">
+                            {booking.paymentStatus}
+                          </Badge>
+                        </div>
                       </div>
                     </div>
                   </CardHeader>
                   
-                  <CardContent className="space-y-4">
+                  {/* Expandable Details Section */}
+                  {isExpanded && (
+                    <CardContent className="pt-0 space-y-4 border-t border-slate-200 dark:border-slate-700">
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div className="space-y-1">
                         <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
@@ -299,7 +343,7 @@ export default function EnhancedBookingManagement() {
                           <span className="font-medium">Total:</span>
                         </div>
                         <div className="text-slate-900 dark:text-slate-100 pl-5 font-semibold">
-                          ${parseFloat(booking.totalAmount).toFixed(2)}
+                          ₹{parseFloat(booking.totalAmount).toFixed(2)}
                         </div>
                       </div>
                       <div className="space-y-1">
@@ -308,7 +352,7 @@ export default function EnhancedBookingManagement() {
                           <span className="font-medium">Deposit:</span>
                         </div>
                         <div className="text-slate-900 dark:text-slate-100 pl-5 font-semibold">
-                          ${parseFloat(booking.securityDeposit).toFixed(2)}
+                          ₹{parseFloat(booking.securityDeposit).toFixed(2)}
                         </div>
                       </div>
                     </div>
@@ -348,7 +392,8 @@ export default function EnhancedBookingManagement() {
                         </SelectContent>
                       </Select>
                     </div>
-                  </CardContent>
+                    </CardContent>
+                  )}
                 </Card>
               );
             })}
