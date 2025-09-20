@@ -258,9 +258,9 @@ export default function EnhancedBookingManagement() {
                   className={`${isBookingOverdue ? "border-red-300 bg-red-50 dark:border-red-800 dark:bg-red-900/10" : "border-slate-200 dark:border-slate-700"} bg-white dark:bg-slate-800 hover:shadow-lg transition-all duration-200`}
                   data-testid={`booking-card-${booking.id}`}
                 >
-                  {/* Compact List Header - Always Visible */}
-                  <CardHeader className="py-4">
-                    <div className="flex items-center justify-between">
+                  {/* Compact List Header - Reduced Height */}
+                  <CardHeader className="py-3">
+                    <div className="flex items-center justify-between gap-4">
                       {/* Left Side - Customer Info */}
                       <div className="flex items-center gap-4 flex-1">
                         <Button
@@ -284,24 +284,24 @@ export default function EnhancedBookingManagement() {
                       </div>
                       
                       {/* Middle - Dates */}
-                      <div className="hidden md:flex items-center gap-4 text-sm text-slate-600 dark:text-slate-400">
+                      <div className="hidden md:flex items-center gap-4 text-sm text-slate-600 dark:text-slate-400 min-w-0">
                         <div className="flex items-center gap-1">
                           <Calendar className="h-3 w-3" />
-                          <span>{format(new Date(booking.startDate), 'MMM dd')} - {format(new Date(booking.endDate), 'MMM dd')}</span>
+                          <span className="whitespace-nowrap">{format(new Date(booking.startDate), 'MMM dd')} - {format(new Date(booking.endDate), 'MMM dd')}</span>
                         </div>
                       </div>
 
-                      {/* Right Side - Status & Amount */}
-                      <div className="flex items-center gap-4">
-                        <div className="text-right">
-                          <div className="font-semibold text-slate-900 dark:text-slate-100">
+                      {/* Right Side - Status & Amount with Better Spacing */}
+                      <div className="flex items-center gap-6 min-w-0">
+                        <div className="flex items-center gap-2 px-2">
+                          <div className="font-semibold text-slate-900 dark:text-slate-100 text-lg">
                             ₹{parseFloat(booking.totalAmount).toFixed(0)}
                           </div>
                           <div className="text-xs text-slate-500 dark:text-slate-400">
-                            {booking.items?.length || 0} items
+                            • {booking.items?.length || 0} items
                           </div>
                         </div>
-                        <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
                           <Badge className={getStatusColor(booking.status)} data-testid={`status-${booking.id}`}>
                             {booking.status}
                           </Badge>

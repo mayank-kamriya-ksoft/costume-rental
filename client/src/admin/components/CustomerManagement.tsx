@@ -40,7 +40,8 @@ import {
   Filter,
   UserCheck,
   UserX,
-  Plus
+  Plus,
+  ChevronDown
 } from "lucide-react";
 import { apiRequest } from "../../lib/queryClient";
 import { useToast } from "../../hooks/use-toast";
@@ -82,7 +83,11 @@ export default function CustomerManagement() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+const [expandedCustomerId, setExpandedCustomerId] = useState(null);
 
+const toggleCustomerDetails = (customerId) => {
+  setExpandedCustomerId(expandedCustomerId === customerId ? null : customerId);
+};
   const [formData, setFormData] = useState<CustomerFormData>({
     firstName: "",
     lastName: "",
@@ -302,10 +307,9 @@ export default function CustomerManagement() {
         <div className="space-y-2 max-h-[400px] overflow-y-auto">
           {filteredCustomers.map((customer) => (
             <Card key={customer.id} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white dark:bg-slate-800">
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-2">
+              <CardContent className="p-3">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                         {customer.firstName.charAt(0)}{customer.lastName.charAt(0)}
                       </div>
@@ -316,46 +320,9 @@ export default function CustomerManagement() {
                         <div className="flex items-center space-x-2">
                           {getStatusBadge(customer)}
                           <span className="text-sm text-slate-500 dark:text-slate-400">
-                            Joined {format(new Date(customer.createdAt), 'MMM dd, yyyy')}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
-                      <div className="flex items-center space-x-2">
-                        <Mail className="h-4 w-4 text-slate-400" />
-                        <span className="text-slate-600 dark:text-slate-400" data-testid={`text-customer-email-${customer.id}`}>
                           {customer.email}
                         </span>
                       </div>
-                      
-                      {customer.phone && (
-                        <div className="flex items-center space-x-2">
-                          <Phone className="h-4 w-4 text-slate-400" />
-                          <span className="text-slate-600 dark:text-slate-400" data-testid={`text-customer-phone-${customer.id}`}>
-                            {customer.phone}
-                          </span>
-                        </div>
-                      )}
-                      
-                      {(customer.city || customer.address) && (
-                        <div className="flex items-center space-x-2">
-                          <MapPin className="h-4 w-4 text-slate-400" />
-                          <span className="text-slate-600 dark:text-slate-400" data-testid={`text-customer-location-${customer.id}`}>
-                            {customer.city ? `${customer.city}${customer.address ? ', ' + customer.address : ''}` : customer.address}
-                          </span>
-                        </div>
-                      )}
-                      
-                      {customer.dateOfBirth && (
-                        <div className="flex items-center space-x-2">
-                          <Calendar className="h-4 w-4 text-slate-400" />
-                          <span className="text-slate-600 dark:text-slate-400" data-testid={`text-customer-dob-${customer.id}`}>
-                            {format(new Date(customer.dateOfBirth), 'MMM dd, yyyy')}
-                          </span>
-                        </div>
-                      )}
                     </div>
                   </div>
 
@@ -395,8 +362,66 @@ export default function CustomerManagement() {
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
+                  
+                  {/* Dropdown arrow for expanding/collapsing details */}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => toggleCustomerDetails(customer.id)}
+                    className="h-8 w-8 p-0"
+                  >
+                    <ChevronDown className={`h-4 w-4 transition-transform ${expandedCustomerId === customer.id ? 'rotate-180' : ''}`} />
+                  </Button>
+                </div>
+              </div>
+              
+              {/* Collapsible details section */}
+              {expandedCustomerId === customer.id && (
+                <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+                    <div className="flex items-center space-x-2">
+                      <Mail className="h-4 w-4 text-slate-400" />
+                      <span className="text-slate-600 dark:text-slate-400" data-testid={`text-customer-email-${customer.id}`}>
+                        {customer.email}
+                      </span>
+                    </div>
+                    
+                    {customer.phone && (
+                      <div className="flex items-center space-x-2">
+                        <Phone className="h-4 w-4 text-slate-400" />
+                        <span className="text-slate-600 dark:text-slate-400" data-testid={`text-customer-phone-${customer.id}`}>
+                          {customer.phone}
+                        </span>
+                      </div>
+                    )}
+                    
+                    {(customer.city || customer.address) && (
+                      <div className="flex items-center space-x-2">
+                        <MapPin className="h-4 w-4 text-slate-400" />
+                        <span className="text-slate-600 dark:text-slate-400" data-testid={`text-customer-location-${customer.id}`}>
+                          {customer.city ? `${customer.city}${customer.address ? ', ' + customer.address : ''}` : customer.address}
+                        </span>
+                      </div>
+                    )}
+                    
+                    {customer.dateOfBirth && (
+                      <div className="flex items-center space-x-2">
+                        <Calendar className="h-4 w-4 text-slate-400" />
+                        <span className="text-slate-600 dark:text-slate-400" data-testid={`text-customer-dob-${customer.id}`}>
+                          {format(new Date(customer.dateOfBirth), 'MMM dd, yyyy')}
+                        </span>
+                      </div>
+                    )}
+                    
+                    <div className="flex items-center space-x-2">
+                      <Calendar className="h-4 w-4 text-slate-400" />
+                      <span className="text-slate-600 dark:text-slate-400">
+                        Joined {format(new Date(customer.createdAt), 'MMM dd, yyyy')}
+                      </span>
+                    </div>
                   </div>
                 </div>
+              )}
               </CardContent>
             </Card>
           ))}
